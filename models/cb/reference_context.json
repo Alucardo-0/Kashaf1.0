@@ -655,390 +655,6 @@
     "defensive_action_height_iqr": 28.125,
     "median_action_height": 37.25
   },
-  "Stephanie Houghton": {
-    "aerial_duels_p90": 0.2129,
-    "pass_completion_pct": 0.8681,
-    "tackle_win_pct": 0.5556,
-    "long_passes_p90": 12.4389,
-    "defensive_action_height_iqr": 27.3333,
-    "median_action_height": 30.3333
-  },
-  "Gemma Bonner": {
-    "aerial_duels_p90": 0.1644,
-    "pass_completion_pct": 0.9078,
-    "tackle_win_pct": 0.5091,
-    "long_passes_p90": 7.6736,
-    "defensive_action_height_iqr": 36.75,
-    "median_action_height": 29.5833
-  },
-  "Jennifer Patricia Beattie": {
-    "aerial_duels_p90": 0.1334,
-    "pass_completion_pct": 0.9105,
-    "tackle_win_pct": 0.46,
-    "long_passes_p90": 10.2964,
-    "defensive_action_height_iqr": 28.3125,
-    "median_action_height": 30.8333
-  },
-  "Millie Bright": {
-    "aerial_duels_p90": 0.1151,
-    "pass_completion_pct": 0.8455,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 10.7591,
-    "defensive_action_height_iqr": 23.1042,
-    "median_action_height": 32.6667
-  },
-  "Abbie McManus": {
-    "aerial_duels_p90": 0.1743,
-    "pass_completion_pct": 0.8454,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 6.7469,
-    "defensive_action_height_iqr": 35.8333,
-    "median_action_height": 31.6667
-  },
-  "Magdalena Lilly Eriksson": {
-    "aerial_duels_p90": 0.1969,
-    "pass_completion_pct": 0.85,
-    "tackle_win_pct": 0.5753,
-    "long_passes_p90": 9.4233,
-    "defensive_action_height_iqr": 32.0417,
-    "median_action_height": 34.1667
-  },
-  "Frankie Brown": {
-    "aerial_duels_p90": 0.2204,
-    "pass_completion_pct": 0.7474,
-    "tackle_win_pct": 0.5106,
-    "long_passes_p90": 2.5184,
-    "defensive_action_height_iqr": 22.0,
-    "median_action_height": 33.375
-  },
-  "Victoria Williams": {
-    "aerial_duels_p90": 0.0865,
-    "pass_completion_pct": 0.7614,
-    "tackle_win_pct": 0.7671,
-    "long_passes_p90": 4.4957,
-    "defensive_action_height_iqr": 26.7708,
-    "median_action_height": 28.0833
-  },
-  "Laura Rafferty": {
-    "aerial_duels_p90": 0.1596,
-    "pass_completion_pct": 0.7822,
-    "tackle_win_pct": 0.6562,
-    "long_passes_p90": 2.234,
-    "defensive_action_height_iqr": 28.3333,
-    "median_action_height": 27.5
-  },
-  "Danique Kerkdijk": {
-    "aerial_duels_p90": 0.0607,
-    "pass_completion_pct": 0.7622,
-    "tackle_win_pct": 0.6296,
-    "long_passes_p90": 4.5698,
-    "defensive_action_height_iqr": 29.8333,
-    "median_action_height": 27.5
-  },
-  "Gemma Evans": {
-    "aerial_duels_p90": 0.1353,
-    "pass_completion_pct": 0.7195,
-    "tackle_win_pct": 0.544,
-    "long_passes_p90": 3.0921,
-    "defensive_action_height_iqr": 27.5417,
-    "median_action_height": 25.0
-  },
-  "Kirstyn Pearce": {
-    "aerial_duels_p90": 0.0566,
-    "pass_completion_pct": 0.7602,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 8.8302,
-    "defensive_action_height_iqr": 20.8333,
-    "median_action_height": 31.6667
-  },
-  "Hannah Short": {
-    "aerial_duels_p90": 0.1748,
-    "pass_completion_pct": 0.6452,
-    "tackle_win_pct": 0.6122,
-    "long_passes_p90": 2.5631,
-    "defensive_action_height_iqr": 16.75,
-    "median_action_height": 25.8333
-  },
-  "Ellie Mason": {
-    "aerial_duels_p90": 0.2737,
-    "pass_completion_pct": 0.7176,
-    "tackle_win_pct": 0.6,
-    "long_passes_p90": 2.7372,
-    "defensive_action_height_iqr": 25.8333,
-    "median_action_height": 29.1667
-  },
-  "Josanne Potter": {
-    "aerial_duels_p90": 0.2432,
-    "pass_completion_pct": 0.7526,
-    "tackle_win_pct": 0.6452,
-    "long_passes_p90": 8.8784,
-    "defensive_action_height_iqr": 22.2917,
-    "median_action_height": 30.8333
-  },
-  "Nicola Cousins": {
-    "aerial_duels_p90": 0.3529,
-    "pass_completion_pct": 0.6617,
-    "tackle_win_pct": 0.4359,
-    "long_passes_p90": 1.9412,
-    "defensive_action_height_iqr": 32.0833,
-    "median_action_height": 32.5
-  },
-  "Sophie Howard": {
-    "aerial_duels_p90": 0.2932,
-    "pass_completion_pct": 0.8024,
-    "tackle_win_pct": 0.6296,
-    "long_passes_p90": 3.6938,
-    "defensive_action_height_iqr": 33.125,
-    "median_action_height": 30.25
-  },
-  "Louise Quinn": {
-    "aerial_duels_p90": 0.3009,
-    "pass_completion_pct": 0.9102,
-    "tackle_win_pct": 0.5833,
-    "long_passes_p90": 6.0176,
-    "defensive_action_height_iqr": 31.2709,
-    "median_action_height": 30.0
-  },
-  "Dominique Johanna Anna Petrone Janssen": {
-    "aerial_duels_p90": 0.1075,
-    "pass_completion_pct": 0.8531,
-    "tackle_win_pct": 0.5867,
-    "long_passes_p90": 8.0597,
-    "defensive_action_height_iqr": 38.8334,
-    "median_action_height": 39.1667
-  },
-  "Niamh Fahey": {
-    "aerial_duels_p90": 0.194,
-    "pass_completion_pct": 0.8115,
-    "tackle_win_pct": 0.6897,
-    "long_passes_p90": 3.2339,
-    "defensive_action_height_iqr": 21.5834,
-    "median_action_height": 32.375
-  },
-  "Leandra Little": {
-    "aerial_duels_p90": 0.2857,
-    "pass_completion_pct": 0.8,
-    "tackle_win_pct": 0.5556,
-    "long_passes_p90": 1.4286,
-    "defensive_action_height_iqr": 30.0,
-    "median_action_height": 30.4167
-  },
-  "Jasmine Matthews": {
-    "aerial_duels_p90": 0.2784,
-    "pass_completion_pct": 0.7754,
-    "tackle_win_pct": 0.6809,
-    "long_passes_p90": 3.866,
-    "defensive_action_height_iqr": 27.3542,
-    "median_action_height": 25.75
-  },
-  "Sophie Elizabeth Bradley-Auckland": {
-    "aerial_duels_p90": 0.2175,
-    "pass_completion_pct": 0.7666,
-    "tackle_win_pct": 0.6333,
-    "long_passes_p90": 4.2251,
-    "defensive_action_height_iqr": 24.8542,
-    "median_action_height": 23.8333
-  },
-  "Kerys Harrop": {
-    "aerial_duels_p90": 0.052,
-    "pass_completion_pct": 0.8443,
-    "tackle_win_pct": 0.5455,
-    "long_passes_p90": 5.0723,
-    "defensive_action_height_iqr": 29.1667,
-    "median_action_height": 30.0
-  },
-  "Aoife Mannion": {
-    "aerial_duels_p90": 0.1926,
-    "pass_completion_pct": 0.8883,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 6.7038,
-    "defensive_action_height_iqr": 34.3749,
-    "median_action_height": 27.5
-  },
-  "Gabrielle George": {
-    "aerial_duels_p90": 0.3092,
-    "pass_completion_pct": 0.8423,
-    "tackle_win_pct": 0.5714,
-    "long_passes_p90": 4.4212,
-    "defensive_action_height_iqr": 28.25,
-    "median_action_height": 26.6667
-  },
-  "Georgia Brougham": {
-    "aerial_duels_p90": 0.1701,
-    "pass_completion_pct": 0.8267,
-    "tackle_win_pct": 0.6304,
-    "long_passes_p90": 3.5433,
-    "defensive_action_height_iqr": 21.6875,
-    "median_action_height": 25.0
-  },
-  "Meaghan Sargeant": {
-    "aerial_duels_p90": 0.2303,
-    "pass_completion_pct": 0.8458,
-    "tackle_win_pct": 0.475,
-    "long_passes_p90": 4.2763,
-    "defensive_action_height_iqr": 29.6041,
-    "median_action_height": 27.5
-  },
-  "Brooke Hendrix": {
-    "aerial_duels_p90": 0.1521,
-    "pass_completion_pct": 0.7759,
-    "tackle_win_pct": 0.3684,
-    "long_passes_p90": 2.6873,
-    "defensive_action_height_iqr": 30.625,
-    "median_action_height": 25.0
-  },
-  "Gilly Louise Scarlett Flaherty": {
-    "aerial_duels_p90": 0.2063,
-    "pass_completion_pct": 0.8364,
-    "tackle_win_pct": 0.5789,
-    "long_passes_p90": 4.4634,
-    "defensive_action_height_iqr": 29.3959,
-    "median_action_height": 28.4167
-  },
-  "Leah Williamson": {
-    "aerial_duels_p90": 0.22,
-    "pass_completion_pct": 0.8659,
-    "tackle_win_pct": 0.7308,
-    "long_passes_p90": 11.2834,
-    "defensive_action_height_iqr": 32.5833,
-    "median_action_height": 34.1667
-  },
-  "Megan Finnigan": {
-    "aerial_duels_p90": 0.2424,
-    "pass_completion_pct": 0.8218,
-    "tackle_win_pct": 0.4949,
-    "long_passes_p90": 6.5455,
-    "defensive_action_height_iqr": 22.1667,
-    "median_action_height": 26.6667
-  },
-  "Maria Thorisdottir": {
-    "aerial_duels_p90": 0.1253,
-    "pass_completion_pct": 0.8359,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 2.8399,
-    "defensive_action_height_iqr": 29.0833,
-    "median_action_height": 36.5833
-  },
-  "Fern Whelan": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8014,
-    "tackle_win_pct": 0.5333,
-    "long_passes_p90": 2.5784,
-    "defensive_action_height_iqr": 7.5,
-    "median_action_height": 29.1667
-  },
-  "Molly Bartrip": {
-    "aerial_duels_p90": 0.1563,
-    "pass_completion_pct": 0.8208,
-    "tackle_win_pct": 0.5472,
-    "long_passes_p90": 4.8466,
-    "defensive_action_height_iqr": 20.7917,
-    "median_action_height": 29.1667
-  },
-  "Deanna Cooper": {
-    "aerial_duels_p90": 0.1611,
-    "pass_completion_pct": 0.8554,
-    "tackle_win_pct": 0.5625,
-    "long_passes_p90": 6.0027,
-    "defensive_action_height_iqr": 21.2083,
-    "median_action_height": 30.1667
-  },
-  "Viktoria Schnaderbeck": {
-    "aerial_duels_p90": 0.0887,
-    "pass_completion_pct": 0.9188,
-    "tackle_win_pct": 0.5185,
-    "long_passes_p90": 4.0788,
-    "defensive_action_height_iqr": 26.4167,
-    "median_action_height": 34.1667
-  },
-  "Janni Arnth-Jensen": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8642,
-    "tackle_win_pct": 1.0,
-    "long_passes_p90": 2.9209,
-    "defensive_action_height_iqr": 0.0,
-    "median_action_height": 33.3333
-  },
-  "Anita Amma Ankyewah Asante": {
-    "aerial_duels_p90": 0.2799,
-    "pass_completion_pct": 0.8507,
-    "tackle_win_pct": 0.4902,
-    "long_passes_p90": 2.4261,
-    "defensive_action_height_iqr": 25.75,
-    "median_action_height": 31.75
-  },
-  "Kika van Es": {
-    "aerial_duels_p90": 0.3403,
-    "pass_completion_pct": 0.8169,
-    "tackle_win_pct": 0.4444,
-    "long_passes_p90": 2.7221,
-    "defensive_action_height_iqr": 32.25,
-    "median_action_height": 32.2083
-  },
-  "Anna Filbey": {
-    "aerial_duels_p90": 0.1742,
-    "pass_completion_pct": 0.8036,
-    "tackle_win_pct": 0.5909,
-    "long_passes_p90": 5.4581,
-    "defensive_action_height_iqr": 28.6667,
-    "median_action_height": 26.375
-  },
-  "Hannah Godfrey": {
-    "aerial_duels_p90": 0.1155,
-    "pass_completion_pct": 0.8394,
-    "tackle_win_pct": 0.5417,
-    "long_passes_p90": 7.4471,
-    "defensive_action_height_iqr": 21.3333,
-    "median_action_height": 25.0
-  },
-  "Laura Vetterlein": {
-    "aerial_duels_p90": 0.297,
-    "pass_completion_pct": 0.7236,
-    "tackle_win_pct": 0.5088,
-    "long_passes_p90": 4.7153,
-    "defensive_action_height_iqr": 30.3334,
-    "median_action_height": 29.8333
-  },
-  "Kristine Leine": {
-    "aerial_duels_p90": 0.289,
-    "pass_completion_pct": 0.7911,
-    "tackle_win_pct": 0.5357,
-    "long_passes_p90": 4.0827,
-    "defensive_action_height_iqr": 29.75,
-    "median_action_height": 34.4167
-  },
-  "Grace Fisk": {
-    "aerial_duels_p90": 0.2623,
-    "pass_completion_pct": 0.8346,
-    "tackle_win_pct": 0.6111,
-    "long_passes_p90": 4.2714,
-    "defensive_action_height_iqr": 17.7292,
-    "median_action_height": 29.5833
-  },
-  "Jenna Schillaci": {
-    "aerial_duels_p90": 0.3333,
-    "pass_completion_pct": 0.8382,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 7.0,
-    "defensive_action_height_iqr": 24.3334,
-    "median_action_height": 17.5833
-  },
-  "Millie Turner": {
-    "aerial_duels_p90": 0.3697,
-    "pass_completion_pct": 0.9139,
-    "tackle_win_pct": 0.5517,
-    "long_passes_p90": 6.3697,
-    "defensive_action_height_iqr": 30.8334,
-    "median_action_height": 28.0833
-  },
-  "Amy Turner": {
-    "aerial_duels_p90": 0.1782,
-    "pass_completion_pct": 0.8275,
-    "tackle_win_pct": 0.5625,
-    "long_passes_p90": 4.4837,
-    "defensive_action_height_iqr": 25.9584,
-    "median_action_height": 33.6667
-  },
   "Joël Andre Job Matip": {
     "aerial_duels_p90": 0.2,
     "pass_completion_pct": 0.8507,
@@ -1054,358 +670,6 @@
     "long_passes_p90": 4.5559,
     "defensive_action_height_iqr": 28.7499,
     "median_action_height": 33.3333
-  },
-  "Bo-Ram Hwang": {
-    "aerial_duels_p90": 0.5,
-    "pass_completion_pct": 0.7838,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 2.0,
-    "defensive_action_height_iqr": 0.0,
-    "median_action_height": 26.875
-  },
-  "Griedge Mbock Bathy Nka": {
-    "aerial_duels_p90": 0.4952,
-    "pass_completion_pct": 0.9286,
-    "tackle_win_pct": 0.5333,
-    "long_passes_p90": 8.4182,
-    "defensive_action_height_iqr": 17.3542,
-    "median_action_height": 33.7917
-  },
-  "Wendie Renard": {
-    "aerial_duels_p90": 0.2869,
-    "pass_completion_pct": 0.8944,
-    "tackle_win_pct": 0.4706,
-    "long_passes_p90": 10.8287,
-    "defensive_action_height_iqr": 23.125,
-    "median_action_height": 33.9167
-  },
-  "Hye-Ri Kim": {
-    "aerial_duels_p90": 0.2439,
-    "pass_completion_pct": 0.7647,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 2.1951,
-    "defensive_action_height_iqr": 23.2084,
-    "median_action_height": 44.8333
-  },
-  "Do-Yeon Kim": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.9697,
-    "tackle_win_pct": 0.0,
-    "long_passes_p90": 6.3333,
-    "defensive_action_height_iqr": 0.0,
-    "median_action_height": 30.4167
-  },
-  "Osinachi Marvis Ohale": {
-    "aerial_duels_p90": 0.3197,
-    "pass_completion_pct": 0.7255,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 5.1155,
-    "defensive_action_height_iqr": 23.4583,
-    "median_action_height": 28.5833
-  },
-  "Onome Ebi": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.6047,
-    "tackle_win_pct": 1.0,
-    "long_passes_p90": 4.0,
-    "defensive_action_height_iqr": 0.0,
-    "median_action_height": 24.9167
-  },
-  "Kathrin Julia Hendrich": {
-    "aerial_duels_p90": 0.1481,
-    "pass_completion_pct": 0.8746,
-    "tackle_win_pct": 0.5652,
-    "long_passes_p90": 3.3333,
-    "defensive_action_height_iqr": 25.3333,
-    "median_action_height": 30.8333
-  },
-  "Marina Hegering": {
-    "aerial_duels_p90": 0.3472,
-    "pass_completion_pct": 0.8855,
-    "tackle_win_pct": 0.5455,
-    "long_passes_p90": 7.5506,
-    "defensive_action_height_iqr": 25.0833,
-    "median_action_height": 33.1667
-  },
-  "Sara Doorsoun-Khajeh": {
-    "aerial_duels_p90": 0.2105,
-    "pass_completion_pct": 0.8685,
-    "tackle_win_pct": 0.4231,
-    "long_passes_p90": 5.6842,
-    "defensive_action_height_iqr": 17.8333,
-    "median_action_height": 30.0
-  },
-  "Haiyan Wu": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8442,
-    "tackle_win_pct": 0.5556,
-    "long_passes_p90": 5.0,
-    "defensive_action_height_iqr": 12.5833,
-    "median_action_height": 29.0
-  },
-  "María Pilar León Cebrián": {
-    "aerial_duels_p90": 0.25,
-    "pass_completion_pct": 0.9011,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 8.5,
-    "defensive_action_height_iqr": 22.8333,
-    "median_action_height": 35.8333
-  },
-  "Irene Paredes Hernandez": {
-    "aerial_duels_p90": 0.2,
-    "pass_completion_pct": 0.9126,
-    "tackle_win_pct": 0.5217,
-    "long_passes_p90": 9.95,
-    "defensive_action_height_iqr": 31.5833,
-    "median_action_height": 37.25
-  },
-  "Noko Matlou": {
-    "aerial_duels_p90": 0.6398,
-    "pass_completion_pct": 0.7115,
-    "tackle_win_pct": 0.7059,
-    "long_passes_p90": 1.9194,
-    "defensive_action_height_iqr": 24.3334,
-    "median_action_height": 22.75
-  },
-  "Sara Gama": {
-    "aerial_duels_p90": 0.3015,
-    "pass_completion_pct": 0.7438,
-    "tackle_win_pct": 0.7,
-    "long_passes_p90": 3.6181,
-    "defensive_action_height_iqr": 27.8958,
-    "median_action_height": 28.0
-  },
-  "Clare Elizabeth Polkinghorne": {
-    "aerial_duels_p90": 0.2584,
-    "pass_completion_pct": 0.8092,
-    "tackle_win_pct": 0.7333,
-    "long_passes_p90": 1.2919,
-    "defensive_action_height_iqr": 33.1458,
-    "median_action_height": 34.75
-  },
-  "Elena Linari": {
-    "aerial_duels_p90": 0.3263,
-    "pass_completion_pct": 0.9062,
-    "tackle_win_pct": 0.6333,
-    "long_passes_p90": 4.5685,
-    "defensive_action_height_iqr": 15.625,
-    "median_action_height": 27.1667
-  },
-  "Chantelle Swaby": {
-    "aerial_duels_p90": 0.1727,
-    "pass_completion_pct": 0.7237,
-    "tackle_win_pct": 0.75,
-    "long_passes_p90": 1.9002,
-    "defensive_action_height_iqr": 25.4167,
-    "median_action_height": 32.9167
-  },
-  "Kathellen Sousa Feitoza": {
-    "aerial_duels_p90": 0.4724,
-    "pass_completion_pct": 0.7416,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 4.0157,
-    "defensive_action_height_iqr": 8.7917,
-    "median_action_height": 29.375
-  },
-  "Konya Plummer": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8125,
-    "tackle_win_pct": 0.5833,
-    "long_passes_p90": 6.0,
-    "defensive_action_height_iqr": 18.75,
-    "median_action_height": 26.75
-  },
-  "Allyson Swaby": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8085,
-    "tackle_win_pct": 0.5714,
-    "long_passes_p90": 3.0,
-    "defensive_action_height_iqr": 31.1666,
-    "median_action_height": 24.4167
-  },
-  "Alex Greenwood": {
-    "aerial_duels_p90": 0.2332,
-    "pass_completion_pct": 0.8815,
-    "tackle_win_pct": 0.662,
-    "long_passes_p90": 7.4352,
-    "defensive_action_height_iqr": 33.3333,
-    "median_action_height": 39.4167
-  },
-  "Rachel Corsie": {
-    "aerial_duels_p90": 0.2632,
-    "pass_completion_pct": 0.842,
-    "tackle_win_pct": 0.625,
-    "long_passes_p90": 6.5789,
-    "defensive_action_height_iqr": 22.5208,
-    "median_action_height": 26.1667
-  },
-  "Kadeisha Buchanan": {
-    "aerial_duels_p90": 0.1654,
-    "pass_completion_pct": 0.9026,
-    "tackle_win_pct": 0.7,
-    "long_passes_p90": 8.4375,
-    "defensive_action_height_iqr": 33.6667,
-    "median_action_height": 35.25
-  },
-  "Estelle Johnson": {
-    "aerial_duels_p90": 0.087,
-    "pass_completion_pct": 0.7364,
-    "tackle_win_pct": 0.6923,
-    "long_passes_p90": 4.3478,
-    "defensive_action_height_iqr": 32.2917,
-    "median_action_height": 27.5
-  },
-  "Shelina Laura Zadorsky": {
-    "aerial_duels_p90": 0.3438,
-    "pass_completion_pct": 0.8308,
-    "tackle_win_pct": 0.7826,
-    "long_passes_p90": 5.0,
-    "defensive_action_height_iqr": 33.7083,
-    "median_action_height": 28.4167
-  },
-  "Marie Aurelle Awona": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.7429,
-    "tackle_win_pct": 0.8333,
-    "long_passes_p90": 2.6667,
-    "defensive_action_height_iqr": 9.4167,
-    "median_action_height": 26.9167
-  },
-  "Moeka Minami": {
-    "aerial_duels_p90": 0.1667,
-    "pass_completion_pct": 0.8596,
-    "tackle_win_pct": 0.7,
-    "long_passes_p90": 10.0,
-    "defensive_action_height_iqr": 12.125,
-    "median_action_height": 35.25
-  },
-  "Aldana Cometti": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.7215,
-    "tackle_win_pct": 0.6923,
-    "long_passes_p90": 3.1858,
-    "defensive_action_height_iqr": 22.6042,
-    "median_action_height": 28.8333
-  },
-  "Saki Kumagai": {
-    "aerial_duels_p90": 0.2222,
-    "pass_completion_pct": 0.919,
-    "tackle_win_pct": 0.7,
-    "long_passes_p90": 6.5556,
-    "defensive_action_height_iqr": 17.6041,
-    "median_action_height": 33.5833
-  },
-  "Stephanie van der Gragt": {
-    "aerial_duels_p90": 0.3109,
-    "pass_completion_pct": 0.8488,
-    "tackle_win_pct": 0.3235,
-    "long_passes_p90": 9.9482,
-    "defensive_action_height_iqr": 41.875,
-    "median_action_height": 30.9167
-  },
-  "Abby Erceg": {
-    "aerial_duels_p90": 0.1875,
-    "pass_completion_pct": 0.8534,
-    "tackle_win_pct": 0.6957,
-    "long_passes_p90": 7.75,
-    "defensive_action_height_iqr": 24.875,
-    "median_action_height": 30.25
-  },
-  "Rebekah Ashley Stott": {
-    "aerial_duels_p90": 0.0843,
-    "pass_completion_pct": 0.85,
-    "tackle_win_pct": 0.4545,
-    "long_passes_p90": 3.8764,
-    "defensive_action_height_iqr": 18.5,
-    "median_action_height": 32.5833
-  },
-  "Abby Dahlkemper": {
-    "aerial_duels_p90": 0.2404,
-    "pass_completion_pct": 0.8809,
-    "tackle_win_pct": 0.5625,
-    "long_passes_p90": 8.1745,
-    "defensive_action_height_iqr": 26.9583,
-    "median_action_height": 32.5833
-  },
-  "Julie Beth Ertz": {
-    "aerial_duels_p90": 0.3609,
-    "pass_completion_pct": 0.7791,
-    "tackle_win_pct": 0.6923,
-    "long_passes_p90": 6.2069,
-    "defensive_action_height_iqr": 39.125,
-    "median_action_height": 37.1667
-  },
-  "Nilla Fischer": {
-    "aerial_duels_p90": 0.1895,
-    "pass_completion_pct": 0.8736,
-    "tackle_win_pct": 0.6,
-    "long_passes_p90": 8.3368,
-    "defensive_action_height_iqr": 17.5,
-    "median_action_height": 40.0833
-  },
-  "Linda Brigitta Sembrant": {
-    "aerial_duels_p90": 0.2892,
-    "pass_completion_pct": 0.888,
-    "tackle_win_pct": 0.7143,
-    "long_passes_p90": 4.1928,
-    "defensive_action_height_iqr": 30.8333,
-    "median_action_height": 35.1667
-  },
-  "Camila Alejandra Saez Oyaneder": {
-    "aerial_duels_p90": 0.6667,
-    "pass_completion_pct": 0.8806,
-    "tackle_win_pct": 1.0,
-    "long_passes_p90": 3.6667,
-    "defensive_action_height_iqr": 1.25,
-    "median_action_height": 31.8333
-  },
-  "Carla Valentina Guerrero Puelle": {
-    "aerial_duels_p90": 0.6667,
-    "pass_completion_pct": 0.82,
-    "tackle_win_pct": 0.0,
-    "long_passes_p90": 4.6667,
-    "defensive_action_height_iqr": 20.1875,
-    "median_action_height": 32.9583
-  },
-  "Bambanani Nolufefe Mbane": {
-    "aerial_duels_p90": 0.4489,
-    "pass_completion_pct": 0.7647,
-    "tackle_win_pct": 0.4375,
-    "long_passes_p90": 2.02,
-    "defensive_action_height_iqr": 22.0208,
-    "median_action_height": 25.7917
-  },
-  "Nana Ichise": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.9149,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 6.6667,
-    "defensive_action_height_iqr": 20.8333,
-    "median_action_height": 30.3333
-  },
-  "Anouk Dekker": {
-    "aerial_duels_p90": 0.2632,
-    "pass_completion_pct": 0.8143,
-    "tackle_win_pct": 0.5714,
-    "long_passes_p90": 4.4737,
-    "defensive_action_height_iqr": 29.7917,
-    "median_action_height": 28.5833
-  },
-  "Rebecca Elizabeth Sauerbrunn": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.9031,
-    "tackle_win_pct": 0.6429,
-    "long_passes_p90": 4.4953,
-    "defensive_action_height_iqr": 33.625,
-    "median_action_height": 28.3333
-  },
-  "Emily Ann Sonnett": {
-    "aerial_duels_p90": 0.1202,
-    "pass_completion_pct": 0.8315,
-    "tackle_win_pct": 0.8333,
-    "long_passes_p90": 3.3645,
-    "defensive_action_height_iqr": 23.3333,
-    "median_action_height": 30.8333
   },
   "Sami Hyypiä": {
     "aerial_duels_p90": 0.0,
@@ -1534,14 +798,6 @@
     "long_passes_p90": 3.0,
     "defensive_action_height_iqr": 3.7083,
     "median_action_height": 32.25
-  },
-  "Luis Hernández Rodríguez": {
-    "aerial_duels_p90": 0.2188,
-    "pass_completion_pct": 0.8672,
-    "tackle_win_pct": 0.5556,
-    "long_passes_p90": 3.8024,
-    "defensive_action_height_iqr": 17.0,
-    "median_action_height": 32.0833
   },
   "Jean-Sylvain Claude Babin": {
     "aerial_duels_p90": 0.7904,
@@ -2687,30 +1943,6 @@
     "defensive_action_height_iqr": 10.7084,
     "median_action_height": 31.5
   },
-  "Elisha N''Dow": {
-    "aerial_duels_p90": 0.1622,
-    "pass_completion_pct": 0.768,
-    "tackle_win_pct": 0.68,
-    "long_passes_p90": 2.5405,
-    "defensive_action_height_iqr": 31.125,
-    "median_action_height": 28.3333
-  },
-  "Natalie Haigh": {
-    "aerial_duels_p90": 0.2293,
-    "pass_completion_pct": 0.7908,
-    "tackle_win_pct": 0.4643,
-    "long_passes_p90": 2.8089,
-    "defensive_action_height_iqr": 22.625,
-    "median_action_height": 23.4167
-  },
-  "Rikke Læntver Sevecke": {
-    "aerial_duels_p90": 0.0412,
-    "pass_completion_pct": 0.8475,
-    "tackle_win_pct": 0.7838,
-    "long_passes_p90": 6.9136,
-    "defensive_action_height_iqr": 28.5,
-    "median_action_height": 27.3333
-  },
   "Óscar Mingueza García": {
     "aerial_duels_p90": 0.2276,
     "pass_completion_pct": 0.9362,
@@ -2750,38 +1982,6 @@
     "long_passes_p90": 4.2378,
     "defensive_action_height_iqr": 23.7916,
     "median_action_height": 30.25
-  },
-  "Kiera Skeels": {
-    "aerial_duels_p90": 0.3003,
-    "pass_completion_pct": 0.7132,
-    "tackle_win_pct": 0.5556,
-    "long_passes_p90": 3.0033,
-    "defensive_action_height_iqr": 28.7083,
-    "median_action_height": 34.9167
-  },
-  "Carlotte Wubben-Moy": {
-    "aerial_duels_p90": 0.0611,
-    "pass_completion_pct": 0.8763,
-    "tackle_win_pct": 0.7273,
-    "long_passes_p90": 6.6033,
-    "defensive_action_height_iqr": 31.5208,
-    "median_action_height": 30.6667
-  },
-  "Ruby Mace": {
-    "aerial_duels_p90": 0.3609,
-    "pass_completion_pct": 0.8389,
-    "tackle_win_pct": 0.6364,
-    "long_passes_p90": 2.093,
-    "defensive_action_height_iqr": 28.6458,
-    "median_action_height": 25.5
-  },
-  "Hawa Cissoko": {
-    "aerial_duels_p90": 0.1818,
-    "pass_completion_pct": 0.7714,
-    "tackle_win_pct": 0.5833,
-    "long_passes_p90": 1.1818,
-    "defensive_action_height_iqr": 21.5,
-    "median_action_height": 32.0
   },
   "Caglar Söyüncü": {
     "aerial_duels_p90": 0.0,
@@ -2934,14 +2134,6 @@
     "long_passes_p90": 6.6163,
     "defensive_action_height_iqr": 28.3333,
     "median_action_height": 36.75
-  },
-  "Jurriën David Norman Timber": {
-    "aerial_duels_p90": 0.4306,
-    "pass_completion_pct": 0.9208,
-    "tackle_win_pct": 0.5714,
-    "long_passes_p90": 3.5885,
-    "defensive_action_height_iqr": 35.9583,
-    "median_action_height": 45.2083
   },
   "Illia Zabarnyi": {
     "aerial_duels_p90": 0.25,
@@ -3238,6 +2430,14 @@
     "long_passes_p90": 6.255,
     "defensive_action_height_iqr": 34.0625,
     "median_action_height": 34.8333
+  },
+  "Lucas Perrin": {
+    "aerial_duels_p90": 0.0,
+    "pass_completion_pct": 0.8958,
+    "tackle_win_pct": 0.25,
+    "long_passes_p90": 2.2785,
+    "defensive_action_height_iqr": 0.0,
+    "median_action_height": 38.25
   },
   "Gerzino Nyamsi": {
     "aerial_duels_p90": 0.0,
@@ -4222,174 +3422,6 @@
     "long_passes_p90": 4.9955,
     "defensive_action_height_iqr": 17.6667,
     "median_action_height": 34.1667
-  },
-  "Carina Wenninger": {
-    "aerial_duels_p90": 0.6143,
-    "pass_completion_pct": 0.7639,
-    "tackle_win_pct": 0.6,
-    "long_passes_p90": 4.3003,
-    "defensive_action_height_iqr": 11.7917,
-    "median_action_height": 29.4167
-  },
-  "Julie Nelson": {
-    "aerial_duels_p90": 0.6923,
-    "pass_completion_pct": 0.625,
-    "tackle_win_pct": 0.3333,
-    "long_passes_p90": 3.8077,
-    "defensive_action_height_iqr": 14.6875,
-    "median_action_height": 23.4167
-  },
-  "Sarah Cathryn Ann Robson": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.7391,
-    "tackle_win_pct": 0.7143,
-    "long_passes_p90": 4.3333,
-    "defensive_action_height_iqr": 15.5208,
-    "median_action_height": 21.7083
-  },
-  "Elli Pikkujämsä": {
-    "aerial_duels_p90": 0.3333,
-    "pass_completion_pct": 0.76,
-    "tackle_win_pct": 0.75,
-    "long_passes_p90": 3.3333,
-    "defensive_action_height_iqr": 32.0833,
-    "median_action_height": 31.2917
-  },
-  "Natalia Kuikka": {
-    "aerial_duels_p90": 0.3333,
-    "pass_completion_pct": 0.8667,
-    "tackle_win_pct": 0.4286,
-    "long_passes_p90": 5.5,
-    "defensive_action_height_iqr": 33.625,
-    "median_action_height": 35.9167
-  },
-  "Stine Ballisager Pedersen": {
-    "aerial_duels_p90": 0.3453,
-    "pass_completion_pct": 0.8397,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 5.0639,
-    "defensive_action_height_iqr": 24.8542,
-    "median_action_height": 32.75
-  },
-  "Simone Boye-Sørensen": {
-    "aerial_duels_p90": 0.1429,
-    "pass_completion_pct": 0.8511,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 3.1429,
-    "defensive_action_height_iqr": 33.5834,
-    "median_action_height": 31.875
-  },
-  "Carole da Silva Costa": {
-    "aerial_duels_p90": 0.2242,
-    "pass_completion_pct": 0.9026,
-    "tackle_win_pct": 0.6667,
-    "long_passes_p90": 4.9315,
-    "defensive_action_height_iqr": 22.1042,
-    "median_action_height": 33.4167
-  },
-  "Diana Catarina Ribeiro Gomes": {
-    "aerial_duels_p90": 0.375,
-    "pass_completion_pct": 0.7758,
-    "tackle_win_pct": 0.5909,
-    "long_passes_p90": 4.5,
-    "defensive_action_height_iqr": 31.2917,
-    "median_action_height": 32.875
-  },
-  "Viola Calligaris": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.7769,
-    "tackle_win_pct": 0.625,
-    "long_passes_p90": 2.4444,
-    "defensive_action_height_iqr": 19.9583,
-    "median_action_height": 30.8333
-  },
-  "Gun Nathalie Björn": {
-    "aerial_duels_p90": 0.2757,
-    "pass_completion_pct": 0.8398,
-    "tackle_win_pct": 0.525,
-    "long_passes_p90": 3.4743,
-    "defensive_action_height_iqr": 27.3958,
-    "median_action_height": 42.6667
-  },
-  "Amanda Ilestedt": {
-    "aerial_duels_p90": 0.5891,
-    "pass_completion_pct": 0.8507,
-    "tackle_win_pct": 0.6522,
-    "long_passes_p90": 5.1709,
-    "defensive_action_height_iqr": 37.2083,
-    "median_action_height": 34.8333
-  },
-  "Aniek Nouwen": {
-    "aerial_duels_p90": 0.235,
-    "pass_completion_pct": 0.7941,
-    "tackle_win_pct": 0.8,
-    "long_passes_p90": 5.8747,
-    "defensive_action_height_iqr": 13.4375,
-    "median_action_height": 32.75
-  },
-  "Aïssatou Tounkara": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.9091,
-    "tackle_win_pct": 1.0,
-    "long_passes_p90": 4.3333,
-    "defensive_action_height_iqr": 4.6458,
-    "median_action_height": 29.6667
-  },
-  "Sari Kees": {
-    "aerial_duels_p90": 0.1429,
-    "pass_completion_pct": 0.8657,
-    "tackle_win_pct": 0.6111,
-    "long_passes_p90": 4.4286,
-    "defensive_action_height_iqr": 18.4166,
-    "median_action_height": 25.25
-  },
-  "Glódís Perla Viggósdóttir": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8534,
-    "tackle_win_pct": 0.8889,
-    "long_passes_p90": 7.2553,
-    "defensive_action_height_iqr": 17.9583,
-    "median_action_height": 26.0833
-  },
-  "Laura De Neve": {
-    "aerial_duels_p90": 0.7229,
-    "pass_completion_pct": 0.8395,
-    "tackle_win_pct": 0.6,
-    "long_passes_p90": 7.2289,
-    "defensive_action_height_iqr": 13.6667,
-    "median_action_height": 26.5
-  },
-  "Guðrún Arnardóttir": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.7407,
-    "tackle_win_pct": 0.4615,
-    "long_passes_p90": 4.4,
-    "defensive_action_height_iqr": 23.5833,
-    "median_action_height": 29.0833
-  },
-  "Amber Tysiak": {
-    "aerial_duels_p90": 1.2981,
-    "pass_completion_pct": 0.8605,
-    "tackle_win_pct": 0.7143,
-    "long_passes_p90": 3.0288,
-    "defensive_action_height_iqr": 15.9791,
-    "median_action_height": 25.0833
-  },
-  "Julia Stierli": {
-    "aerial_duels_p90": 0.1341,
-    "pass_completion_pct": 0.895,
-    "tackle_win_pct": 0.5714,
-    "long_passes_p90": 7.377,
-    "defensive_action_height_iqr": 8.5834,
-    "median_action_height": 30.6667
-  },
-  "Ingibjörg Sigurðardóttir": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.7797,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 4.3714,
-    "defensive_action_height_iqr": 0.0,
-    "median_action_height": 27.4167
   },
   "Mateusz Wieteska": {
     "aerial_duels_p90": 0.5,
@@ -5831,190 +4863,6 @@
     "defensive_action_height_iqr": 25.8333,
     "median_action_height": 38.375
   },
-  "Mathilde Hauge Harviken": {
-    "aerial_duels_p90": 0.1565,
-    "pass_completion_pct": 0.8742,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 3.6,
-    "defensive_action_height_iqr": 4.7916,
-    "median_action_height": 31.7917
-  },
-  "Clare Hunt": {
-    "aerial_duels_p90": 0.163,
-    "pass_completion_pct": 0.8941,
-    "tackle_win_pct": 0.5833,
-    "long_passes_p90": 5.3804,
-    "defensive_action_height_iqr": 14.8333,
-    "median_action_height": 24.8333
-  },
-  "Hali Moriah Candido Long": {
-    "aerial_duels_p90": 0.6667,
-    "pass_completion_pct": 0.7805,
-    "tackle_win_pct": 0.0,
-    "long_passes_p90": 3.6667,
-    "defensive_action_height_iqr": 16.0833,
-    "median_action_height": 29.5833
-  },
-  "Angela Beard": {
-    "aerial_duels_p90": 0.6667,
-    "pass_completion_pct": 0.7045,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 3.0,
-    "defensive_action_height_iqr": 23.0417,
-    "median_action_height": 31.7083
-  },
-  "Vanessa Brigitte Gilles": {
-    "aerial_duels_p90": 2.6667,
-    "pass_completion_pct": 0.8404,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 6.0,
-    "defensive_action_height_iqr": 21.0833,
-    "median_action_height": 37.0
-  },
-  "Oluwatosin Blessing Demehin": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.7917,
-    "tackle_win_pct": 0.7143,
-    "long_passes_p90": 3.0595,
-    "defensive_action_height_iqr": 7.5833,
-    "median_action_height": 26.25
-  },
-  "Fabiola Villalobos Morales": {
-    "aerial_duels_p90": 0.4,
-    "pass_completion_pct": 0.6957,
-    "tackle_win_pct": 0.3333,
-    "long_passes_p90": 3.6,
-    "defensive_action_height_iqr": 23.7083,
-    "median_action_height": 27.5833
-  },
-  "Mariana De Los Angeles Benavidez": {
-    "aerial_duels_p90": 0.6667,
-    "pass_completion_pct": 0.7368,
-    "tackle_win_pct": 1.0,
-    "long_passes_p90": 3.6667,
-    "defensive_action_height_iqr": 10.7708,
-    "median_action_height": 26.25
-  },
-  "Naomi Haile Girma": {
-    "aerial_duels_p90": 0.25,
-    "pass_completion_pct": 0.8382,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 9.0,
-    "defensive_action_height_iqr": 11.5833,
-    "median_action_height": 36.5833
-  },
-  "Lushomo Mweemba": {
-    "aerial_duels_p90": 0.5806,
-    "pass_completion_pct": 0.5882,
-    "tackle_win_pct": 1.0,
-    "long_passes_p90": 4.0645,
-    "defensive_action_height_iqr": 21.2084,
-    "median_action_height": 24.9167
-  },
-  "Betina Petit-Frère": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.65,
-    "tackle_win_pct": 0.75,
-    "long_passes_p90": 1.4286,
-    "defensive_action_height_iqr": 2.75,
-    "median_action_height": 27.2917
-  },
-  "Dougenie Tabita Kerbie Joseph": {
-    "aerial_duels_p90": 0.6667,
-    "pass_completion_pct": 0.6774,
-    "tackle_win_pct": 0.2,
-    "long_passes_p90": 2.0,
-    "defensive_action_height_iqr": 12.5,
-    "median_action_height": 27.9167
-  },
-  "Bongeka Gamede": {
-    "aerial_duels_p90": 0.25,
-    "pass_completion_pct": 0.7111,
-    "tackle_win_pct": 0.65,
-    "long_passes_p90": 3.0,
-    "defensive_action_height_iqr": 25.6667,
-    "median_action_height": 32.3333
-  },
-  "Maëlle Lakrar": {
-    "aerial_duels_p90": 0.3333,
-    "pass_completion_pct": 0.8175,
-    "tackle_win_pct": 0.6111,
-    "long_passes_p90": 5.0,
-    "defensive_action_height_iqr": 18.2083,
-    "median_action_height": 35.0833
-  },
-  "Cecilia Salvai": {
-    "aerial_duels_p90": 0.1625,
-    "pass_completion_pct": 0.84,
-    "tackle_win_pct": 0.7,
-    "long_passes_p90": 4.0614,
-    "defensive_action_height_iqr": 30.375,
-    "median_action_height": 31.75
-  },
-  "Yomira Tibisay Pinzón Ríos": {
-    "aerial_duels_p90": 0.3333,
-    "pass_completion_pct": 0.7353,
-    "tackle_win_pct": 0.375,
-    "long_passes_p90": 3.0,
-    "defensive_action_height_iqr": 13.625,
-    "median_action_height": 25.3333
-  },
-  "Rafaelle Leone Carvalho Souza": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8713,
-    "tackle_win_pct": 0.625,
-    "long_passes_p90": 10.3333,
-    "defensive_action_height_iqr": 35.9167,
-    "median_action_height": 40.3333
-  },
-  "Daniela Alexandra Árias Rojas": {
-    "aerial_duels_p90": 0.4,
-    "pass_completion_pct": 0.7833,
-    "tackle_win_pct": 0.2941,
-    "long_passes_p90": 2.6,
-    "defensive_action_height_iqr": 21.5208,
-    "median_action_height": 26.5833
-  },
-  "Jorelyn Andrea Daniela Carabalí Martínez": {
-    "aerial_duels_p90": 0.3939,
-    "pass_completion_pct": 0.7018,
-    "tackle_win_pct": 0.4286,
-    "long_passes_p90": 5.9081,
-    "defensive_action_height_iqr": 14.8333,
-    "median_action_height": 27.375
-  },
-  "Seo-Yeon Shim": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.7273,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 4.0,
-    "defensive_action_height_iqr": 13.75,
-    "median_action_height": 27.5833
-  },
-  "Ana Rita Silva Seiça": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.907,
-    "tackle_win_pct": 0.2,
-    "long_passes_p90": 1.5084,
-    "defensive_action_height_iqr": 20.3333,
-    "median_action_height": 40.1667
-  },
-  "Martina Lenzini": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.814,
-    "tackle_win_pct": 1.0,
-    "long_passes_p90": 2.3615,
-    "defensive_action_height_iqr": 0.0,
-    "median_action_height": 31.1667
-  },
-  "Hana Takahashi": {
-    "aerial_duels_p90": 0.6642,
-    "pass_completion_pct": 0.95,
-    "tackle_win_pct": 0.3333,
-    "long_passes_p90": 4.6494,
-    "defensive_action_height_iqr": 18.625,
-    "median_action_height": 37.6667
-  },
   "Mohamed Simakan": {
     "aerial_duels_p90": 0.0,
     "pass_completion_pct": 0.875,
@@ -6551,6 +5399,14 @@
     "defensive_action_height_iqr": 0.0,
     "median_action_height": 34.0
   },
+  "Nahuel Adolfo Ferraresi Hernández": {
+    "aerial_duels_p90": 0.4072,
+    "pass_completion_pct": 0.8644,
+    "tackle_win_pct": 0.6,
+    "long_passes_p90": 7.3303,
+    "defensive_action_height_iqr": 8.4583,
+    "median_action_height": 30.7083
+  },
   "Yordan Hernando Osorio Paredes": {
     "aerial_duels_p90": 0.2493,
     "pass_completion_pct": 0.9459,
@@ -6654,70 +5510,6 @@
     "long_passes_p90": 3.3129,
     "defensive_action_height_iqr": 0.0,
     "median_action_height": 35.5833
-  },
-  "Eva Nyström": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.9306,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 7.3333,
-    "defensive_action_height_iqr": 0.0,
-    "median_action_height": 34.1667
-  },
-  "Rebecca Knaak": {
-    "aerial_duels_p90": 0.2459,
-    "pass_completion_pct": 0.8765,
-    "tackle_win_pct": 0.75,
-    "long_passes_p90": 8.8525,
-    "defensive_action_height_iqr": 17.375,
-    "median_action_height": 39.9167
-  },
-  "Janina Minge": {
-    "aerial_duels_p90": 0.2,
-    "pass_completion_pct": 0.9214,
-    "tackle_win_pct": 0.8462,
-    "long_passes_p90": 8.8,
-    "defensive_action_height_iqr": 36.8542,
-    "median_action_height": 36.1667
-  },
-  "Emilia Urszula Szymczak": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8125,
-    "tackle_win_pct": 0.5714,
-    "long_passes_p90": 5.0,
-    "defensive_action_height_iqr": 9.5417,
-    "median_action_height": 22.3333
-  },
-  "Oliwia Woś": {
-    "aerial_duels_p90": 0.3333,
-    "pass_completion_pct": 0.7679,
-    "tackle_win_pct": 0.3333,
-    "long_passes_p90": 4.0,
-    "defensive_action_height_iqr": 0.0,
-    "median_action_height": 23.25
-  },
-  "Emma Skou Færge": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8143,
-    "tackle_win_pct": 0.3333,
-    "long_passes_p90": 4.3333,
-    "defensive_action_height_iqr": 23.0833,
-    "median_action_height": 34.5
-  },
-  "Alice Sombath": {
-    "aerial_duels_p90": 0.2586,
-    "pass_completion_pct": 0.9157,
-    "tackle_win_pct": 0.0,
-    "long_passes_p90": 4.9138,
-    "defensive_action_height_iqr": 10.5,
-    "median_action_height": 35.6667
-  },
-  "Thiniba Samoura": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8654,
-    "tackle_win_pct": 0.5,
-    "long_passes_p90": 6.5,
-    "defensive_action_height_iqr": 14.7917,
-    "median_action_height": 37.3333
   },
   "José Romero Urtasun": {
     "aerial_duels_p90": 0.0,
@@ -6983,14 +5775,6 @@
     "defensive_action_height_iqr": 7.3334,
     "median_action_height": 28.25
   },
-  "Raúl Rodríguez Navarro": {
-    "aerial_duels_p90": 0.0,
-    "pass_completion_pct": 0.8136,
-    "tackle_win_pct": 0.6,
-    "long_passes_p90": 4.25,
-    "defensive_action_height_iqr": 27.0,
-    "median_action_height": 29.9167
-  },
   "Whitney Church": {
     "aerial_duels_p90": 0.2281,
     "pass_completion_pct": 0.7692,
@@ -6999,6 +5783,22 @@
     "defensive_action_height_iqr": 31.6667,
     "median_action_height": 30.0
   },
+  "Abby Erceg": {
+    "aerial_duels_p90": 0.2308,
+    "pass_completion_pct": 0.8621,
+    "tackle_win_pct": 0.7778,
+    "long_passes_p90": 8.9231,
+    "defensive_action_height_iqr": 17.5,
+    "median_action_height": 30.8333
+  },
+  "Estelle Johnson": {
+    "aerial_duels_p90": 0.125,
+    "pass_completion_pct": 0.7629,
+    "tackle_win_pct": 0.8125,
+    "long_passes_p90": 5.625,
+    "defensive_action_height_iqr": 31.6667,
+    "median_action_height": 27.5
+  },
   "Megan Montefusco": {
     "aerial_duels_p90": 0.1667,
     "pass_completion_pct": 0.7976,
@@ -7006,6 +5806,14 @@
     "long_passes_p90": 9.8333,
     "defensive_action_height_iqr": 22.5,
     "median_action_height": 24.1667
+  },
+  "Emily Ann Sonnett": {
+    "aerial_duels_p90": 0.2,
+    "pass_completion_pct": 0.7805,
+    "tackle_win_pct": 0.6667,
+    "long_passes_p90": 4.6,
+    "defensive_action_height_iqr": 17.0833,
+    "median_action_height": 26.6667
   },
   "Kelli Hubly": {
     "aerial_duels_p90": 0.0,
@@ -7047,6 +5855,22 @@
     "defensive_action_height_iqr": 15.8333,
     "median_action_height": 27.5
   },
+  "Rachel Corsie": {
+    "aerial_duels_p90": 0.2222,
+    "pass_completion_pct": 0.8502,
+    "tackle_win_pct": 0.5,
+    "long_passes_p90": 7.1111,
+    "defensive_action_height_iqr": 12.7084,
+    "median_action_height": 28.3333
+  },
+  "Rebecca Elizabeth Sauerbrunn": {
+    "aerial_duels_p90": 0.0,
+    "pass_completion_pct": 0.8919,
+    "tackle_win_pct": 0.6667,
+    "long_passes_p90": 4.6,
+    "defensive_action_height_iqr": 20.0,
+    "median_action_height": 28.3333
+  },
   "Quinn Quinn": {
     "aerial_duels_p90": 0.5,
     "pass_completion_pct": 0.6275,
@@ -7071,6 +5895,14 @@
     "defensive_action_height_iqr": 23.125,
     "median_action_height": 29.1667
   },
+  "Shelina Laura Zadorsky": {
+    "aerial_duels_p90": 0.0,
+    "pass_completion_pct": 0.7871,
+    "tackle_win_pct": 0.6,
+    "long_passes_p90": 4.4286,
+    "defensive_action_height_iqr": 17.5,
+    "median_action_height": 29.5833
+  },
   "Lauren Barnes": {
     "aerial_duels_p90": 0.1667,
     "pass_completion_pct": 0.7236,
@@ -7086,6 +5918,14 @@
     "long_passes_p90": 4.1667,
     "defensive_action_height_iqr": 19.7917,
     "median_action_height": 28.3333
+  },
+  "Julie Beth Ertz": {
+    "aerial_duels_p90": 0.0,
+    "pass_completion_pct": 0.7258,
+    "tackle_win_pct": 0.5833,
+    "long_passes_p90": 5.8,
+    "defensive_action_height_iqr": 22.0833,
+    "median_action_height": 34.1667
   },
   "Emily Menges": {
     "aerial_duels_p90": 0.0,
@@ -7174,6 +6014,14 @@
     "long_passes_p90": 7.0,
     "defensive_action_height_iqr": 10.4167,
     "median_action_height": 33.3333
+  },
+  "Román Aureliano Torres Morcillo": {
+    "aerial_duels_p90": 0.4128,
+    "pass_completion_pct": 0.7222,
+    "tackle_win_pct": 0.0,
+    "long_passes_p90": 4.9541,
+    "defensive_action_height_iqr": 0.0,
+    "median_action_height": 23.3333
   },
   "Andreas Granqvist": {
     "aerial_duels_p90": 0.0,

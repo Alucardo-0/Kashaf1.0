@@ -669,16 +669,6 @@
     "progressive_pass_pct": 0.2291,
     "long_passes_p90": 6.7946
   },
-  "Andrés Iniesta Luján": {
-    "defensive_actions_p90": 1.4981,
-    "interceptions_p90": 0.3497,
-    "progressive_carries_p90": 2.7908,
-    "pass_completion_pct": 0.8994,
-    "tackle_win_pct": 0.7243,
-    "dribble_success_pct": 0.69,
-    "progressive_pass_pct": 0.1639,
-    "long_passes_p90": 4.3499
-  },
   "Paul Scholes": {
     "defensive_actions_p90": 0.75,
     "interceptions_p90": 0.0,
@@ -768,16 +758,6 @@
     "dribble_success_pct": 0.5,
     "progressive_pass_pct": 0.1911,
     "long_passes_p90": 3.941
-  },
-  "Paul Pogba": {
-    "defensive_actions_p90": 2.1262,
-    "interceptions_p90": 0.4603,
-    "progressive_carries_p90": 3.0248,
-    "pass_completion_pct": 0.8555,
-    "tackle_win_pct": 0.6061,
-    "dribble_success_pct": 0.5838,
-    "progressive_pass_pct": 0.1608,
-    "long_passes_p90": 5.0852
   },
   "Claudio Marchisio": {
     "defensive_actions_p90": 2.7352,
@@ -869,586 +849,6 @@
     "progressive_pass_pct": 0.1626,
     "long_passes_p90": 4.6872
   },
-  "Jill Scott": {
-    "defensive_actions_p90": 2.2854,
-    "interceptions_p90": 0.4828,
-    "progressive_carries_p90": 1.529,
-    "pass_completion_pct": 0.8492,
-    "tackle_win_pct": 0.698,
-    "dribble_success_pct": 0.6635,
-    "progressive_pass_pct": 0.1303,
-    "long_passes_p90": 2.5429
-  },
-  "Sophie Louise Ingle": {
-    "defensive_actions_p90": 1.3849,
-    "interceptions_p90": 0.4328,
-    "progressive_carries_p90": 0.4544,
-    "pass_completion_pct": 0.8543,
-    "tackle_win_pct": 0.6866,
-    "dribble_success_pct": 0.8571,
-    "progressive_pass_pct": 0.2108,
-    "long_passes_p90": 5.3667
-  },
-  "Keira Walsh": {
-    "defensive_actions_p90": 2.0885,
-    "interceptions_p90": 0.5352,
-    "progressive_carries_p90": 0.9398,
-    "pass_completion_pct": 0.8678,
-    "tackle_win_pct": 0.7105,
-    "dribble_success_pct": 0.6364,
-    "progressive_pass_pct": 0.1774,
-    "long_passes_p90": 6.7614
-  },
-  "So-Yun Ji": {
-    "defensive_actions_p90": 1.9175,
-    "interceptions_p90": 0.3633,
-    "progressive_carries_p90": 2.2,
-    "pass_completion_pct": 0.8593,
-    "tackle_win_pct": 0.75,
-    "dribble_success_pct": 0.6565,
-    "progressive_pass_pct": 0.1578,
-    "long_passes_p90": 4.6221
-  },
-  "Drew Spence": {
-    "defensive_actions_p90": 1.3881,
-    "interceptions_p90": 0.4291,
-    "progressive_carries_p90": 0.5805,
-    "pass_completion_pct": 0.8378,
-    "tackle_win_pct": 0.7414,
-    "dribble_success_pct": 0.6216,
-    "progressive_pass_pct": 0.1699,
-    "long_passes_p90": 1.7919
-  },
-  "Danielle Buet": {
-    "defensive_actions_p90": 1.7799,
-    "interceptions_p90": 0.5933,
-    "progressive_carries_p90": 0.502,
-    "pass_completion_pct": 0.7727,
-    "tackle_win_pct": 0.7079,
-    "dribble_success_pct": 0.6923,
-    "progressive_pass_pct": 0.1598,
-    "long_passes_p90": 3.6283
-  },
-  "Chloe Peplow": {
-    "defensive_actions_p90": 2.2012,
-    "interceptions_p90": 0.6746,
-    "progressive_carries_p90": 0.7101,
-    "pass_completion_pct": 0.8714,
-    "tackle_win_pct": 0.7143,
-    "dribble_success_pct": 0.8235,
-    "progressive_pass_pct": 0.1411,
-    "long_passes_p90": 2.7337
-  },
-  "Julie Biesmans": {
-    "defensive_actions_p90": 2.1233,
-    "interceptions_p90": 0.6066,
-    "progressive_carries_p90": 0.4333,
-    "pass_completion_pct": 0.7794,
-    "tackle_win_pct": 0.6833,
-    "dribble_success_pct": 0.8095,
-    "progressive_pass_pct": 0.1529,
-    "long_passes_p90": 1.6033
-  },
-  "Lucy Hope": {
-    "defensive_actions_p90": 1.6114,
-    "interceptions_p90": 0.5801,
-    "progressive_carries_p90": 0.9238,
-    "pass_completion_pct": 0.7309,
-    "tackle_win_pct": 0.7,
-    "dribble_success_pct": 0.5294,
-    "progressive_pass_pct": 0.1498,
-    "long_passes_p90": 2.1485
-  },
-  "Carla Humphrey": {
-    "defensive_actions_p90": 1.7681,
-    "interceptions_p90": 0.6469,
-    "progressive_carries_p90": 0.9703,
-    "pass_completion_pct": 0.75,
-    "tackle_win_pct": 0.5889,
-    "dribble_success_pct": 0.5579,
-    "progressive_pass_pct": 0.1283,
-    "long_passes_p90": 2.5012
-  },
-  "Jodie Brett": {
-    "defensive_actions_p90": 1.0588,
-    "interceptions_p90": 0.2353,
-    "progressive_carries_p90": 0.3529,
-    "pass_completion_pct": 0.75,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.0978,
-    "long_passes_p90": 0.9412
-  },
-  "Fara Williams": {
-    "defensive_actions_p90": 1.0017,
-    "interceptions_p90": 0.1066,
-    "progressive_carries_p90": 0.7246,
-    "pass_completion_pct": 0.73,
-    "tackle_win_pct": 0.6316,
-    "dribble_success_pct": 0.6125,
-    "progressive_pass_pct": 0.1407,
-    "long_passes_p90": 3.1968
-  },
-  "Emily Syme": {
-    "defensive_actions_p90": 0.6735,
-    "interceptions_p90": 0.1418,
-    "progressive_carries_p90": 0.7089,
-    "pass_completion_pct": 0.7377,
-    "tackle_win_pct": 0.7647,
-    "dribble_success_pct": 0.6111,
-    "progressive_pass_pct": 0.1721,
-    "long_passes_p90": 0.6026
-  },
-  "Remi Allen": {
-    "defensive_actions_p90": 3.1236,
-    "interceptions_p90": 0.5835,
-    "progressive_carries_p90": 0.6178,
-    "pass_completion_pct": 0.8301,
-    "tackle_win_pct": 0.6731,
-    "dribble_success_pct": 0.5714,
-    "progressive_pass_pct": 0.1811,
-    "long_passes_p90": 2.2311
-  },
-  "Bonnie Horwood": {
-    "defensive_actions_p90": 2.5625,
-    "interceptions_p90": 0.8125,
-    "progressive_carries_p90": 0.1875,
-    "pass_completion_pct": 0.7388,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.7273,
-    "progressive_pass_pct": 0.1567,
-    "long_passes_p90": 2.125
-  },
-  "Georgia Evans": {
-    "defensive_actions_p90": 1.7041,
-    "interceptions_p90": 0.4418,
-    "progressive_carries_p90": 0.1893,
-    "pass_completion_pct": 0.7475,
-    "tackle_win_pct": 0.5517,
-    "dribble_success_pct": 0.5385,
-    "progressive_pass_pct": 0.1436,
-    "long_passes_p90": 2.0827
-  },
-  "Rachel Furness": {
-    "defensive_actions_p90": 2.0198,
-    "interceptions_p90": 0.4752,
-    "progressive_carries_p90": 1.2475,
-    "pass_completion_pct": 0.7606,
-    "tackle_win_pct": 0.5455,
-    "dribble_success_pct": 0.7167,
-    "progressive_pass_pct": 0.1674,
-    "long_passes_p90": 3.3861
-  },
-  "Lia Wälti": {
-    "defensive_actions_p90": 3.4255,
-    "interceptions_p90": 0.6932,
-    "progressive_carries_p90": 1.0195,
-    "pass_completion_pct": 0.8742,
-    "tackle_win_pct": 0.6196,
-    "dribble_success_pct": 0.7826,
-    "progressive_pass_pct": 0.1836,
-    "long_passes_p90": 5.9334
-  },
-  "Danielle van de Donk": {
-    "defensive_actions_p90": 2.0585,
-    "interceptions_p90": 0.3935,
-    "progressive_carries_p90": 1.5136,
-    "pass_completion_pct": 0.8116,
-    "tackle_win_pct": 0.6216,
-    "dribble_success_pct": 0.619,
-    "progressive_pass_pct": 0.1508,
-    "long_passes_p90": 2.6337
-  },
-  "Christie Murray": {
-    "defensive_actions_p90": 2.7909,
-    "interceptions_p90": 0.6911,
-    "progressive_carries_p90": 0.5316,
-    "pass_completion_pct": 0.6606,
-    "tackle_win_pct": 0.6952,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.2165,
-    "long_passes_p90": 3.0567
-  },
-  "Kim Little": {
-    "defensive_actions_p90": 1.6222,
-    "interceptions_p90": 0.4113,
-    "progressive_carries_p90": 1.4851,
-    "pass_completion_pct": 0.8908,
-    "tackle_win_pct": 0.7465,
-    "dribble_success_pct": 0.8235,
-    "progressive_pass_pct": 0.1485,
-    "long_passes_p90": 3.1302
-  },
-  "Laura Coombs": {
-    "defensive_actions_p90": 1.6905,
-    "interceptions_p90": 0.5098,
-    "progressive_carries_p90": 0.7782,
-    "pass_completion_pct": 0.8273,
-    "tackle_win_pct": 0.6866,
-    "dribble_success_pct": 0.6471,
-    "progressive_pass_pct": 0.157,
-    "long_passes_p90": 3.0859
-  },
-  "Hayley Ladd": {
-    "defensive_actions_p90": 2.4059,
-    "interceptions_p90": 0.5413,
-    "progressive_carries_p90": 0.6215,
-    "pass_completion_pct": 0.8267,
-    "tackle_win_pct": 0.7407,
-    "dribble_success_pct": 0.6949,
-    "progressive_pass_pct": 0.1625,
-    "long_passes_p90": 3.288
-  },
-  "Marisa Ewers": {
-    "defensive_actions_p90": 2.6689,
-    "interceptions_p90": 1.2251,
-    "progressive_carries_p90": 0.525,
-    "pass_completion_pct": 0.7833,
-    "tackle_win_pct": 0.6923,
-    "dribble_success_pct": 0.4444,
-    "progressive_pass_pct": 0.1361,
-    "long_passes_p90": 3.4127
-  },
-  "Angharad James": {
-    "defensive_actions_p90": 3.3286,
-    "interceptions_p90": 1.0312,
-    "progressive_carries_p90": 0.7417,
-    "pass_completion_pct": 0.7659,
-    "tackle_win_pct": 0.6358,
-    "dribble_success_pct": 0.65,
-    "progressive_pass_pct": 0.1762,
-    "long_passes_p90": 4.1065
-  },
-  "Lucy Staniforth": {
-    "defensive_actions_p90": 1.427,
-    "interceptions_p90": 0.5321,
-    "progressive_carries_p90": 1.1126,
-    "pass_completion_pct": 0.7927,
-    "tackle_win_pct": 0.7234,
-    "dribble_success_pct": 0.6731,
-    "progressive_pass_pct": 0.16,
-    "long_passes_p90": 3.0234
-  },
-  "Abbey-Leigh Stringer": {
-    "defensive_actions_p90": 1.6945,
-    "interceptions_p90": 0.3826,
-    "progressive_carries_p90": 0.328,
-    "pass_completion_pct": 0.8271,
-    "tackle_win_pct": 0.6548,
-    "dribble_success_pct": 0.5814,
-    "progressive_pass_pct": 0.1109,
-    "long_passes_p90": 3.225
-  },
-  "Dominique Bruinenberg": {
-    "defensive_actions_p90": 1.7172,
-    "interceptions_p90": 0.5051,
-    "progressive_carries_p90": 0.303,
-    "pass_completion_pct": 0.7178,
-    "tackle_win_pct": 0.6957,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.1779,
-    "long_passes_p90": 2.4242
-  },
-  "Chloe Arthur": {
-    "defensive_actions_p90": 2.7444,
-    "interceptions_p90": 0.697,
-    "progressive_carries_p90": 1.3069,
-    "pass_completion_pct": 0.7782,
-    "tackle_win_pct": 0.6948,
-    "dribble_success_pct": 0.7467,
-    "progressive_pass_pct": 0.1621,
-    "long_passes_p90": 3.1365
-  },
-  "Brianna Visalli": {
-    "defensive_actions_p90": 2.0664,
-    "interceptions_p90": 0.3321,
-    "progressive_carries_p90": 1.476,
-    "pass_completion_pct": 0.7644,
-    "tackle_win_pct": 0.7541,
-    "dribble_success_pct": 0.7213,
-    "progressive_pass_pct": 0.1534,
-    "long_passes_p90": 1.476
-  },
-  "Julia Simic": {
-    "defensive_actions_p90": 1.445,
-    "interceptions_p90": 0.2752,
-    "progressive_carries_p90": 1.6514,
-    "pass_completion_pct": 0.7986,
-    "tackle_win_pct": 0.68,
-    "dribble_success_pct": 0.7143,
-    "progressive_pass_pct": 0.223,
-    "long_passes_p90": 3.0275
-  },
-  "Lucienne Reichardt": {
-    "defensive_actions_p90": 1.7466,
-    "interceptions_p90": 0.411,
-    "progressive_carries_p90": 0.411,
-    "pass_completion_pct": 0.8,
-    "tackle_win_pct": 0.5909,
-    "dribble_success_pct": 0.6,
-    "progressive_pass_pct": 0.1867,
-    "long_passes_p90": 3.0822
-  },
-  "Kate Longhurst": {
-    "defensive_actions_p90": 1.4575,
-    "interceptions_p90": 0.3858,
-    "progressive_carries_p90": 0.9645,
-    "pass_completion_pct": 0.7577,
-    "tackle_win_pct": 0.6849,
-    "dribble_success_pct": 0.6438,
-    "progressive_pass_pct": 0.1459,
-    "long_passes_p90": 3.408
-  },
-  "Ria Percival": {
-    "defensive_actions_p90": 2.8193,
-    "interceptions_p90": 0.6506,
-    "progressive_carries_p90": 1.0055,
-    "pass_completion_pct": 0.7466,
-    "tackle_win_pct": 0.6788,
-    "dribble_success_pct": 0.5079,
-    "progressive_pass_pct": 0.1761,
-    "long_passes_p90": 3.1939
-  },
-  "Amy Rodgers": {
-    "defensive_actions_p90": 2.1499,
-    "interceptions_p90": 0.3707,
-    "progressive_carries_p90": 0.5931,
-    "pass_completion_pct": 0.7722,
-    "tackle_win_pct": 0.7778,
-    "dribble_success_pct": 0.6923,
-    "progressive_pass_pct": 0.1456,
-    "long_passes_p90": 2.1499
-  },
-  "Rhiannon Roberts": {
-    "defensive_actions_p90": 2.1451,
-    "interceptions_p90": 0.4197,
-    "progressive_carries_p90": 0.5596,
-    "pass_completion_pct": 0.7057,
-    "tackle_win_pct": 0.6207,
-    "dribble_success_pct": 0.6,
-    "progressive_pass_pct": 0.1806,
-    "long_passes_p90": 4.0104
-  },
-  "Vyan Sampson": {
-    "defensive_actions_p90": 1.2593,
-    "interceptions_p90": 0.6667,
-    "progressive_carries_p90": 0.2222,
-    "pass_completion_pct": 0.8365,
-    "tackle_win_pct": 0.8,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.2264,
-    "long_passes_p90": 1.4815
-  },
-  "Jade Moore": {
-    "defensive_actions_p90": 2.1609,
-    "interceptions_p90": 0.4682,
-    "progressive_carries_p90": 0.9364,
-    "pass_completion_pct": 0.723,
-    "tackle_win_pct": 0.7231,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1599,
-    "long_passes_p90": 3.7455
-  },
-  "Connie Scofield": {
-    "defensive_actions_p90": 1.1679,
-    "interceptions_p90": 0.3767,
-    "progressive_carries_p90": 0.4144,
-    "pass_completion_pct": 0.7659,
-    "tackle_win_pct": 0.5556,
-    "dribble_success_pct": 0.7037,
-    "progressive_pass_pct": 0.0873,
-    "long_passes_p90": 0.7158
-  },
-  "Megan Connolly": {
-    "defensive_actions_p90": 2.417,
-    "interceptions_p90": 1.1131,
-    "progressive_carries_p90": 0.7633,
-    "pass_completion_pct": 0.7702,
-    "tackle_win_pct": 0.5974,
-    "dribble_success_pct": 0.6333,
-    "progressive_pass_pct": 0.1835,
-    "long_passes_p90": 2.417
-  },
-  "Jade Bailey": {
-    "defensive_actions_p90": 2.1699,
-    "interceptions_p90": 0.3617,
-    "progressive_carries_p90": 0.2067,
-    "pass_completion_pct": 0.8385,
-    "tackle_win_pct": 0.7037,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.1615,
-    "long_passes_p90": 2.0149
-  },
-  "Ruby Grant": {
-    "defensive_actions_p90": 0.1385,
-    "interceptions_p90": 0.1385,
-    "progressive_carries_p90": 0.1385,
-    "pass_completion_pct": 0.6667,
-    "tackle_win_pct": 0.5,
-    "dribble_success_pct": 0.4286,
-    "progressive_pass_pct": 0.1282,
-    "long_passes_p90": 0.9692
-  },
-  "So-Hyun Cho": {
-    "defensive_actions_p90": 1.8446,
-    "interceptions_p90": 0.5058,
-    "progressive_carries_p90": 0.5653,
-    "pass_completion_pct": 0.7852,
-    "tackle_win_pct": 0.6761,
-    "dribble_success_pct": 0.3704,
-    "progressive_pass_pct": 0.1795,
-    "long_passes_p90": 2.3207
-  },
-  "Emily Simpkins": {
-    "defensive_actions_p90": 0.9609,
-    "interceptions_p90": 0.2402,
-    "progressive_carries_p90": 0.6806,
-    "pass_completion_pct": 0.8009,
-    "tackle_win_pct": 0.7,
-    "dribble_success_pct": 0.7143,
-    "progressive_pass_pct": 0.1549,
-    "long_passes_p90": 0.6806
-  },
-  "Olivia Chance": {
-    "defensive_actions_p90": 1.0819,
-    "interceptions_p90": 0.4637,
-    "progressive_carries_p90": 1.1334,
-    "pass_completion_pct": 0.7832,
-    "tackle_win_pct": 0.8667,
-    "dribble_success_pct": 0.8571,
-    "progressive_pass_pct": 0.1416,
-    "long_passes_p90": 2.4728
-  },
-  "Molly Pike": {
-    "defensive_actions_p90": 1.605,
-    "interceptions_p90": 0.4414,
-    "progressive_carries_p90": 0.8426,
-    "pass_completion_pct": 0.6697,
-    "tackle_win_pct": 0.6857,
-    "dribble_success_pct": 0.5652,
-    "progressive_pass_pct": 0.1946,
-    "long_passes_p90": 1.0031
-  },
-  "Maéva Clemaron": {
-    "defensive_actions_p90": 2.4913,
-    "interceptions_p90": 0.8824,
-    "progressive_carries_p90": 0.519,
-    "pass_completion_pct": 0.8077,
-    "tackle_win_pct": 0.6444,
-    "dribble_success_pct": 0.5238,
-    "progressive_pass_pct": 0.1648,
-    "long_passes_p90": 2.8547
-  },
-  "Lucy Whipp": {
-    "defensive_actions_p90": 2.0526,
-    "interceptions_p90": 0.5053,
-    "progressive_carries_p90": 0.4421,
-    "pass_completion_pct": 0.7805,
-    "tackle_win_pct": 0.5938,
-    "dribble_success_pct": 0.6897,
-    "progressive_pass_pct": 0.1084,
-    "long_passes_p90": 1.6105
-  },
-  "Léa Le Garrec": {
-    "defensive_actions_p90": 2.1133,
-    "interceptions_p90": 0.6837,
-    "progressive_carries_p90": 1.3052,
-    "pass_completion_pct": 0.6704,
-    "tackle_win_pct": 0.85,
-    "dribble_success_pct": 0.4833,
-    "progressive_pass_pct": 0.1536,
-    "long_passes_p90": 3.9157
-  },
-  "Josie Green": {
-    "defensive_actions_p90": 2.244,
-    "interceptions_p90": 0.5178,
-    "progressive_carries_p90": 0.5178,
-    "pass_completion_pct": 0.7626,
-    "tackle_win_pct": 0.6026,
-    "dribble_success_pct": 0.5263,
-    "progressive_pass_pct": 0.1027,
-    "long_passes_p90": 2.244
-  },
-  "Jill Roord": {
-    "defensive_actions_p90": 1.531,
-    "interceptions_p90": 0.2483,
-    "progressive_carries_p90": 0.6621,
-    "pass_completion_pct": 0.914,
-    "tackle_win_pct": 0.6932,
-    "dribble_success_pct": 0.5844,
-    "progressive_pass_pct": 0.1024,
-    "long_passes_p90": 2.1931
-  },
-  "Tessel Middag": {
-    "defensive_actions_p90": 1.4016,
-    "interceptions_p90": 0.6007,
-    "progressive_carries_p90": 0.2002,
-    "pass_completion_pct": 0.7867,
-    "tackle_win_pct": 0.8095,
-    "dribble_success_pct": 0.2857,
-    "progressive_pass_pct": 0.1533,
-    "long_passes_p90": 1.802
-  },
-  "Kenza Dali": {
-    "defensive_actions_p90": 1.0857,
-    "interceptions_p90": 0.2505,
-    "progressive_carries_p90": 1.9487,
-    "pass_completion_pct": 0.7567,
-    "tackle_win_pct": 0.6286,
-    "dribble_success_pct": 0.5849,
-    "progressive_pass_pct": 0.1583,
-    "long_passes_p90": 2.3662
-  },
-  "Ruesha Littlejohn": {
-    "defensive_actions_p90": 1.4405,
-    "interceptions_p90": 0.2744,
-    "progressive_carries_p90": 0.343,
-    "pass_completion_pct": 0.7329,
-    "tackle_win_pct": 0.5,
-    "dribble_success_pct": 0.4737,
-    "progressive_pass_pct": 0.0932,
-    "long_passes_p90": 2.2637
-  },
-  "Chloe Logarzo": {
-    "defensive_actions_p90": 1.558,
-    "interceptions_p90": 0.3666,
-    "progressive_carries_p90": 0.6415,
-    "pass_completion_pct": 0.8182,
-    "tackle_win_pct": 0.5882,
-    "dribble_success_pct": 0.6923,
-    "progressive_pass_pct": 0.1259,
-    "long_passes_p90": 1.2831
-  },
-  "Katie Zelem": {
-    "defensive_actions_p90": 1.5655,
-    "interceptions_p90": 0.4473,
-    "progressive_carries_p90": 0.3514,
-    "pass_completion_pct": 0.8351,
-    "tackle_win_pct": 0.7302,
-    "dribble_success_pct": 0.8462,
-    "progressive_pass_pct": 0.1556,
-    "long_passes_p90": 5.8786
-  },
-  "Jackie Groenen": {
-    "defensive_actions_p90": 2.1462,
-    "interceptions_p90": 0.4454,
-    "progressive_carries_p90": 0.9111,
-    "pass_completion_pct": 0.814,
-    "tackle_win_pct": 0.7391,
-    "dribble_success_pct": 0.65,
-    "progressive_pass_pct": 0.1511,
-    "long_passes_p90": 3.1586
-  },
-  "Bamidele Alli": {
-    "defensive_actions_p90": 2.1409,
-    "interceptions_p90": 0.5283,
-    "progressive_carries_p90": 1.8628,
-    "pass_completion_pct": 0.7783,
-    "tackle_win_pct": 0.6571,
-    "dribble_success_pct": 0.3839,
-    "progressive_pass_pct": 0.1478,
-    "long_passes_p90": 1.6126
-  },
   "Eric Dier": {
     "defensive_actions_p90": 2.0329,
     "interceptions_p90": 0.5082,
@@ -1459,546 +859,6 @@
     "progressive_pass_pct": 0.1929,
     "long_passes_p90": 4.574
   },
-  "Amandine Henry": {
-    "defensive_actions_p90": 2.4,
-    "interceptions_p90": 0.8,
-    "progressive_carries_p90": 3.2,
-    "pass_completion_pct": 0.8106,
-    "tackle_win_pct": 0.6923,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.197,
-    "long_passes_p90": 5.2
-  },
-  "Elise Bussaglia": {
-    "defensive_actions_p90": 1.75,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 1.0,
-    "pass_completion_pct": 0.8208,
-    "tackle_win_pct": 0.7,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.1792,
-    "long_passes_p90": 5.5
-  },
-  "Onema Grace Geyoro": {
-    "defensive_actions_p90": 2.0976,
-    "interceptions_p90": 0.5244,
-    "progressive_carries_p90": 1.2454,
-    "pass_completion_pct": 0.8893,
-    "tackle_win_pct": 0.6897,
-    "dribble_success_pct": 0.3529,
-    "progressive_pass_pct": 0.1626,
-    "long_passes_p90": 1.4421
-  },
-  "Vilde Bøe Risa": {
-    "defensive_actions_p90": 2.1631,
-    "interceptions_p90": 0.618,
-    "progressive_carries_p90": 1.2361,
-    "pass_completion_pct": 0.8548,
-    "tackle_win_pct": 0.5238,
-    "dribble_success_pct": 0.5455,
-    "progressive_pass_pct": 0.2013,
-    "long_passes_p90": 4.0172
-  },
-  "Halimatu Ibrahim Ayinde": {
-    "defensive_actions_p90": 2.9767,
-    "interceptions_p90": 0.7004,
-    "progressive_carries_p90": 1.0506,
-    "pass_completion_pct": 0.7708,
-    "tackle_win_pct": 0.8125,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1979,
-    "long_passes_p90": 4.0272
-  },
-  "Ingrid Syrstad Engen": {
-    "defensive_actions_p90": 2.6667,
-    "interceptions_p90": 1.2,
-    "progressive_carries_p90": 0.4667,
-    "pass_completion_pct": 0.8415,
-    "tackle_win_pct": 0.6522,
-    "dribble_success_pct": 0.5556,
-    "progressive_pass_pct": 0.2161,
-    "long_passes_p90": 1.8667
-  },
-  "Frida Maanum": {
-    "defensive_actions_p90": 1.4394,
-    "interceptions_p90": 0.4545,
-    "progressive_carries_p90": 0.6818,
-    "pass_completion_pct": 0.8081,
-    "tackle_win_pct": 0.6471,
-    "dribble_success_pct": 0.2667,
-    "progressive_pass_pct": 0.1515,
-    "long_passes_p90": 1.9697
-  },
-  "Rui Zhang": {
-    "defensive_actions_p90": 2.1667,
-    "interceptions_p90": 0.3333,
-    "progressive_carries_p90": 1.0,
-    "pass_completion_pct": 0.816,
-    "tackle_win_pct": 0.4667,
-    "dribble_success_pct": 0.5556,
-    "progressive_pass_pct": 0.1472,
-    "long_passes_p90": 3.0
-  },
-  "Melanie Leupolz": {
-    "defensive_actions_p90": 2.1249,
-    "interceptions_p90": 0.6139,
-    "progressive_carries_p90": 0.9916,
-    "pass_completion_pct": 0.8545,
-    "tackle_win_pct": 0.6441,
-    "dribble_success_pct": 0.6522,
-    "progressive_pass_pct": 0.1497,
-    "long_passes_p90": 3.6831
-  },
-  "Yao Wei": {
-    "defensive_actions_p90": 0.6154,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.0,
-    "pass_completion_pct": 0.8333,
-    "tackle_win_pct": 0.6,
-    "dribble_success_pct": 0.3333,
-    "progressive_pass_pct": 0.2444,
-    "long_passes_p90": 2.6154
-  },
-  "Sara Däbritz": {
-    "defensive_actions_p90": 1.3265,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 1.7907,
-    "pass_completion_pct": 0.8635,
-    "tackle_win_pct": 0.5909,
-    "dribble_success_pct": 0.6207,
-    "progressive_pass_pct": 0.1807,
-    "long_passes_p90": 1.9897
-  },
-  "Lena Oberdorf": {
-    "defensive_actions_p90": 3.5737,
-    "interceptions_p90": 1.4107,
-    "progressive_carries_p90": 0.8464,
-    "pass_completion_pct": 0.7653,
-    "tackle_win_pct": 0.6341,
-    "dribble_success_pct": 0.6,
-    "progressive_pass_pct": 0.1837,
-    "long_passes_p90": 2.8213
-  },
-  "Kholosa Biyana": {
-    "defensive_actions_p90": 2.1635,
-    "interceptions_p90": 0.2163,
-    "progressive_carries_p90": 0.4327,
-    "pass_completion_pct": 0.7273,
-    "tackle_win_pct": 0.9167,
-    "dribble_success_pct": 0.7,
-    "progressive_pass_pct": 0.2222,
-    "long_passes_p90": 5.1923
-  },
-  "Linda Maserame Motlhalo": {
-    "defensive_actions_p90": 2.1165,
-    "interceptions_p90": 0.8063,
-    "progressive_carries_p90": 1.2094,
-    "pass_completion_pct": 0.8187,
-    "tackle_win_pct": 0.75,
-    "dribble_success_pct": 0.6429,
-    "progressive_pass_pct": 0.1228,
-    "long_passes_p90": 3.2251
-  },
-  "Virginia Torrecilla Reyes": {
-    "defensive_actions_p90": 2.8391,
-    "interceptions_p90": 0.8517,
-    "progressive_carries_p90": 1.1356,
-    "pass_completion_pct": 0.7833,
-    "tackle_win_pct": 0.7692,
-    "dribble_success_pct": 0.75,
-    "progressive_pass_pct": 0.2,
-    "long_passes_p90": 7.0978
-  },
-  "Refiloe Jane": {
-    "defensive_actions_p90": 1.7266,
-    "interceptions_p90": 1.295,
-    "progressive_carries_p90": 0.4317,
-    "pass_completion_pct": 0.7258,
-    "tackle_win_pct": 0.4,
-    "dribble_success_pct": 0.6364,
-    "progressive_pass_pct": 0.1774,
-    "long_passes_p90": 2.8058
-  },
-  "Emily Louise van Egmond": {
-    "defensive_actions_p90": 1.9389,
-    "interceptions_p90": 0.655,
-    "progressive_carries_p90": 0.4978,
-    "pass_completion_pct": 0.7454,
-    "tackle_win_pct": 0.6364,
-    "dribble_success_pct": 0.5526,
-    "progressive_pass_pct": 0.1522,
-    "long_passes_p90": 4.5066
-  },
-  "Aurora Galli": {
-    "defensive_actions_p90": 1.4,
-    "interceptions_p90": 0.2,
-    "progressive_carries_p90": 0.4,
-    "pass_completion_pct": 0.6923,
-    "tackle_win_pct": 0.5,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.0577,
-    "long_passes_p90": 2.0
-  },
-  "Tameka Yallop": {
-    "defensive_actions_p90": 0.8145,
-    "interceptions_p90": 0.4072,
-    "progressive_carries_p90": 0.6109,
-    "pass_completion_pct": 0.7826,
-    "tackle_win_pct": 1.0,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1957,
-    "long_passes_p90": 2.2398
-  },
-  "Manuela Giugliano": {
-    "defensive_actions_p90": 2.1575,
-    "interceptions_p90": 0.6164,
-    "progressive_carries_p90": 0.1541,
-    "pass_completion_pct": 0.8296,
-    "tackle_win_pct": 0.6316,
-    "dribble_success_pct": 0.75,
-    "progressive_pass_pct": 0.1741,
-    "long_passes_p90": 4.238
-  },
-  "Valentina Cernoia": {
-    "defensive_actions_p90": 1.1429,
-    "interceptions_p90": 0.1429,
-    "progressive_carries_p90": 0.8571,
-    "pass_completion_pct": 0.7978,
-    "tackle_win_pct": 0.7,
-    "dribble_success_pct": 0.8571,
-    "progressive_pass_pct": 0.1798,
-    "long_passes_p90": 2.4286
-  },
-  "Alanna Stephanie Kennedy": {
-    "defensive_actions_p90": 1.9584,
-    "interceptions_p90": 0.7892,
-    "progressive_carries_p90": 1.14,
-    "pass_completion_pct": 0.8263,
-    "tackle_win_pct": 0.6735,
-    "dribble_success_pct": 0.7755,
-    "progressive_pass_pct": 0.1615,
-    "long_passes_p90": 5.5245
-  },
-  "Katrina Gorry": {
-    "defensive_actions_p90": 2.7983,
-    "interceptions_p90": 0.6508,
-    "progressive_carries_p90": 1.6269,
-    "pass_completion_pct": 0.7363,
-    "tackle_win_pct": 0.6923,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.1443,
-    "long_passes_p90": 4.0998
-  },
-  "Miraildes Maciel Mota": {
-    "defensive_actions_p90": 3.8756,
-    "interceptions_p90": 1.2919,
-    "progressive_carries_p90": 0.4306,
-    "pass_completion_pct": 0.8095,
-    "tackle_win_pct": 0.7,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.2063,
-    "long_passes_p90": 4.7368
-  },
-  "Thaysa de Moraes Rosa Moreno": {
-    "defensive_actions_p90": 1.6138,
-    "interceptions_p90": 0.3724,
-    "progressive_carries_p90": 0.7448,
-    "pass_completion_pct": 0.8506,
-    "tackle_win_pct": 0.7692,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1883,
-    "long_passes_p90": 3.1034
-  },
-  "Havana Solaun": {
-    "defensive_actions_p90": 0.6577,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.9866,
-    "pass_completion_pct": 0.7647,
-    "tackle_win_pct": 0.875,
-    "dribble_success_pct": 0.5185,
-    "progressive_pass_pct": 0.1569,
-    "long_passes_p90": 1.4251
-  },
-  "Jessie Alexandra Fleming": {
-    "defensive_actions_p90": 1.5807,
-    "interceptions_p90": 0.4589,
-    "progressive_carries_p90": 0.4079,
-    "pass_completion_pct": 0.8651,
-    "tackle_win_pct": 0.6875,
-    "dribble_success_pct": 0.5588,
-    "progressive_pass_pct": 0.1107,
-    "long_passes_p90": 1.2748
-  },
-  "Jeannette Yango": {
-    "defensive_actions_p90": 2.6163,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.2616,
-    "pass_completion_pct": 0.75,
-    "tackle_win_pct": 0.7143,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.1528,
-    "long_passes_p90": 2.8779
-  },
-  "Raissa Feudjio Tchuanyo": {
-    "defensive_actions_p90": 4.0,
-    "interceptions_p90": 1.0,
-    "progressive_carries_p90": 1.75,
-    "pass_completion_pct": 0.6941,
-    "tackle_win_pct": 0.75,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.3059,
-    "long_passes_p90": 5.5
-  },
-  "Sophie Schmidt": {
-    "defensive_actions_p90": 1.8571,
-    "interceptions_p90": 0.2857,
-    "progressive_carries_p90": 1.5714,
-    "pass_completion_pct": 0.858,
-    "tackle_win_pct": 0.5882,
-    "dribble_success_pct": 0.7143,
-    "progressive_pass_pct": 0.2273,
-    "long_passes_p90": 4.8571
-  },
-  "Desiree Rose Marie Scott": {
-    "defensive_actions_p90": 1.8405,
-    "interceptions_p90": 0.5521,
-    "progressive_carries_p90": 1.2883,
-    "pass_completion_pct": 0.8978,
-    "tackle_win_pct": 0.7391,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1679,
-    "long_passes_p90": 2.6687
-  },
-  "Yui Hasegawa": {
-    "defensive_actions_p90": 2.875,
-    "interceptions_p90": 1.0,
-    "progressive_carries_p90": 1.125,
-    "pass_completion_pct": 0.8139,
-    "tackle_win_pct": 0.8,
-    "dribble_success_pct": 0.7143,
-    "progressive_pass_pct": 0.1429,
-    "long_passes_p90": 2.625
-  },
-  "Narumi Miura": {
-    "defensive_actions_p90": 3.0,
-    "interceptions_p90": 0.25,
-    "progressive_carries_p90": 1.0,
-    "pass_completion_pct": 0.8417,
-    "tackle_win_pct": 0.7143,
-    "dribble_success_pct": 0.4,
-    "progressive_pass_pct": 0.0917,
-    "long_passes_p90": 3.0
-  },
-  "Miriam Anahí Mayorga": {
-    "defensive_actions_p90": 1.0,
-    "interceptions_p90": 0.2,
-    "progressive_carries_p90": 1.0,
-    "pass_completion_pct": 0.7719,
-    "tackle_win_pct": 0.8333,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.3158,
-    "long_passes_p90": 0.8
-  },
-  "Flavia Lorena Benítez": {
-    "defensive_actions_p90": 0.9524,
-    "interceptions_p90": 0.4762,
-    "progressive_carries_p90": 0.0,
-    "pass_completion_pct": 0.8415,
-    "tackle_win_pct": 0.4,
-    "dribble_success_pct": 0.8571,
-    "progressive_pass_pct": 0.1098,
-    "long_passes_p90": 3.3333
-  },
-  "Sherida Spitse": {
-    "defensive_actions_p90": 2.799,
-    "interceptions_p90": 0.6459,
-    "progressive_carries_p90": 0.6459,
-    "pass_completion_pct": 0.8609,
-    "tackle_win_pct": 0.6462,
-    "dribble_success_pct": 0.4,
-    "progressive_pass_pct": 0.1755,
-    "long_passes_p90": 6.6746
-  },
-  "Annalie Longo": {
-    "defensive_actions_p90": 1.0689,
-    "interceptions_p90": 0.4276,
-    "progressive_carries_p90": 0.4276,
-    "pass_completion_pct": 0.675,
-    "tackle_win_pct": 0.2,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.05,
-    "long_passes_p90": 1.2827
-  },
-  "Samantha June Mewis": {
-    "defensive_actions_p90": 1.9286,
-    "interceptions_p90": 0.3045,
-    "progressive_carries_p90": 1.8947,
-    "pass_completion_pct": 0.7704,
-    "tackle_win_pct": 0.82,
-    "dribble_success_pct": 0.7556,
-    "progressive_pass_pct": 0.1887,
-    "long_passes_p90": 4.0263
-  },
-  "Rosemary Kathleen Lavelle": {
-    "defensive_actions_p90": 1.0957,
-    "interceptions_p90": 0.2645,
-    "progressive_carries_p90": 1.3224,
-    "pass_completion_pct": 0.7816,
-    "tackle_win_pct": 0.625,
-    "dribble_success_pct": 0.5667,
-    "progressive_pass_pct": 0.1297,
-    "long_passes_p90": 1.5113
-  },
-  "Suchawadee Nildhamrong": {
-    "defensive_actions_p90": 1.3333,
-    "interceptions_p90": 0.3333,
-    "progressive_carries_p90": 1.3333,
-    "pass_completion_pct": 0.7632,
-    "tackle_win_pct": 0.4,
-    "dribble_success_pct": 0.8333,
-    "progressive_pass_pct": 0.2895,
-    "long_passes_p90": 2.6667
-  },
-  "Sara Caroline Seger": {
-    "defensive_actions_p90": 2.8439,
-    "interceptions_p90": 1.4219,
-    "progressive_carries_p90": 1.0037,
-    "pass_completion_pct": 0.8993,
-    "tackle_win_pct": 0.7778,
-    "dribble_success_pct": 0.7778,
-    "progressive_pass_pct": 0.1812,
-    "long_passes_p90": 2.0911
-  },
-  "Elin Ingrid Johanna Rubensson": {
-    "defensive_actions_p90": 2.5479,
-    "interceptions_p90": 0.4932,
-    "progressive_carries_p90": 1.3151,
-    "pass_completion_pct": 0.856,
-    "tackle_win_pct": 0.8065,
-    "dribble_success_pct": 0.3636,
-    "progressive_pass_pct": 0.148,
-    "long_passes_p90": 2.5479
-  },
-  "Francisca Alejandra Lara Lara": {
-    "defensive_actions_p90": 2.8685,
-    "interceptions_p90": 0.7171,
-    "progressive_carries_p90": 0.7171,
-    "pass_completion_pct": 0.7632,
-    "tackle_win_pct": 0.8,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1053,
-    "long_passes_p90": 5.0199
-  },
-  "Yanara Aedo": {
-    "defensive_actions_p90": 1.5254,
-    "interceptions_p90": 1.0169,
-    "progressive_carries_p90": 0.5085,
-    "pass_completion_pct": 0.8043,
-    "tackle_win_pct": 1.0,
-    "dribble_success_pct": 0.8571,
-    "progressive_pass_pct": 0.1957,
-    "long_passes_p90": 2.0339
-  },
-  "Yesenia López": {
-    "defensive_actions_p90": 1.3333,
-    "interceptions_p90": 0.6667,
-    "progressive_carries_p90": 2.3333,
-    "pass_completion_pct": 0.8772,
-    "tackle_win_pct": 1.0,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.193,
-    "long_passes_p90": 5.3333
-  },
-  "Charlotte Bilbault": {
-    "defensive_actions_p90": 2.4954,
-    "interceptions_p90": 0.4991,
-    "progressive_carries_p90": 0.9982,
-    "pass_completion_pct": 0.8293,
-    "tackle_win_pct": 0.6471,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.122,
-    "long_passes_p90": 7.9852
-  },
-  "Patricia Guijarro Gutiérrez": {
-    "defensive_actions_p90": 2.7015,
-    "interceptions_p90": 0.7719,
-    "progressive_carries_p90": 1.3122,
-    "pass_completion_pct": 0.8773,
-    "tackle_win_pct": 0.6111,
-    "dribble_success_pct": 0.5217,
-    "progressive_pass_pct": 0.1283,
-    "long_passes_p90": 6.0206
-  },
-  "Luana Bertolucci Paixão": {
-    "defensive_actions_p90": 2.3349,
-    "interceptions_p90": 0.8491,
-    "progressive_carries_p90": 0.4245,
-    "pass_completion_pct": 0.8462,
-    "tackle_win_pct": 0.5455,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.141,
-    "long_passes_p90": 2.5472
-  },
-  "Yan Wang": {
-    "defensive_actions_p90": 2.7391,
-    "interceptions_p90": 1.1739,
-    "progressive_carries_p90": 0.3913,
-    "pass_completion_pct": 0.7647,
-    "tackle_win_pct": 0.625,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.2059,
-    "long_passes_p90": 5.4783
-  },
-  "Mamello Makhabane": {
-    "defensive_actions_p90": 1.5,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 1.5,
-    "pass_completion_pct": 0.7647,
-    "tackle_win_pct": 0.0,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.1569,
-    "long_passes_p90": 4.0
-  },
-  "Rebecca Quinn": {
-    "defensive_actions_p90": 1.4353,
-    "interceptions_p90": 0.2533,
-    "progressive_carries_p90": 1.5197,
-    "pass_completion_pct": 0.7905,
-    "tackle_win_pct": 0.625,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1858,
-    "long_passes_p90": 3.9681
-  },
-  "Morgan Paige Gautrat": {
-    "defensive_actions_p90": 1.5882,
-    "interceptions_p90": 0.3529,
-    "progressive_carries_p90": 0.8824,
-    "pass_completion_pct": 0.8099,
-    "tackle_win_pct": 0.5714,
-    "dribble_success_pct": 0.8333,
-    "progressive_pass_pct": 0.2314,
-    "long_passes_p90": 2.6471
-  },
-  "Allie Long": {
-    "defensive_actions_p90": 1.7143,
-    "interceptions_p90": 0.7143,
-    "progressive_carries_p90": 0.7143,
-    "pass_completion_pct": 0.8832,
-    "tackle_win_pct": 0.7,
-    "dribble_success_pct": 0.6,
-    "progressive_pass_pct": 0.1726,
-    "long_passes_p90": 5.5714
-  },
-  "Linda Dallmann": {
-    "defensive_actions_p90": 1.1032,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 1.1951,
-    "pass_completion_pct": 0.8532,
-    "tackle_win_pct": 0.55,
-    "dribble_success_pct": 0.375,
-    "progressive_pass_pct": 0.1376,
-    "long_passes_p90": 0.5516
-  },
   "Ivan Gennaro Gattuso": {
     "defensive_actions_p90": 2.6866,
     "interceptions_p90": 0.4478,
@@ -2008,16 +868,6 @@
     "dribble_success_pct": 1.0,
     "progressive_pass_pct": 0.1311,
     "long_passes_p90": 1.791
-  },
-  "Clarence Seedorf": {
-    "defensive_actions_p90": 1.5341,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 1.5341,
-    "pass_completion_pct": 0.9118,
-    "tackle_win_pct": 0.8,
-    "dribble_success_pct": 0.4444,
-    "progressive_pass_pct": 0.1176,
-    "long_passes_p90": 2.0455
   },
   "Xabier Alonso Olano": {
     "defensive_actions_p90": 2.3949,
@@ -2308,6 +1158,16 @@
     "dribble_success_pct": 0.8,
     "progressive_pass_pct": 0.1707,
     "long_passes_p90": 1.3534
+  },
+  "Raoul Cédric Loé": {
+    "defensive_actions_p90": 5.3333,
+    "interceptions_p90": 1.6667,
+    "progressive_carries_p90": 1.0,
+    "pass_completion_pct": 0.7333,
+    "tackle_win_pct": 0.6667,
+    "dribble_success_pct": 0.5,
+    "progressive_pass_pct": 0.2,
+    "long_passes_p90": 5.3333
   },
   "Roberto Torres Morales": {
     "defensive_actions_p90": 1.3455,
@@ -3299,16 +2159,6 @@
     "progressive_pass_pct": 0.1867,
     "long_passes_p90": 4.0645
   },
-  "Anderson Luís de Souza": {
-    "defensive_actions_p90": 2.1735,
-    "interceptions_p90": 0.3969,
-    "progressive_carries_p90": 2.9861,
-    "pass_completion_pct": 0.847,
-    "tackle_win_pct": 0.6111,
-    "dribble_success_pct": 0.5981,
-    "progressive_pass_pct": 0.1368,
-    "long_passes_p90": 5.3297
-  },
   "Jonjo Shelvey": {
     "defensive_actions_p90": 1.8807,
     "interceptions_p90": 0.5471,
@@ -3959,16 +2809,6 @@
     "progressive_pass_pct": 0.16,
     "long_passes_p90": 0.311
   },
-  "Marouane Fellaini-Bakkioui": {
-    "defensive_actions_p90": 2.4754,
-    "interceptions_p90": 0.5605,
-    "progressive_carries_p90": 0.8874,
-    "pass_completion_pct": 0.883,
-    "tackle_win_pct": 0.7879,
-    "dribble_success_pct": 0.625,
-    "progressive_pass_pct": 0.1196,
-    "long_passes_p90": 2.2418
-  },
   "Morgan Schneiderlin": {
     "defensive_actions_p90": 2.9304,
     "interceptions_p90": 1.1789,
@@ -4079,106 +2919,6 @@
     "progressive_pass_pct": 0.1926,
     "long_passes_p90": 5.4814
   },
-  "Chloe Mccarron": {
-    "defensive_actions_p90": 1.1416,
-    "interceptions_p90": 0.2854,
-    "progressive_carries_p90": 0.0951,
-    "pass_completion_pct": 0.8493,
-    "tackle_win_pct": 0.5625,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.1781,
-    "long_passes_p90": 1.4271
-  },
-  "Jessica Fishlock": {
-    "defensive_actions_p90": 2.5981,
-    "interceptions_p90": 0.9743,
-    "progressive_carries_p90": 1.908,
-    "pass_completion_pct": 0.7834,
-    "tackle_win_pct": 0.6863,
-    "dribble_success_pct": 0.551,
-    "progressive_pass_pct": 0.2166,
-    "long_passes_p90": 2.8823
-  },
-  "Malin Gut": {
-    "defensive_actions_p90": 0.812,
-    "interceptions_p90": 0.2707,
-    "progressive_carries_p90": 0.7444,
-    "pass_completion_pct": 0.9126,
-    "tackle_win_pct": 0.5556,
-    "dribble_success_pct": 0.7778,
-    "progressive_pass_pct": 0.1068,
-    "long_passes_p90": 1.6241
-  },
-  "Ramona Petzelberger": {
-    "defensive_actions_p90": 2.7973,
-    "interceptions_p90": 0.4865,
-    "progressive_carries_p90": 1.0946,
-    "pass_completion_pct": 0.7943,
-    "tackle_win_pct": 0.5714,
-    "dribble_success_pct": 0.625,
-    "progressive_pass_pct": 0.1206,
-    "long_passes_p90": 2.4324
-  },
-  "Nadine Hanssen": {
-    "defensive_actions_p90": 1.6917,
-    "interceptions_p90": 0.5414,
-    "progressive_carries_p90": 0.406,
-    "pass_completion_pct": 0.7583,
-    "tackle_win_pct": 0.7391,
-    "dribble_success_pct": 0.8182,
-    "progressive_pass_pct": 0.15,
-    "long_passes_p90": 1.015
-  },
-  "Ella Jade Mastrantonio": {
-    "defensive_actions_p90": 2.2701,
-    "interceptions_p90": 0.5126,
-    "progressive_carries_p90": 0.2929,
-    "pass_completion_pct": 0.827,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.9,
-    "progressive_pass_pct": 0.1784,
-    "long_passes_p90": 2.7828
-  },
-  "Aimee Palmer": {
-    "defensive_actions_p90": 2.8507,
-    "interceptions_p90": 1.7919,
-    "progressive_carries_p90": 0.4072,
-    "pass_completion_pct": 0.7345,
-    "tackle_win_pct": 0.6471,
-    "dribble_success_pct": 0.5714,
-    "progressive_pass_pct": 0.1243,
-    "long_passes_p90": 2.1176
-  },
-  "Mollie Green": {
-    "defensive_actions_p90": 1.3391,
-    "interceptions_p90": 0.4933,
-    "progressive_carries_p90": 0.2114,
-    "pass_completion_pct": 0.7907,
-    "tackle_win_pct": 0.5625,
-    "dribble_success_pct": 0.3636,
-    "progressive_pass_pct": 0.1628,
-    "long_passes_p90": 0.9162
-  },
-  "Isobel Mary Christiansen": {
-    "defensive_actions_p90": 1.9526,
-    "interceptions_p90": 0.6811,
-    "progressive_carries_p90": 0.999,
-    "pass_completion_pct": 0.8236,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.7037,
-    "progressive_pass_pct": 0.1647,
-    "long_passes_p90": 4.4046
-  },
-  "Denise O'Sullivan": {
-    "defensive_actions_p90": 3.2663,
-    "interceptions_p90": 0.6179,
-    "progressive_carries_p90": 1.6332,
-    "pass_completion_pct": 0.8304,
-    "tackle_win_pct": 0.7222,
-    "dribble_success_pct": 0.6739,
-    "progressive_pass_pct": 0.14,
-    "long_passes_p90": 2.6484
-  },
   "Pedro González López": {
     "defensive_actions_p90": 1.7228,
     "interceptions_p90": 0.758,
@@ -4248,46 +2988,6 @@
     "dribble_success_pct": 1.0,
     "progressive_pass_pct": 0.181,
     "long_passes_p90": 2.7639
-  },
-  "Olivia McLoughlin": {
-    "defensive_actions_p90": 2.8083,
-    "interceptions_p90": 1.2036,
-    "progressive_carries_p90": 0.4012,
-    "pass_completion_pct": 0.7561,
-    "tackle_win_pct": 0.5789,
-    "dribble_success_pct": 0.75,
-    "progressive_pass_pct": 0.1585,
-    "long_passes_p90": 0.6686
-  },
-  "Grace Clinton": {
-    "defensive_actions_p90": 0.7469,
-    "interceptions_p90": 0.2801,
-    "progressive_carries_p90": 0.0934,
-    "pass_completion_pct": 0.7719,
-    "tackle_win_pct": 0.5556,
-    "dribble_success_pct": 0.5333,
-    "progressive_pass_pct": 0.1053,
-    "long_passes_p90": 0.9336
-  },
-  "Dagný Brynjarsdóttir": {
-    "defensive_actions_p90": 2.6348,
-    "interceptions_p90": 1.1094,
-    "progressive_carries_p90": 1.0401,
-    "pass_completion_pct": 0.6971,
-    "tackle_win_pct": 0.5556,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.1875,
-    "long_passes_p90": 1.7334
-  },
-  "Damaris Berta Egurrola Wienke": {
-    "defensive_actions_p90": 2.0743,
-    "interceptions_p90": 0.7361,
-    "progressive_carries_p90": 0.2677,
-    "pass_completion_pct": 0.8333,
-    "tackle_win_pct": 0.5152,
-    "dribble_success_pct": 0.7857,
-    "progressive_pass_pct": 0.1932,
-    "long_passes_p90": 3.5465
   },
   "Manuel Locatelli": {
     "defensive_actions_p90": 1.0362,
@@ -4449,16 +3149,6 @@
     "progressive_pass_pct": 0.12,
     "long_passes_p90": 3.8346
   },
-  "Aleksey Miranchuk": {
-    "defensive_actions_p90": 1.2287,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 2.1502,
-    "pass_completion_pct": 0.8372,
-    "tackle_win_pct": 0.75,
-    "dribble_success_pct": 0.4286,
-    "progressive_pass_pct": 0.1395,
-    "long_passes_p90": 0.6143
-  },
   "Remo Freuler": {
     "defensive_actions_p90": 2.6239,
     "interceptions_p90": 0.8397,
@@ -4498,16 +3188,6 @@
     "dribble_success_pct": 0.3333,
     "progressive_pass_pct": 0.1765,
     "long_passes_p90": 0.4225
-  },
-  "Mason Mount": {
-    "defensive_actions_p90": 1.7955,
-    "interceptions_p90": 0.2244,
-    "progressive_carries_p90": 1.2344,
-    "pass_completion_pct": 0.8214,
-    "tackle_win_pct": 0.5,
-    "dribble_success_pct": 0.4615,
-    "progressive_pass_pct": 0.0536,
-    "long_passes_p90": 1.4589
   },
   "Kalvin Phillips": {
     "defensive_actions_p90": 1.8367,
@@ -4618,16 +3298,6 @@
     "dribble_success_pct": 1.0,
     "progressive_pass_pct": 0.1045,
     "long_passes_p90": 1.7857
-  },
-  "Marcel Sabitzer": {
-    "defensive_actions_p90": 1.7,
-    "interceptions_p90": 0.5,
-    "progressive_carries_p90": 1.9,
-    "pass_completion_pct": 0.7983,
-    "tackle_win_pct": 0.5556,
-    "dribble_success_pct": 0.4615,
-    "progressive_pass_pct": 0.1288,
-    "long_passes_p90": 3.3
   },
   "Xaver Schlager": {
     "defensive_actions_p90": 3.8051,
@@ -6569,286 +5239,6 @@
     "progressive_pass_pct": 0.1569,
     "long_passes_p90": 5.0737
   },
-  "Sarah Puntigam": {
-    "defensive_actions_p90": 2.3143,
-    "interceptions_p90": 0.5143,
-    "progressive_carries_p90": 0.5143,
-    "pass_completion_pct": 0.7973,
-    "tackle_win_pct": 0.5,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1892,
-    "long_passes_p90": 3.8571
-  },
-  "Sarah Zadrazil": {
-    "defensive_actions_p90": 3.9394,
-    "interceptions_p90": 1.2121,
-    "progressive_carries_p90": 1.2121,
-    "pass_completion_pct": 0.8382,
-    "tackle_win_pct": 0.9,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.0882,
-    "long_passes_p90": 0.9091
-  },
-  "Laura Feiersinger": {
-    "defensive_actions_p90": 3.5393,
-    "interceptions_p90": 1.5169,
-    "progressive_carries_p90": 2.5281,
-    "pass_completion_pct": 0.7705,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.25,
-    "progressive_pass_pct": 0.0984,
-    "long_passes_p90": 1.5169
-  },
-  "Irene Guerrero Sanmartín": {
-    "defensive_actions_p90": 0.8592,
-    "interceptions_p90": 0.6444,
-    "progressive_carries_p90": 0.4296,
-    "pass_completion_pct": 0.8644,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1356,
-    "long_passes_p90": 1.7184
-  },
-  "Emmi Alanen": {
-    "defensive_actions_p90": 3.6667,
-    "interceptions_p90": 1.0,
-    "progressive_carries_p90": 1.0,
-    "pass_completion_pct": 0.7848,
-    "tackle_win_pct": 0.5556,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.1519,
-    "long_passes_p90": 1.6667
-  },
-  "Eveliina Summanen": {
-    "defensive_actions_p90": 3.825,
-    "interceptions_p90": 1.125,
-    "progressive_carries_p90": 0.9,
-    "pass_completion_pct": 0.7989,
-    "tackle_win_pct": 0.6923,
-    "dribble_success_pct": 0.4,
-    "progressive_pass_pct": 0.1397,
-    "long_passes_p90": 7.2
-  },
-  "Laia Aleixandri López": {
-    "defensive_actions_p90": 1.2876,
-    "interceptions_p90": 0.7725,
-    "progressive_carries_p90": 1.4163,
-    "pass_completion_pct": 0.9343,
-    "tackle_win_pct": 0.8,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.2273,
-    "long_passes_p90": 3.6052
-  },
-  "Sofie Junge Pedersen": {
-    "defensive_actions_p90": 4.2489,
-    "interceptions_p90": 2.3176,
-    "progressive_carries_p90": 1.5451,
-    "pass_completion_pct": 0.7846,
-    "tackle_win_pct": 0.4,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.0923,
-    "long_passes_p90": 3.4764
-  },
-  "Sanne Troelsgaard-Nielsen": {
-    "defensive_actions_p90": 1.6413,
-    "interceptions_p90": 0.6839,
-    "progressive_carries_p90": 0.4103,
-    "pass_completion_pct": 0.7581,
-    "tackle_win_pct": 0.75,
-    "dribble_success_pct": 0.8,
-    "progressive_pass_pct": 0.1774,
-    "long_passes_p90": 1.0942
-  },
-  "Lena Lattwein": {
-    "defensive_actions_p90": 0.8333,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.1667,
-    "pass_completion_pct": 0.7568,
-    "tackle_win_pct": 0.75,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1216,
-    "long_passes_p90": 1.8333
-  },
-  "Sydney Lohmann": {
-    "defensive_actions_p90": 0.4286,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.8571,
-    "pass_completion_pct": 0.7083,
-    "tackle_win_pct": 1.0,
-    "dribble_success_pct": 0.4444,
-    "progressive_pass_pct": 0.1458,
-    "long_passes_p90": 1.7143
-  },
-  "Sandy Mändly": {
-    "defensive_actions_p90": 3.5294,
-    "interceptions_p90": 1.1765,
-    "progressive_carries_p90": 0.5882,
-    "pass_completion_pct": 0.675,
-    "tackle_win_pct": 0.8333,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.15,
-    "long_passes_p90": 3.5294
-  },
-  "Andreia Alexandra Norton": {
-    "defensive_actions_p90": 2.1333,
-    "interceptions_p90": 0.5333,
-    "progressive_carries_p90": 1.4667,
-    "pass_completion_pct": 0.7745,
-    "tackle_win_pct": 0.7857,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1471,
-    "long_passes_p90": 1.8667
-  },
-  "Coumba Sow": {
-    "defensive_actions_p90": 2.2261,
-    "interceptions_p90": 0.318,
-    "progressive_carries_p90": 0.9541,
-    "pass_completion_pct": 0.7522,
-    "tackle_win_pct": 0.5333,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.115,
-    "long_passes_p90": 2.2261
-  },
-  "Géraldine Reuteler": {
-    "defensive_actions_p90": 3.8864,
-    "interceptions_p90": 1.125,
-    "progressive_carries_p90": 1.125,
-    "pass_completion_pct": 0.8217,
-    "tackle_win_pct": 0.6452,
-    "dribble_success_pct": 0.5385,
-    "progressive_pass_pct": 0.1087,
-    "long_passes_p90": 2.8636
-  },
-  "Dolores Isabel Jacome Silva": {
-    "defensive_actions_p90": 1.3575,
-    "interceptions_p90": 0.1357,
-    "progressive_carries_p90": 0.0,
-    "pass_completion_pct": 0.8831,
-    "tackle_win_pct": 0.4444,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1299,
-    "long_passes_p90": 0.6787
-  },
-  "Fátima Alexandra Figueira Pinto": {
-    "defensive_actions_p90": 1.3091,
-    "interceptions_p90": 0.1636,
-    "progressive_carries_p90": 0.4909,
-    "pass_completion_pct": 0.7907,
-    "tackle_win_pct": 0.7,
-    "dribble_success_pct": 0.2857,
-    "progressive_pass_pct": 0.1163,
-    "long_passes_p90": 1.1455
-  },
-  "Ingrid Filippa Angeldal": {
-    "defensive_actions_p90": 1.8595,
-    "interceptions_p90": 0.4463,
-    "progressive_carries_p90": 0.8926,
-    "pass_completion_pct": 0.7219,
-    "tackle_win_pct": 0.7576,
-    "dribble_success_pct": 0.4516,
-    "progressive_pass_pct": 0.2388,
-    "long_passes_p90": 3.4215
-  },
-  "Hanna Ulrika Bennison": {
-    "defensive_actions_p90": 0.4167,
-    "interceptions_p90": 0.0833,
-    "progressive_carries_p90": 0.25,
-    "pass_completion_pct": 0.8281,
-    "tackle_win_pct": 0.6,
-    "dribble_success_pct": 0.6,
-    "progressive_pass_pct": 0.2188,
-    "long_passes_p90": 0.8333
-  },
-  "Sandie Toletti": {
-    "defensive_actions_p90": 1.977,
-    "interceptions_p90": 0.4707,
-    "progressive_carries_p90": 1.4121,
-    "pass_completion_pct": 0.8372,
-    "tackle_win_pct": 0.8095,
-    "dribble_success_pct": 0.75,
-    "progressive_pass_pct": 0.1473,
-    "long_passes_p90": 2.7301
-  },
-  "Arianna Caruso": {
-    "defensive_actions_p90": 1.374,
-    "interceptions_p90": 0.3435,
-    "progressive_carries_p90": 0.458,
-    "pass_completion_pct": 0.8231,
-    "tackle_win_pct": 0.7143,
-    "dribble_success_pct": 0.4348,
-    "progressive_pass_pct": 0.1224,
-    "long_passes_p90": 1.7176
-  },
-  "Martina Rosucci": {
-    "defensive_actions_p90": 3.0275,
-    "interceptions_p90": 0.8257,
-    "progressive_carries_p90": 1.1009,
-    "pass_completion_pct": 0.8971,
-    "tackle_win_pct": 0.625,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1765,
-    "long_passes_p90": 1.3761
-  },
-  "Flaminia Simonetti": {
-    "defensive_actions_p90": 2.1862,
-    "interceptions_p90": 0.7287,
-    "progressive_carries_p90": 2.1862,
-    "pass_completion_pct": 0.8571,
-    "tackle_win_pct": 0.8,
-    "dribble_success_pct": 0.6,
-    "progressive_pass_pct": 0.0893,
-    "long_passes_p90": 1.4575
-  },
-  "Justine Vanhaevermaet": {
-    "defensive_actions_p90": 3.4375,
-    "interceptions_p90": 1.0938,
-    "progressive_carries_p90": 1.0938,
-    "pass_completion_pct": 0.8175,
-    "tackle_win_pct": 0.6,
-    "dribble_success_pct": 0.3,
-    "progressive_pass_pct": 0.2857,
-    "long_passes_p90": 3.9062
-  },
-  "Tinne De Caigny": {
-    "defensive_actions_p90": 1.8,
-    "interceptions_p90": 0.2,
-    "progressive_carries_p90": 1.2,
-    "pass_completion_pct": 0.7386,
-    "tackle_win_pct": 1.0,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.0795,
-    "long_passes_p90": 1.0
-  },
-  "Karólína Lea Vilhjálmsdóttir": {
-    "defensive_actions_p90": 1.6736,
-    "interceptions_p90": 0.5579,
-    "progressive_carries_p90": 1.8595,
-    "pass_completion_pct": 0.6613,
-    "tackle_win_pct": 0.7143,
-    "dribble_success_pct": 0.3684,
-    "progressive_pass_pct": 0.2097,
-    "long_passes_p90": 2.4174
-  },
-  "Gunnhildur Yrsa Jónsdóttir": {
-    "defensive_actions_p90": 2.5906,
-    "interceptions_p90": 0.9595,
-    "progressive_carries_p90": 1.0554,
-    "pass_completion_pct": 0.7981,
-    "tackle_win_pct": 0.8889,
-    "dribble_success_pct": 0.6364,
-    "progressive_pass_pct": 0.2083,
-    "long_passes_p90": 3.4542
-  },
-  "Karen Holmgaard": {
-    "defensive_actions_p90": 3.1337,
-    "interceptions_p90": 0.6267,
-    "progressive_carries_p90": 1.6295,
-    "pass_completion_pct": 0.8182,
-    "tackle_win_pct": 0.5556,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1364,
-    "long_passes_p90": 2.507
-  },
   "Vitor Machado Ferreira": {
     "defensive_actions_p90": 2.0597,
     "interceptions_p90": 0.8657,
@@ -6929,26 +5319,6 @@
     "progressive_pass_pct": 0.1317,
     "long_passes_p90": 2.1763
   },
-  "Teresa Abelleira Dueñas": {
-    "defensive_actions_p90": 2.3906,
-    "interceptions_p90": 0.2812,
-    "progressive_carries_p90": 1.2656,
-    "pass_completion_pct": 0.8846,
-    "tackle_win_pct": 0.8125,
-    "dribble_success_pct": 0.75,
-    "progressive_pass_pct": 0.145,
-    "long_passes_p90": 8.0156
-  },
-  "Anis Ben Slimane": {
-    "defensive_actions_p90": 1.1321,
-    "interceptions_p90": 0.566,
-    "progressive_carries_p90": 2.2642,
-    "pass_completion_pct": 0.7333,
-    "tackle_win_pct": 0.25,
-    "dribble_success_pct": 0.3333,
-    "progressive_pass_pct": 0.1556,
-    "long_passes_p90": 1.4151
-  },
   "Aïssa Bilal Laïdouni": {
     "defensive_actions_p90": 1.954,
     "interceptions_p90": 0.5747,
@@ -7008,16 +5378,6 @@
     "dribble_success_pct": 0.0,
     "progressive_pass_pct": 0.0942,
     "long_passes_p90": 3.4743
-  },
-  "Sergej Milinković-Savić": {
-    "defensive_actions_p90": 2.6174,
-    "interceptions_p90": 0.5034,
-    "progressive_carries_p90": 1.4094,
-    "pass_completion_pct": 0.7971,
-    "tackle_win_pct": 0.6923,
-    "dribble_success_pct": 0.4921,
-    "progressive_pass_pct": 0.1342,
-    "long_passes_p90": 2.5839
   },
   "Jackson Irvine": {
     "defensive_actions_p90": 2.4519,
@@ -8038,16 +6398,6 @@
     "dribble_success_pct": 0.9091,
     "progressive_pass_pct": 0.1505,
     "long_passes_p90": 0.7484
-  },
-  "Allan Marques Loureiro": {
-    "defensive_actions_p90": 2.9636,
-    "interceptions_p90": 0.312,
-    "progressive_carries_p90": 2.3397,
-    "pass_completion_pct": 0.8604,
-    "tackle_win_pct": 0.7525,
-    "dribble_success_pct": 0.5158,
-    "progressive_pass_pct": 0.1181,
-    "long_passes_p90": 2.9636
   },
   "Angelo Palombo": {
     "defensive_actions_p90": 1.3257,
@@ -9139,196 +7489,6 @@
     "progressive_pass_pct": 0.1652,
     "long_passes_p90": 3.2857
   },
-  "Malia Grace Steinmetz": {
-    "defensive_actions_p90": 2.6667,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.3333,
-    "pass_completion_pct": 0.7536,
-    "tackle_win_pct": 0.4167,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.0725,
-    "long_passes_p90": 2.6667
-  },
-  "Kyra Lillee Cooney-Cross": {
-    "defensive_actions_p90": 1.0992,
-    "interceptions_p90": 0.2748,
-    "progressive_carries_p90": 1.6489,
-    "pass_completion_pct": 0.8992,
-    "tackle_win_pct": 0.7857,
-    "dribble_success_pct": 0.6316,
-    "progressive_pass_pct": 0.155,
-    "long_passes_p90": 2.3359
-  },
-  "Antionette Oyedupe Payne": {
-    "defensive_actions_p90": 0.8385,
-    "interceptions_p90": 0.2795,
-    "progressive_carries_p90": 0.8385,
-    "pass_completion_pct": 0.8,
-    "tackle_win_pct": 0.0,
-    "dribble_success_pct": 0.6364,
-    "progressive_pass_pct": 0.18,
-    "long_passes_p90": 2.236
-  },
-  "Christy Onyenaturuchi Ucheibe": {
-    "defensive_actions_p90": 4.0,
-    "interceptions_p90": 1.0,
-    "progressive_carries_p90": 0.0,
-    "pass_completion_pct": 0.7397,
-    "tackle_win_pct": 0.7619,
-    "dribble_success_pct": 0.375,
-    "progressive_pass_pct": 0.1507,
-    "long_passes_p90": 4.5
-  },
-  "Julia Angela Grosso": {
-    "defensive_actions_p90": 2.6316,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.5263,
-    "pass_completion_pct": 0.8529,
-    "tackle_win_pct": 0.6,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.1471,
-    "long_passes_p90": 0.0
-  },
-  "Katherine Maria Alvarado Aguilar": {
-    "defensive_actions_p90": 2.0,
-    "interceptions_p90": 0.6667,
-    "progressive_carries_p90": 0.3333,
-    "pass_completion_pct": 0.7778,
-    "tackle_win_pct": 0.75,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.0667,
-    "long_passes_p90": 1.6667
-  },
-  "Andi Sullivan": {
-    "defensive_actions_p90": 2.8297,
-    "interceptions_p90": 0.786,
-    "progressive_carries_p90": 1.2576,
-    "pass_completion_pct": 0.8179,
-    "tackle_win_pct": 0.6875,
-    "dribble_success_pct": 0.7333,
-    "progressive_pass_pct": 0.1192,
-    "long_passes_p90": 4.4017
-  },
-  "Fuka Nagano": {
-    "defensive_actions_p90": 1.5441,
-    "interceptions_p90": 0.2206,
-    "progressive_carries_p90": 0.8824,
-    "pass_completion_pct": 0.8841,
-    "tackle_win_pct": 0.7143,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1594,
-    "long_passes_p90": 4.4118
-  },
-  "Evarine Susan Katongo": {
-    "defensive_actions_p90": 1.5063,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.3766,
-    "pass_completion_pct": 0.5962,
-    "tackle_win_pct": 0.8,
-    "dribble_success_pct": 0.75,
-    "progressive_pass_pct": 0.1154,
-    "long_passes_p90": 1.1297
-  },
-  "Lina Yang": {
-    "defensive_actions_p90": 3.3333,
-    "interceptions_p90": 0.6667,
-    "progressive_carries_p90": 0.6667,
-    "pass_completion_pct": 0.8194,
-    "tackle_win_pct": 0.7778,
-    "dribble_success_pct": 0.6,
-    "progressive_pass_pct": 0.0972,
-    "long_passes_p90": 3.6667
-  },
-  "Josefine Hasbo": {
-    "defensive_actions_p90": 2.6334,
-    "interceptions_p90": 0.4647,
-    "progressive_carries_p90": 0.0,
-    "pass_completion_pct": 0.8676,
-    "tackle_win_pct": 0.875,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1765,
-    "long_passes_p90": 0.6196
-  },
-  "Andreia de Jesus Jacinto": {
-    "defensive_actions_p90": 1.2753,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.7287,
-    "pass_completion_pct": 0.8475,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.25,
-    "progressive_pass_pct": 0.1695,
-    "long_passes_p90": 1.4575
-  },
-  "Atlanta Reigan Primus": {
-    "defensive_actions_p90": 1.0588,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.3529,
-    "pass_completion_pct": 0.6829,
-    "tackle_win_pct": 0.3333,
-    "dribble_success_pct": 0.4286,
-    "progressive_pass_pct": 0.0976,
-    "long_passes_p90": 1.0588
-  },
-  "Ghizlane Chebbak": {
-    "defensive_actions_p90": 2.75,
-    "interceptions_p90": 1.25,
-    "progressive_carries_p90": 1.25,
-    "pass_completion_pct": 0.75,
-    "tackle_win_pct": 0.5833,
-    "dribble_success_pct": 0.2,
-    "progressive_pass_pct": 0.1842,
-    "long_passes_p90": 4.0
-  },
-  "Giada Greggi": {
-    "defensive_actions_p90": 0.7143,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.7143,
-    "pass_completion_pct": 0.878,
-    "tackle_win_pct": 0.5556,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.3171,
-    "long_passes_p90": 1.2857
-  },
-  "Honoka Hayashi": {
-    "defensive_actions_p90": 1.7787,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.0,
-    "pass_completion_pct": 0.8519,
-    "tackle_win_pct": 0.5714,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.1852,
-    "long_passes_p90": 1.4229
-  },
-  "Raquel Rodriguez": {
-    "defensive_actions_p90": 0.8475,
-    "interceptions_p90": 0.339,
-    "progressive_carries_p90": 0.678,
-    "pass_completion_pct": 0.8039,
-    "tackle_win_pct": 0.6,
-    "dribble_success_pct": 0.4286,
-    "progressive_pass_pct": 0.0588,
-    "long_passes_p90": 1.3559
-  },
-  "Sjoeke Nüsken": {
-    "defensive_actions_p90": 2.6835,
-    "interceptions_p90": 0.8257,
-    "progressive_carries_p90": 0.4128,
-    "pass_completion_pct": 0.8019,
-    "tackle_win_pct": 0.7333,
-    "dribble_success_pct": 0.4286,
-    "progressive_pass_pct": 0.1415,
-    "long_passes_p90": 3.5092
-  },
-  "Wieke Hendrikje Maria Kaptein": {
-    "defensive_actions_p90": 1.75,
-    "interceptions_p90": 0.25,
-    "progressive_carries_p90": 0.5,
-    "pass_completion_pct": 0.9259,
-    "tackle_win_pct": 1.0,
-    "dribble_success_pct": 0.5714,
-    "progressive_pass_pct": 0.1111,
-    "long_passes_p90": 2.25
-  },
   "Nicolas Seiwald": {
     "defensive_actions_p90": 2.9091,
     "interceptions_p90": 0.5455,
@@ -9618,16 +7778,6 @@
     "dribble_success_pct": 0.0,
     "progressive_pass_pct": 0.1207,
     "long_passes_p90": 2.7068
-  },
-  "José Ndong Machín Dicombo": {
-    "defensive_actions_p90": 0.2579,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.7736,
-    "pass_completion_pct": 0.8281,
-    "tackle_win_pct": 0.0,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.0938,
-    "long_passes_p90": 0.2579
   },
   "Jamiro Gregory Monteiro Alvarenga": {
     "defensive_actions_p90": 1.0539,
@@ -10209,96 +8359,6 @@
     "progressive_pass_pct": 0.122,
     "long_passes_p90": 1.9325
   },
-  "Oona Siren": {
-    "defensive_actions_p90": 3.0,
-    "interceptions_p90": 0.3333,
-    "progressive_carries_p90": 2.6667,
-    "pass_completion_pct": 0.9266,
-    "tackle_win_pct": 0.6364,
-    "dribble_success_pct": 0.25,
-    "progressive_pass_pct": 0.0734,
-    "long_passes_p90": 2.3333
-  },
-  "Smilla Vallotto": {
-    "defensive_actions_p90": 2.0056,
-    "interceptions_p90": 0.5014,
-    "progressive_carries_p90": 1.0028,
-    "pass_completion_pct": 0.8806,
-    "tackle_win_pct": 0.3333,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.1791,
-    "long_passes_p90": 1.0028
-  },
-  "Lisa Fjeldstad Naalsund": {
-    "defensive_actions_p90": 1.5,
-    "interceptions_p90": 0.5,
-    "progressive_carries_p90": 0.5,
-    "pass_completion_pct": 0.7778,
-    "tackle_win_pct": 0.7143,
-    "dribble_success_pct": 0.0,
-    "progressive_pass_pct": 0.0833,
-    "long_passes_p90": 2.75
-  },
-  "Jarne Teulings": {
-    "defensive_actions_p90": 1.4634,
-    "interceptions_p90": 0.0,
-    "progressive_carries_p90": 0.3659,
-    "pass_completion_pct": 0.8611,
-    "tackle_win_pct": 0.2857,
-    "dribble_success_pct": 0.3333,
-    "progressive_pass_pct": 0.2222,
-    "long_passes_p90": 1.8293
-  },
-  "Emma Severini": {
-    "defensive_actions_p90": 1.2385,
-    "interceptions_p90": 0.4128,
-    "progressive_carries_p90": 1.2385,
-    "pass_completion_pct": 0.7778,
-    "tackle_win_pct": 0.5,
-    "dribble_success_pct": 1.0,
-    "progressive_pass_pct": 0.1778,
-    "long_passes_p90": 1.0321
-  },
-  "Elisa Senß": {
-    "defensive_actions_p90": 2.8481,
-    "interceptions_p90": 0.1899,
-    "progressive_carries_p90": 0.0,
-    "pass_completion_pct": 0.9091,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.5,
-    "progressive_pass_pct": 0.2045,
-    "long_passes_p90": 2.6582
-  },
-  "Ewelina Kamczyk": {
-    "defensive_actions_p90": 2.6695,
-    "interceptions_p90": 0.3814,
-    "progressive_carries_p90": 3.8136,
-    "pass_completion_pct": 0.697,
-    "tackle_win_pct": 0.6667,
-    "dribble_success_pct": 0.3,
-    "progressive_pass_pct": 0.1515,
-    "long_passes_p90": 1.5254
-  },
-  "Julia Zigiotti-Olme": {
-    "defensive_actions_p90": 2.0339,
-    "interceptions_p90": 0.5085,
-    "progressive_carries_p90": 0.5085,
-    "pass_completion_pct": 0.7553,
-    "tackle_win_pct": 0.5,
-    "dribble_success_pct": 0.6667,
-    "progressive_pass_pct": 0.1064,
-    "long_passes_p90": 2.0339
-  },
-  "Andressa Cavalari Machry": {
-    "defensive_actions_p90": 1.08,
-    "interceptions_p90": 0.18,
-    "progressive_carries_p90": 0.36,
-    "pass_completion_pct": 0.8182,
-    "tackle_win_pct": 0.4286,
-    "dribble_success_pct": 0.7778,
-    "progressive_pass_pct": 0.2525,
-    "long_passes_p90": 3.24
-  },
   "Miguel Ángel Lozano Ayala": {
     "defensive_actions_p90": 1.6071,
     "interceptions_p90": 0.2679,
@@ -10699,6 +8759,36 @@
     "progressive_pass_pct": 0.152,
     "long_passes_p90": 3.9293
   },
+  "Denise O'Sullivan": {
+    "defensive_actions_p90": 2.8972,
+    "interceptions_p90": 1.028,
+    "progressive_carries_p90": 2.5234,
+    "pass_completion_pct": 0.8253,
+    "tackle_win_pct": 0.84,
+    "dribble_success_pct": 0.6818,
+    "progressive_pass_pct": 0.1712,
+    "long_passes_p90": 3.4579
+  },
+  "Andi Sullivan": {
+    "defensive_actions_p90": 2.4076,
+    "interceptions_p90": 0.6879,
+    "progressive_carries_p90": 1.8344,
+    "pass_completion_pct": 0.8153,
+    "tackle_win_pct": 0.8824,
+    "dribble_success_pct": 0.7,
+    "progressive_pass_pct": 0.1306,
+    "long_passes_p90": 4.586
+  },
+  "Havana Solaun": {
+    "defensive_actions_p90": 0.5625,
+    "interceptions_p90": 0.0,
+    "progressive_carries_p90": 1.125,
+    "pass_completion_pct": 0.7419,
+    "tackle_win_pct": 0.75,
+    "dribble_success_pct": 0.5833,
+    "progressive_pass_pct": 0.1129,
+    "long_passes_p90": 1.125
+  },
   "Meggie Dougherty Howard": {
     "defensive_actions_p90": 0.9517,
     "interceptions_p90": 0.2719,
@@ -10718,6 +8808,16 @@
     "dribble_success_pct": 1.0,
     "progressive_pass_pct": 0.2056,
     "long_passes_p90": 4.1033
+  },
+  "Allie Long": {
+    "defensive_actions_p90": 2.0,
+    "interceptions_p90": 0.8333,
+    "progressive_carries_p90": 0.8333,
+    "pass_completion_pct": 0.8824,
+    "tackle_win_pct": 0.7,
+    "dribble_success_pct": 0.6,
+    "progressive_pass_pct": 0.1765,
+    "long_passes_p90": 6.3333
   },
   "Celeste Boureille": {
     "defensive_actions_p90": 2.0,
@@ -10749,6 +8849,16 @@
     "progressive_pass_pct": 0.1087,
     "long_passes_p90": 1.7476
   },
+  "Andressa Cavalari Machry": {
+    "defensive_actions_p90": 0.2812,
+    "interceptions_p90": 0.0,
+    "progressive_carries_p90": 0.5625,
+    "pass_completion_pct": 0.791,
+    "tackle_win_pct": 0.6667,
+    "dribble_success_pct": 0.75,
+    "progressive_pass_pct": 0.2388,
+    "long_passes_p90": 3.0938
+  },
   "Nikki Stanton": {
     "defensive_actions_p90": 2.8058,
     "interceptions_p90": 1.295,
@@ -10758,6 +8868,16 @@
     "dribble_success_pct": 1.0,
     "progressive_pass_pct": 0.1618,
     "long_passes_p90": 1.5108
+  },
+  "Samantha June Mewis": {
+    "defensive_actions_p90": 1.2676,
+    "interceptions_p90": 0.3457,
+    "progressive_carries_p90": 2.1895,
+    "pass_completion_pct": 0.7598,
+    "tackle_win_pct": 0.5714,
+    "dribble_success_pct": 1.0,
+    "progressive_pass_pct": 0.2108,
+    "long_passes_p90": 5.0704
   },
   "Danielle Colaprico": {
     "defensive_actions_p90": 2.7136,
@@ -10769,6 +8889,46 @@
     "progressive_pass_pct": 0.2268,
     "long_passes_p90": 5.8794
   },
+  "Katrina Gorry": {
+    "defensive_actions_p90": 2.2277,
+    "interceptions_p90": 0.7426,
+    "progressive_carries_p90": 0.8911,
+    "pass_completion_pct": 0.7143,
+    "tackle_win_pct": 0.6667,
+    "dribble_success_pct": 0.5,
+    "progressive_pass_pct": 0.1133,
+    "long_passes_p90": 4.7525
+  },
+  "Gunnhildur Yrsa Jónsdóttir": {
+    "defensive_actions_p90": 3.0769,
+    "interceptions_p90": 1.1538,
+    "progressive_carries_p90": 1.4103,
+    "pass_completion_pct": 0.8034,
+    "tackle_win_pct": 0.9412,
+    "dribble_success_pct": 0.6364,
+    "progressive_pass_pct": 0.2102,
+    "long_passes_p90": 4.6154
+  },
+  "Desiree Rose Marie Scott": {
+    "defensive_actions_p90": 1.4286,
+    "interceptions_p90": 0.7143,
+    "progressive_carries_p90": 1.1429,
+    "pass_completion_pct": 0.8647,
+    "tackle_win_pct": 0.8889,
+    "dribble_success_pct": 0.4286,
+    "progressive_pass_pct": 0.1765,
+    "long_passes_p90": 3.0
+  },
+  "Rebecca Quinn": {
+    "defensive_actions_p90": 2.1667,
+    "interceptions_p90": 0.5,
+    "progressive_carries_p90": 2.5,
+    "pass_completion_pct": 0.7633,
+    "tackle_win_pct": 0.5,
+    "dribble_success_pct": 0.6667,
+    "progressive_pass_pct": 0.2071,
+    "long_passes_p90": 6.1667
+  },
   "Sarah Killion": {
     "defensive_actions_p90": 3.5714,
     "interceptions_p90": 1.4286,
@@ -10778,6 +8938,16 @@
     "dribble_success_pct": 0.625,
     "progressive_pass_pct": 0.1745,
     "long_passes_p90": 4.5714
+  },
+  "Thaysa de Moraes Rosa Moreno": {
+    "defensive_actions_p90": 0.9863,
+    "interceptions_p90": 0.2466,
+    "progressive_carries_p90": 0.4932,
+    "pass_completion_pct": 0.8718,
+    "tackle_win_pct": 0.75,
+    "dribble_success_pct": 0.5556,
+    "progressive_pass_pct": 0.2179,
+    "long_passes_p90": 3.2055
   },
   "Christine Nairn": {
     "defensive_actions_p90": 0.1927,
@@ -10789,6 +8959,16 @@
     "progressive_pass_pct": 0.2088,
     "long_passes_p90": 2.5054
   },
+  "Alanna Stephanie Kennedy": {
+    "defensive_actions_p90": 2.625,
+    "interceptions_p90": 0.75,
+    "progressive_carries_p90": 0.75,
+    "pass_completion_pct": 0.7769,
+    "tackle_win_pct": 0.7692,
+    "dribble_success_pct": 0.7778,
+    "progressive_pass_pct": 0.1713,
+    "long_passes_p90": 6.0
+  },
   "Dani Weatherholt": {
     "defensive_actions_p90": 1.5319,
     "interceptions_p90": 0.1277,
@@ -10799,6 +8979,16 @@
     "progressive_pass_pct": 0.1399,
     "long_passes_p90": 0.6383
   },
+  "Morgan Paige Gautrat": {
+    "defensive_actions_p90": 1.5,
+    "interceptions_p90": 0.4286,
+    "progressive_carries_p90": 0.6429,
+    "pass_completion_pct": 0.7879,
+    "tackle_win_pct": 0.5,
+    "dribble_success_pct": 0.8889,
+    "progressive_pass_pct": 0.2222,
+    "long_passes_p90": 2.3571
+  },
   "Lo’eau LaBonta": {
     "defensive_actions_p90": 2.1916,
     "interceptions_p90": 1.3149,
@@ -10808,6 +8998,16 @@
     "dribble_success_pct": 1.0,
     "progressive_pass_pct": 0.1842,
     "long_passes_p90": 4.5292
+  },
+  "Linda Maserame Motlhalo": {
+    "defensive_actions_p90": 2.5532,
+    "interceptions_p90": 1.0638,
+    "progressive_carries_p90": 1.9149,
+    "pass_completion_pct": 0.812,
+    "tackle_win_pct": 0.7273,
+    "dribble_success_pct": 0.8,
+    "progressive_pass_pct": 0.1282,
+    "long_passes_p90": 5.3191
   },
   "Yury Gazinskiy": {
     "defensive_actions_p90": 0.2857,
@@ -10908,6 +9108,16 @@
     "dribble_success_pct": 0.0,
     "progressive_pass_pct": 0.125,
     "long_passes_p90": 2.717
+  },
+  "Adrien Sebastian Perruchet Silva": {
+    "defensive_actions_p90": 0.7377,
+    "interceptions_p90": 0.0,
+    "progressive_carries_p90": 1.1066,
+    "pass_completion_pct": 0.9515,
+    "tackle_win_pct": 1.0,
+    "dribble_success_pct": 0.0,
+    "progressive_pass_pct": 0.1748,
+    "long_passes_p90": 7.7459
   },
   "Lucas Torreira Di Pascua": {
     "defensive_actions_p90": 2.4129,

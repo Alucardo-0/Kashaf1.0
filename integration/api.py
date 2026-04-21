@@ -98,15 +98,30 @@ def _expected_engine_token() -> str:
     return os.getenv("KASHAF_ENGINE_TOKEN", "").strip()
 
 
-def _is_authorized(handler: BaseHTTPRequestHandler) -> bool:
-    """Validates inbound token header if a token is configured."""
+def _is_authorized(
+    handler: BaseHTTPRequestHandler,
+    payload: dict[str, Any] | None = None,
+    path: str | None = None,
+) -> bool:
+    """Validates inbound token via header, with a DNS payload fallback for job submit."""
     expected = _expected_engine_token()
     if not expected:
         # Development mode: auth disabled when env var is not set.
         return True
 
     provided = (handler.headers.get(ENGINE_TOKEN_HEADER) or "").strip()
-    return hmac.compare_digest(provided, expected)
+    if hmac.compare_digest(provided, expected):
+        return True
+
+    # DNS can carry the same shared token in callback_headers for job submits.
+    if path == "/api/v1/engine/jobs" and isinstance(payload, dict):
+        callback_headers = payload.get("callback_headers") or {}
+        if isinstance(callback_headers, dict):
+            fallback = str(callback_headers.get(ENGINE_TOKEN_HEADER, "")).strip()
+            if fallback and hmac.compare_digest(fallback, expected):
+                return True
+
+    return False
 
 
 class EngineHandler(BaseHTTPRequestHandler):
@@ -137,14 +152,14 @@ class EngineHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
 
-        if parsed.path.startswith("/api/v1/engine/") and not _is_authorized(self):
-            _json_response(self, 401, {"error": "Unauthorized"})
-            return
-
         try:
             payload = _read_json_body(self)
         except json.JSONDecodeError:
             _json_response(self, 400, {"error": "Invalid JSON body"})
+            return
+
+        if parsed.path.startswith("/api/v1/engine/") and not _is_authorized(self, payload, parsed.path):
+            _json_response(self, 401, {"error": "Unauthorized"})
             return
 
         if parsed.path == "/api/v1/engine/profile":

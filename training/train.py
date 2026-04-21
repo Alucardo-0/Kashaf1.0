@@ -74,6 +74,7 @@ FEATURE_MODULES = {"cb": cb, "fb": fb, "mf": mf, "wg": wg, "st": st}
 
 EVENTS_DIR  = Path("data/statsbomb/data/events")
 LINEUPS_DIR = Path("data/statsbomb/data/lineups")
+MATCHES_DIR = Path("data/statsbomb/data/matches")
 OUTPUT_DIR  = Path("models")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
@@ -81,6 +82,45 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 def _events_threshold(unit: str) -> int:
     """Returns the configured minimum event threshold for a given unit."""
     return MIN_EVENTS_THRESHOLD_BY_UNIT.get(unit, MIN_EVENTS_THRESHOLD)
+
+
+def _load_match_gender_map(matches_dir: Path) -> dict[str, str]:
+    """Loads {match_id: gender} from StatsBomb matches metadata."""
+    match_gender: dict[str, str] = {}
+
+    for season_file in matches_dir.glob("*/*.json"):
+        with open(season_file, encoding="utf-8") as f:
+            matches = json.load(f)
+        for match in matches:
+            match_id = str(match.get("match_id"))
+            competition = match.get("competition", {}) or {}
+            raw_gender = str(competition.get("competition_gender", "")).strip().lower()
+            competition_name = str(competition.get("competition_name", "")).strip().lower()
+            combined = f"{raw_gender} {competition_name}"
+
+            if any(token in combined for token in ("female", "women", "woman", "girls")):
+                gender = "female"
+            else:
+                # Treat non-female competitions as male so we only exclude
+                # explicitly female datasets.
+                gender = "male"
+
+            match_gender[match_id] = gender
+
+    return match_gender
+
+
+def _filter_registry_to_male_matches(
+    player_registry: dict[str, list[str]],
+    match_gender: dict[str, str],
+) -> dict[str, list[str]]:
+    """Keeps only male matches in each player's registry entry."""
+    filtered: dict[str, list[str]] = {}
+    for player_name, match_ids in player_registry.items():
+        male_ids = [mid for mid in match_ids if match_gender.get(str(mid)) == "male"]
+        if male_ids:
+            filtered[player_name] = male_ids
+    return filtered
 
 
 def load_player_registry(
@@ -205,7 +245,7 @@ def diagnose_unit_sample(
     print(f"  Running diagnostic for {unit.upper()}...")
 
     EXPECTED_CORE_COUNTS = {"cb": 6, "fb": 5, "mf": 6, "wg": 6, "st": 5}
-    EXPECTED_CTX_COUNTS = {"cb": 6, "fb": 6, "mf": 8, "wg": 6, "st": 6}
+    EXPECTED_CTX_COUNTS = {"cb": 6, "fb": 6, "mf": 8, "wg": 7, "st": 6}
     threshold = _events_threshold(unit)
 
 
@@ -214,7 +254,7 @@ def diagnose_unit_sample(
         "cut_inside_carry_pct", "penalty_area_touch_pct",
         "drop_deep_reception_pct", "pass_completion_pct",
         "dribble_success_pct", "tackle_win_pct", "cross_completion_pct",
-        "progressive_pass_pct",
+        "progressive_pass_pct", "headed_shots_pct",
     }
 
     for player_name, match_ids in player_registry.items():
@@ -537,6 +577,8 @@ def train_all():
         raise FileNotFoundError(f"Events dir not found: {EVENTS_DIR.resolve()}")
     if not LINEUPS_DIR.exists():
         raise FileNotFoundError(f"Lineups dir not found: {LINEUPS_DIR.resolve()}")
+    if not MATCHES_DIR.exists():
+        raise FileNotFoundError(f"Matches dir not found: {MATCHES_DIR.resolve()}")
 
     index_path = Path("data/statsbomb/player_index.json")
     if not index_path.exists():
@@ -549,8 +591,20 @@ def train_all():
         player_index = json.load(f)
     print(f"  OK Loaded player index: {len(player_index)} player-seasons")
 
+    match_gender = _load_match_gender_map(MATCHES_DIR)
+    male_count = sum(1 for g in match_gender.values() if g == "male")
+    female_count = sum(1 for g in match_gender.values() if g == "female")
+    unknown_count = sum(1 for g in match_gender.values() if g == "unknown")
+    print(
+        f"  Match metadata loaded: male={male_count}, "
+        f"female={female_count}, unknown={unknown_count}"
+    )
+
     player_registry = load_player_registry(LINEUPS_DIR, player_index)
-    player_unit_map = build_player_unit_map(LINEUPS_DIR, player_index)
+    player_registry = _filter_registry_to_male_matches(player_registry, match_gender)
+    print(f"  Male-only player registry: {len(player_registry)} player-seasons")
+
+    player_unit_map = build_player_unit_map(LINEUPS_DIR, player_registry)
 
     print(f"Events:  {len(list(EVENTS_DIR.glob('*.json')))} files")
     print(f"Lineups: {len(list(LINEUPS_DIR.glob('*.json')))} files")

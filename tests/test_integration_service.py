@@ -1,6 +1,6 @@
 import pandas as pd
 
-from integration.service import run_engine_job
+from integration.service import _build_dataframe, run_engine_job
 
 
 def test_run_engine_job_validates_required_fields():
@@ -46,4 +46,32 @@ def test_dataframe_filtering_requires_player_rows(monkeypatch):
         assert False, "Expected ValueError for missing player rows"
     except ValueError as exc:
         assert "No events found" in str(exc)
+
+
+def test_build_dataframe_normalizes_dns_event_shape():
+    payload = {
+        "player_name": "Nico Williams",
+        "metadata": {"matchId": "m1"},
+        "events": [
+            {
+                "eventType": "Pass",
+                "originX": 20,
+                "originY": 30,
+                "destinationX": 40,
+                "destinationY": 35,
+                "outcome": "success",
+                "isSetPiece": False,
+            }
+        ],
+    }
+
+    df = _build_dataframe(payload)
+    row = df.iloc[0]
+
+    assert row["player_name"] == "Nico Williams"
+    assert row["match_id"] == "m1"
+    assert row["action_type"] == "pass"
+    assert bool(row["outcome"]) is True
+    assert row["minutes"] == 90
+
 

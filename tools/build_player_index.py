@@ -31,8 +31,19 @@ def _load_match_season_map(matches_dir: Path) -> dict[str, tuple[str, str]]:
         for match in matches:
             match_id = str(match["match_id"])
             season = match.get("season", {}).get("season_name", "Unknown")
-            gender = match.get("competition", {}).get("competition_gender", "male")
-            match_season[match_id] = (season, str(gender).lower())
+            competition = match.get("competition", {}) or {}
+            raw_gender = str(competition.get("competition_gender", "")).strip().lower()
+            competition_name = str(competition.get("competition_name", "")).strip().lower()
+
+            combined = f"{raw_gender} {competition_name}"
+            if any(token in combined for token in ("female", "women", "woman", "girls")):
+                gender = "female"
+            else:
+                # Treat non-female competitions as male so we only exclude
+                # explicitly female datasets.
+                gender = "male"
+
+            match_season[match_id] = (season, gender)
 
     return match_season
 
@@ -56,7 +67,12 @@ def build_player_index(events_dir: Path, matches_dir: Path, output_path: Path) -
 
     male_matches = {mid for mid, (_, g) in match_season.items() if g == "male"}
     female_matches = {mid for mid, (_, g) in match_season.items() if g == "female"}
-    print(f"  Male matches: {len(male_matches)}, Female matches excluded: {len(female_matches)}")
+    unknown_matches = {mid for mid, (_, g) in match_season.items() if g == "unknown"}
+    print(
+        f"  Male matches: {len(male_matches)}, "
+        f"Female matches excluded: {len(female_matches)}, "
+        f"Unknown excluded: {len(unknown_matches)}"
+    )
 
     index: dict[str, list[str]] = {}
     total = len(event_files)

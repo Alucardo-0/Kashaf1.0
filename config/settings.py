@@ -25,6 +25,10 @@ WIDE_ZONE_Y_MIN      = 55.0   # bottom wide channel (y > 55)
 CENTRAL_ZONE_Y_MIN   = 25.0
 CENTRAL_ZONE_Y_MAX   = 55.0
 
+# Wide carry detection - carry end point within this distance of touchline.
+# In our 100x100 space, touchlines are y=0 and y=100.
+WIDE_CARRY_TOUCHLINE_DIST = 15.0
+
 # Penalty box
 BOX_X_MIN            = 83.0
 BOX_Y_MIN            = 20.0
@@ -56,7 +60,7 @@ K_VALUES = {
     "cb": 4,
     "fb": 3,
     "mf": 4,
-    "wg": 3,
+    "wg": 4,
     "st": 3,
 }
 

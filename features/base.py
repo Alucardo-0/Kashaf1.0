@@ -303,6 +303,24 @@ def progressive_carries_p90(df: pd.DataFrame, minutes: float, unit: str) -> floa
     return per90(count, minutes)
 
 
+def wide_carries_p90(df: pd.DataFrame, minutes: float) -> float:
+    """
+    Open-play carries ending near either touchline, per 90.
+    """
+    from config.settings import WIDE_CARRY_TOUCHLINE_DIST
+
+    carries = open_play(action_filter(df, "carry"))
+    carries = carries[carries["end_y"].notna()]
+    if carries.empty:
+        return 0.0
+
+    near_touchline = (
+        (carries["end_y"] <= WIDE_CARRY_TOUCHLINE_DIST)
+        | (carries["end_y"] >= (100.0 - WIDE_CARRY_TOUCHLINE_DIST))
+    )
+    return per90(near_touchline.sum(), minutes)
+
+
 def crosses_p90(df: pd.DataFrame, minutes: float) -> float:
     """Crosses per 90 (derived from pass coordinates)."""
     passes = open_play(action_filter(df, "pass"))
