@@ -2,9 +2,9 @@
 
 Player profiling and archetype clustering engine.
 
-## What was added for DNS integration
+## Integration overview
 
-This repo now includes a lightweight HTTP integration layer so the DNS app can:
+This repo includes a lightweight HTTP integration layer so the KASHAF platform can:
 1. send tagged match data to the engine,
 2. receive a scouting report,
 3. display it to scouts (and later player-facing views).
@@ -15,7 +15,7 @@ Integration modules:
 
 ## Quick start
 
-Set `KASHAF_ENGINE_TOKEN` in production so inbound DNS -> engine calls are authenticated via `X-Engine-Token`.
+Set `KASHAF_ENGINE_TOKEN` in production so inbound KASHAF -> engine calls are authenticated via `X-Engine-Token`.
 
 ```powershell
 $env:KASHAF_ENGINE_TOKEN = "replace-with-strong-shared-secret"
@@ -60,11 +60,11 @@ Headers:
 Example body:
 ```json
 {
-  "job_id": "dns-match-1234-salah",
+  "job_id": "kashaf-match-1234-salah",
   "player_name": "Mohamed Salah",
   "unit": "wg",
   "events": [],
-  "callback_url": "https://your-dns-domain/api/engine/callback",
+  "callback_url": "https://your-kashaf-domain/api/engine/callback",
   "callback_headers": {
     "X-Engine-Token": "replace-this"
   },
@@ -82,12 +82,12 @@ Check status:
 Notes:
 - `job_id` is idempotent: posting the same `job_id` again returns the existing job record and does not enqueue duplicate work.
 
-## Callback payload sent back to DNS
+## Callback payload sent back to KASHAF
 
 Success:
 ```json
 {
-  "job_id": "dns-match-1234-salah",
+  "job_id": "kashaf-match-1234-salah",
   "status": "completed",
   "result": {
     "player_name": "Mohamed Salah",
@@ -104,7 +104,7 @@ Success:
 Failure:
 ```json
 {
-  "job_id": "dns-match-1234-salah",
+  "job_id": "kashaf-match-1234-salah",
   "status": "failed",
   "error": {
     "message": "..."
@@ -127,6 +127,6 @@ git branch -M main
 git push -u origin main
 ```
 
-3. In DNS, call this engine API when analyst tagging is completed.
-4. Implement DNS callback endpoint to receive finished report payloads.
+3. In KASHAF, call this engine API when analyst tagging is completed.
+4. Implement a KASHAF callback endpoint to receive finished report payloads.
 
