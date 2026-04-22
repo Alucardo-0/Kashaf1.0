@@ -14,6 +14,7 @@ For each unit:
 
 import json
 import pickle
+import sys
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -77,6 +78,17 @@ LINEUPS_DIR = Path("data/statsbomb/data/lineups")
 MATCHES_DIR = Path("data/statsbomb/data/matches")
 OUTPUT_DIR  = Path("models")
 OUTPUT_DIR.mkdir(exist_ok=True)
+
+
+def _safe_console_text(text: str) -> str:
+    """Returns text safely representable in the current stdout encoding."""
+    encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+    return text.encode(encoding, errors="replace").decode(encoding, errors="replace")
+
+
+def _safe_name(name: str, max_len: int = 50) -> str:
+    """Shortens and normalizes player names for progress printing."""
+    return _safe_console_text(name[:max_len])
 
 
 def _events_threshold(unit: str) -> int:
@@ -201,7 +213,7 @@ def build_feature_matrix(
     threshold = _events_threshold(unit)
 
     for i, (versioned_key, match_ids) in enumerate(unit_players, 1):
-        print(f"  [{i}/{len(unit_players)}] {versioned_key[:50]:<50}", end="\r")
+        print(f"  [{i}/{len(unit_players)}] {_safe_name(versioned_key):<50}", end="\r")
 
         raw_name = _strip_season(versioned_key)
         try:
@@ -265,7 +277,7 @@ def diagnose_unit_sample(
         try:
             events = extract_player_events_from_competition(EVENTS_DIR, match_ids, raw_name)
         except Exception as exc:
-            print(f"  Diagnostic skip ({player_name}): {exc}")
+            print(f"  Diagnostic skip ({_safe_name(player_name)}): {exc}")
             continue
 
         if len(events) < threshold:
@@ -358,27 +370,27 @@ def diagnose_unit_sample(
 
         # Report
         if errors:
-            print(f"  X Diagnostic FAILED for {player_name}:")
+            print(f"  X Diagnostic FAILED for {_safe_name(player_name)}:")
             for issue in errors:
                 print(f"      - {issue}")
             print(f"  X Aborting {unit.upper()} training due to severe diagnostic issues.")
             return False
 
         if len(warnings) >= DIAG_MAX_WARNINGS_BEFORE_ABORT:
-            print(f"  X Diagnostic FAILED for {player_name}: too many warnings ({len(warnings)}).")
+            print(f"  X Diagnostic FAILED for {_safe_name(player_name)}: too many warnings ({len(warnings)}).")
             for issue in warnings:
                 print(f"      - {issue}")
             print(f"  X Aborting {unit.upper()} training (warning limit={DIAG_MAX_WARNINGS_BEFORE_ABORT}).")
             return False
 
         if warnings:
-            print(f"  ! Diagnostic warnings for {player_name}:")
+            print(f"  ! Diagnostic warnings for {_safe_name(player_name)}:")
             for issue in warnings:
                 print(f"      - {issue}")
 
         pass_success_text = f"{success_rate:.0%}" if success_rate is not None else "N/A"
         print(
-            f"  OK Diagnostic sample: {player_name} | "
+            f"  OK Diagnostic sample: {_safe_name(player_name)} | "
             f"events={len(df)} | matches={df['match_id'].nunique()} | "
             f"core={len(core)} | context={len(context)} | "
             f"pass_success={pass_success_text}"
@@ -487,7 +499,7 @@ def train_unit(unit: str, player_registry: dict, player_unit_map: dict):
     ]
 
     for i, (versioned_key, match_ids) in enumerate(unit_players, 1):
-        print(f"  [{i}/{len(unit_players)}] {versioned_key[:50]:<50}", end="\r")
+        print(f"  [{i}/{len(unit_players)}] {_safe_name(versioned_key):<50}", end="\r")
 
         raw_name = _strip_season(versioned_key)
         try:

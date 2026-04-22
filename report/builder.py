@@ -24,7 +24,7 @@ PERCENTAGE_FIELDS = {
 }
 
 # Archetypes indicating insufficient data rather than a stable profile.
-INSUFFICIENT_DATA_ARCHETYPES = {"Sweeper", "Low Data Winger"}
+INSUFFICIENT_DATA_ARCHETYPES = {"Sweeper"}
 INSUFFICIENT_DATA_THRESHOLD = 60.0
 
 
