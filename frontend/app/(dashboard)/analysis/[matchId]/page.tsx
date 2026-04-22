@@ -1,0 +1,763 @@
+"use client";
+
+import { useState, useRef, useCallback } from "react";
+import { useQuery, useMutation, useAction } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useParams, useRouter } from "next/navigation";
+import type { Id } from "@/convex/_generated/dataModel";
+
+/* ── Constants ────────────────────────────────────────────────────────── */
+const EVENT_TYPES = [
+    { value: "pass", label: "Pass", color: "#3B82F6" },
+    { value: "shot", label: "Shot", color: "#EF4444" },
+    { value: "cross", label: "Cross", color: "#F59E0B" },
+    { value: "dribble", label: "Dribble", color: "#8B5CF6" },
+    { value: "tackle", label: "Tackle", color: "#06B6D4" },
+    { value: "interception", label: "Interception", color: "#22C55E" },
+    { value: "aerial", label: "Aerial Duel", color: "#EC4899" },
+];
+
+const OUTCOMES: Record<string, string[]> = {
+    pass: ["Successful", "Failed", "Key Pass", "Assist"],
+    shot: ["On Target", "Off Target", "Blocked", "Goal"],
+    cross: ["Successful", "Failed", "Assist"],
+    dribble: ["Successful", "Failed"],
+    tackle: ["Won", "Lost", "Foul"],
+    interception: ["Successful", "Failed"],
+    aerial: ["Won", "Lost"],
+};
+
+/* ── Format timestamp ─────────────────────────────────────────────────── */
+function formatTimestamp(seconds: number) {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+/* ── Pitch SVG Component ──────────────────────────────────────────────── */
+function PitchMap({
+    events,
+    onPitchClick,
+    clickMode,
+    pendingOrigin,
+    pendingDestination,
+}: {
+    events: Array<{
+        _id: string;
+        eventType: string;
+        originX: number;
+        originY: number;
+        destinationX?: number;
+        destinationY?: number;
+    }>;
+    onPitchClick: (x: number, y: number) => void;
+    clickMode: "origin" | "destination" | null;
+    pendingOrigin: { x: number; y: number } | null;
+    pendingDestination?: { x: number; y: number } | null;
+}) {
+    const svgRef = useRef<SVGSVGElement>(null);
+
+    const handleClick = useCallback(
+        (e: React.MouseEvent<SVGSVGElement>) => {
+            if (!clickMode || !svgRef.current) return;
+            const rect = svgRef.current.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            onPitchClick(Math.round(x * 10) / 10, Math.round(y * 10) / 10);
+        },
+        [clickMode, onPitchClick]
+    );
+
+    const getEventColor = (type: string) => EVENT_TYPES.find((e) => e.value === type)?.color ?? "#fff";
+
+    return (
+        <div className="relative w-full aspect-[68/105] bg-[#1a472a] rounded-2xl overflow-hidden border border-white/10 shadow-xl">
+            <svg
+                ref={svgRef}
+                viewBox="0 0 68 105"
+                className={`w-full h-full ${clickMode ? "cursor-crosshair" : ""}`}
+                onClick={handleClick}
+            >
+                {/* Pitch markings */}
+                <rect x="0" y="0" width="68" height="105" fill="none" stroke="white" strokeWidth="0.3" strokeOpacity="0.5" />
+                {/* Center line */}
+                <line x1="0" y1="52.5" x2="68" y2="52.5" stroke="white" strokeWidth="0.2" strokeOpacity="0.5" />
+                {/* Center circle */}
+                <circle cx="34" cy="52.5" r="9.15" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.5" />
+                <circle cx="34" cy="52.5" r="0.5" fill="white" fillOpacity="0.5" />
+                {/* Penalty area top */}
+                <rect x="13.84" y="0" width="40.32" height="16.5" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.5" />
+                <rect x="24.84" y="0" width="18.32" height="5.5" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.5" />
+                <circle cx="34" cy="11" r="0.5" fill="white" fillOpacity="0.5" />
+                {/* Penalty area bottom */}
+                <rect x="13.84" y="88.5" width="40.32" height="16.5" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.5" />
+                <rect x="24.84" y="99.5" width="18.32" height="5.5" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.5" />
+                <circle cx="34" cy="94" r="0.5" fill="white" fillOpacity="0.5" />
+                {/* Penalty arcs */}
+                <path d="M 29 16.5 A 9.15 9.15 0 0 0 39 16.5" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.5" />
+                <path d="M 29 88.5 A 9.15 9.15 0 0 1 39 88.5" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.5" />
+                {/* Corner arcs */}
+                <path d="M 0 1 A 1 1 0 0 0 1 0" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.3" />
+                <path d="M 67 0 A 1 1 0 0 0 68 1" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.3" />
+                <path d="M 0 104 A 1 1 0 0 1 1 105" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.3" />
+                <path d="M 67 105 A 1 1 0 0 0 68 104" fill="none" stroke="white" strokeWidth="0.15" strokeOpacity="0.3" />
+
+                {/* Events */}
+                {events.map((ev) => {
+                    const color = getEventColor(ev.eventType);
+                    const ox = (ev.originX / 100) * 68;
+                    const oy = (ev.originY / 100) * 105;
+                    return (
+                        <g key={ev._id}>
+                            {/* Destination line */}
+                            {ev.destinationX !== undefined && ev.destinationY !== undefined && (
+                                <line
+                                    x1={ox}
+                                    y1={oy}
+                                    x2={(ev.destinationX / 100) * 68}
+                                    y2={(ev.destinationY / 100) * 105}
+                                    stroke={color}
+                                    strokeWidth="0.4"
+                                    strokeOpacity="0.6"
+                                    strokeDasharray="1,0.5"
+                                    markerEnd=""
+                                />
+                            )}
+                            {/* Destination dot */}
+                            {ev.destinationX !== undefined && ev.destinationY !== undefined && (
+                                <circle
+                                    cx={(ev.destinationX / 100) * 68}
+                                    cy={(ev.destinationY / 100) * 105}
+                                    r="0.8"
+                                    fill={color}
+                                    fillOpacity="0.4"
+                                    stroke={color}
+                                    strokeWidth="0.2"
+                                />
+                            )}
+                            {/* Origin dot */}
+                            <circle cx={ox} cy={oy} r="1.2" fill={color} fillOpacity="0.8" stroke="white" strokeWidth="0.2" />
+                        </g>
+                    );
+                })}
+
+                {/* Pending line connecting origin and destination */}
+                {pendingOrigin && pendingDestination && (
+                    <line
+                        x1={(pendingOrigin.x / 100) * 68}
+                        y1={(pendingOrigin.y / 100) * 105}
+                        x2={(pendingDestination.x / 100) * 68}
+                        y2={(pendingDestination.y / 100) * 105}
+                        stroke="#3B82F6"
+                        strokeWidth="0.4"
+                        strokeOpacity="0.6"
+                        strokeDasharray="1,0.5"
+                    />
+                )}
+
+                {/* Pending origin marker */}
+                {pendingOrigin && (
+                    <circle
+                        cx={(pendingOrigin.x / 100) * 68}
+                        cy={(pendingOrigin.y / 100) * 105}
+                        r="1.2"
+                        fill="#00FF87"
+                        fillOpacity="0.8"
+                        stroke="white"
+                        strokeWidth="0.2"
+                        className={!pendingDestination ? "animate-pulse" : ""}
+                    />
+                )}
+                
+                {/* Pending destination marker */}
+                {pendingDestination && (
+                    <circle
+                        cx={(pendingDestination.x / 100) * 68}
+                        cy={(pendingDestination.y / 100) * 105}
+                        r="1.2"
+                        fill="#3B82F6"
+                        fillOpacity="0.8"
+                        stroke="white"
+                        strokeWidth="0.2"
+                    />
+                )}
+            </svg>
+
+            {/* Click mode indicator */}
+            {clickMode && (
+                <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-black/70 backdrop-blur-sm text-xs font-medium text-[#00FF87] border border-[#00FF87]/30">
+                    Click to set {clickMode === "origin" ? "origin" : "destination"} point
+                </div>
+            )}
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MATCH ANALYSIS PAGE
+   ══════════════════════════════════════════════════════════════════════ */
+export default function MatchAnalysisPage() {
+    const params = useParams();
+    const router = useRouter();
+    const matchId = params.matchId as Id<"matches">;
+
+    /* ── Queries ──────────────────────────────────────────────────────── */
+    const match = useQuery(api.matches.getMatchById, { matchId });
+    const events = useQuery(api.analysisEvents.getEventsByMatch, { matchId });
+    const existingSummary = useQuery(api.matchSummaries.getSummaryByMatch, { matchId });
+    const user = useQuery(api.users.getCurrentUser);
+
+    /* ── Mutations ────────────────────────────────────────────────────── */
+    const logEvent = useMutation(api.analysisEvents.logEvent);
+    const deleteEvent = useMutation(api.analysisEvents.deleteEvent);
+    const updateMatchStatus = useMutation(api.matches.updateMatchStatus);
+    const createSummary = useMutation(api.matchSummaries.createSummary);
+    const getAndQueueEngineJob = useAction(api.engine.getAndQueueEngineJob);
+
+    /* ── Event Logger State ───────────────────────────────────────────── */
+    const [selectedEventType, setSelectedEventType] = useState("pass");
+    const [selectedOutcome, setSelectedOutcome] = useState("Successful");
+    const [clickMode, setClickMode] = useState<"origin" | "destination" | null>(null);
+    const [pendingOrigin, setPendingOrigin] = useState<{ x: number; y: number } | null>(null);
+    const [pendingDestination, setPendingDestination] = useState<{ x: number; y: number } | null>(null);
+    const [videoTimestamp, setVideoTimestamp] = useState(0);
+    const [eventNotes, setEventNotes] = useState("");
+    const [isSetPiece, setIsSetPiece] = useState(false);
+    const [logLoading, setLogLoading] = useState(false);
+
+    /* ── Summary State ────────────────────────────────────────────────── */
+    const [showSummary, setShowSummary] = useState(false);
+    const [overallRating, setOverallRating] = useState(7);
+    const [strengths, setStrengths] = useState("");
+    const [weaknesses, setWeaknesses] = useState("");
+    const [writtenSummary, setWrittenSummary] = useState("");
+    const [summaryLoading, setSummaryLoading] = useState(false);
+    const [engineError, setEngineError] = useState<string | null>(null);
+
+    /* ── Tab state ────────────────────────────────────────────────────── */
+    const [activePanel, setActivePanel] = useState<"events" | "timeline">("events");
+
+    /* ── Loading ──────────────────────────────────────────────────────── */
+    if (match === undefined || user === undefined) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <svg className="animate-spin h-8 w-8 text-[#3B82F6]" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+            </div>
+        );
+    }
+
+    if (!match) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen gap-4">
+                <p className="text-white/40">Match not found</p>
+                <button onClick={() => router.back()} className="text-sm text-[#3B82F6] hover:underline cursor-pointer">Go back</button>
+            </div>
+        );
+    }
+
+    const isCompleted = match.status === "completed";
+
+    /* ── Handlers ─────────────────────────────────────────────────────── */
+    const handlePitchClick = (x: number, y: number) => {
+        if (clickMode === "origin") {
+            setPendingOrigin({ x, y });
+            setClickMode("destination");
+        } else if (clickMode === "destination") {
+            setPendingDestination({ x, y });
+            setClickMode(null);
+        }
+    };
+
+    const handleLogEvent = async () => {
+        if (!pendingOrigin || !match.playerId) return;
+        setLogLoading(true);
+        try {
+            // Set match to "in progress" if it's still "assigned"
+            if (match.status === "analyst_assigned") {
+                await updateMatchStatus({ matchId, status: "analysis_in_progress" });
+            }
+
+            await logEvent({
+                matchId,
+                playerId: match.playerId as Id<"users">,
+                eventType: selectedEventType,
+                outcome: selectedOutcome,
+                originX: pendingOrigin.x,
+                originY: pendingOrigin.y,
+                destinationX: pendingDestination?.x,
+                destinationY: pendingDestination?.y,
+                videoTimestamp,
+                notes: eventNotes || undefined,
+                isSetPiece,
+            });
+
+            // Reset
+            setPendingOrigin(null);
+            setPendingDestination(null);
+            setEventNotes("");
+            setIsSetPiece(false);
+            setVideoTimestamp((prev) => prev);
+        } catch {
+            /* silent */
+        }
+        setLogLoading(false);
+    };
+
+    const handleDeleteEvent = async (eventId: Id<"analysisEvents">) => {
+        try {
+            await deleteEvent({ eventId });
+        } catch {
+            /* silent */
+        }
+    };
+
+    const handleSubmitSummary = async () => {
+        if (!strengths || !weaknesses || !writtenSummary) return;
+        setSummaryLoading(true);
+        setEngineError(null);
+
+        try {
+            // Step 1: Prepare job payload via Convex (doesn't finalize anything yet)
+            if (!match.playerId || !match.analystId) {
+                setEngineError("Match is missing player or analyst data. Cannot submit.");
+                setSummaryLoading(false);
+                return;
+            }
+
+            let payload: any = null;
+            try {
+                payload = await getAndQueueEngineJob({
+                    matchId,
+                    playerId: match.playerId as Id<"users">,
+                    analystId: match.analystId as Id<"users">,
+                });
+            } catch (err: any) {
+                setEngineError("Failed to prepare engine job: " + (err?.message || "Unknown error"));
+                setSummaryLoading(false);
+                return;
+            }
+
+            // Step 2: Send to local Python Engine via proxy
+            try {
+                const res = await fetch("/api/engine/proxy", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) {
+                    const errText = await res.text();
+                    setEngineError(`Engine rejected the job (${res.status}): ${errText}`);
+                    setSummaryLoading(false);
+                    return;
+                }
+            } catch (err: any) {
+                setEngineError("Could not reach the local engine. Is it running on port 8080? Error: " + (err?.message || "Network error"));
+                setSummaryLoading(false);
+                return;
+            }
+
+            // Step 3: Engine accepted — now safe to finalize the analysis
+            await createSummary({
+                matchId,
+                overallRating,
+                strengths: strengths.split(",").map((s) => s.trim()).filter(Boolean),
+                weaknesses: weaknesses.split(",").map((s) => s.trim()).filter(Boolean),
+                positionProfile: [],
+                writtenSummary,
+            });
+
+            setShowSummary(false);
+        } catch (err: any) {
+            setEngineError("Unexpected error: " + (err?.message || "Please try again."));
+        }
+        setSummaryLoading(false);
+    };
+
+    const eventColors: Record<string, string> = {};
+    EVENT_TYPES.forEach((e) => { eventColors[e.value] = e.color; });
+
+    return (
+        <div className="flex flex-col h-screen overflow-hidden">
+            {/* ── Top Bar ─────────────────────────────────────────────── */}
+            <div className="flex items-center justify-between px-6 py-3 border-b border-white/[0.06] bg-[#0d0d14] shrink-0">
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => router.push(`/dashboard/${user?.role ?? "analyst"}`)}
+                        className="text-white/40 hover:text-white transition-colors cursor-pointer"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 className="text-sm font-semibold text-white">
+                            {match.opponentName ? `vs ${match.opponentName}` : "Match Analysis"}
+                        </h1>
+                        <p className="text-[11px] text-white/30">
+                            {events?.length ?? 0} events logged
+                            {isCompleted && " · ✅ Completed"}
+                        </p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    {!isCompleted && !existingSummary && (events?.length ?? 0) > 0 && (
+                        <button
+                            onClick={() => setShowSummary(true)}
+                            className="px-4 py-2 rounded-xl text-xs font-semibold text-[#0A0A0F] bg-[#00FF87] hover:bg-[#00FF87]/90 transition-all cursor-pointer"
+                        >
+                            Complete Analysis
+                        </button>
+                    )}
+                    <a
+                        href={match.youtubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white/30 hover:text-white/60 transition-colors p-2"
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            {/* ── Main Layout ─────────────────────────────────────────── */}
+            <div className="flex-1 flex overflow-hidden">
+                {/* Left: Video Space & Event Logger */}
+                <div className="flex-1 flex flex-col overflow-hidden bg-[#0A0A0F]">
+                    {/* Video Embed */}
+                    <div className="flex-1 p-4 lg:p-6 flex items-center justify-center overflow-auto min-h-[400px]">
+                        <div className="w-full max-w-5xl aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl">
+                            <iframe
+                                src={`https://www.youtube.com/embed/${match.youtubeVideoId}?enablejsapi=1`}
+                                className="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                                allowFullScreen
+                            />
+                        </div>
+                    </div>
+
+                    {/* Logger Panel (Bottom) */}
+                    {!isCompleted && (
+                        <div className="shrink-0 border-t border-white/[0.06] bg-[#0d0d14] p-4 lg:p-6 overflow-y-auto w-full">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                                {/* Column 1: Event Type */}
+                                <div>
+                                    <label className="block text-xs font-medium text-white/50 mb-3">Event Type</label>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {EVENT_TYPES.map((et) => (
+                                            <button
+                                                key={et.value}
+                                                onClick={() => {
+                                                    setSelectedEventType(et.value);
+                                                    setSelectedOutcome(OUTCOMES[et.value]?.[0] ?? "Successful");
+                                                }}
+                                                className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer border ${selectedEventType === et.value
+                                                    ? "border-white/20 shadow-sm"
+                                                    : "border-transparent hover:bg-white/5"
+                                                    }`}
+                                                style={{
+                                                    backgroundColor: selectedEventType === et.value ? `${et.color}20` : "",
+                                                    color: selectedEventType === et.value ? et.color : "rgba(255,255,255,0.5)",
+                                                }}
+                                            >
+                                                {et.label}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <label className="block text-xs font-medium text-white/50 mb-2 mt-5">Video Timestamp (min)</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="0.5"
+                                        value={videoTimestamp}
+                                        onChange={(e) => setVideoTimestamp(Number(e.target.value))}
+                                        className="w-24 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-[#3B82F6]"
+                                    />
+                                    
+                                    <div className="flex items-center justify-between mt-5 w-48">
+                                        <label className="block text-xs font-medium text-white/50">Is this a Set Piece?</label>
+                                        <button
+                                            onClick={() => setIsSetPiece(!isSetPiece)}
+                                            className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer border ${isSetPiece
+                                                ? "bg-[#A855F7]/10 text-[#A855F7] border-[#A855F7]/30"
+                                                : "bg-white/[0.03] text-white/40 border-transparent hover:bg-white/5"
+                                            }`}
+                                        >
+                                            {isSetPiece ? "Yes" : "No"}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Column 2: Outcome & Pitch Controls */}
+                                <div className="space-y-5">
+                                    <div>
+                                        <label className="block text-xs font-medium text-white/50 mb-3">Outcome</label>
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {(OUTCOMES[selectedEventType] ?? []).map((o) => (
+                                                <button
+                                                    key={o}
+                                                    onClick={() => setSelectedOutcome(o)}
+                                                    className={`px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${selectedOutcome === o
+                                                        ? "bg-white/10 text-white font-medium"
+                                                        : "bg-white/[0.03] text-white/40 hover:bg-white/5"
+                                                        }`}
+                                                >
+                                                    {o}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-medium text-white/50 mb-2">Position on Pitch</label>
+                                        <div className="flex flex-col xl:flex-row gap-2">
+                                            <button
+                                                onClick={() => {
+                                                    setPendingOrigin(null);
+                                                    setPendingDestination(null);
+                                                    setClickMode("origin");
+                                                }}
+                                                className={`flex-1 px-3 py-2 text-center rounded-lg text-xs transition-all cursor-pointer border ${clickMode === "origin"
+                                                        ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30 animate-pulse"
+                                                        : pendingOrigin
+                                                            ? "bg-[#00FF87]/10 text-[#00FF87] border-[#00FF87]/30"
+                                                            : "bg-white/[0.03] text-white/40 border-white/[0.06] hover:bg-white/5"
+                                                    }`}
+                                            >
+                                                {pendingOrigin ? `Origin: ${pendingOrigin.x.toFixed(0)}%, ${pendingOrigin.y.toFixed(0)}%` : "Set Origin"}
+                                            </button>
+                                            <button
+                                                onClick={() => setClickMode("destination")}
+                                                disabled={!pendingOrigin}
+                                                className={`flex-1 px-3 py-2 text-center rounded-lg text-xs transition-all cursor-pointer border ${clickMode === "destination"
+                                                        ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30 animate-pulse"
+                                                        : pendingDestination
+                                                            ? "bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/30"
+                                                            : "bg-white/[0.03] text-white/40 border-white/[0.06] hover:bg-white/5 disabled:opacity-30"
+                                                    }`}
+                                            >
+                                                {pendingDestination ? `Dest: ${pendingDestination.x.toFixed(0)}%, ${pendingDestination.y.toFixed(0)}%` : "Set Destination"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Column 3 & 4: Notes and Submit */}
+                                <div className="lg:col-span-2 flex flex-col h-full">
+                                    <label className="block text-xs font-medium text-white/50 mb-3">Notes (optional)</label>
+                                    <textarea
+                                        value={eventNotes}
+                                        onChange={(e) => setEventNotes(e.target.value)}
+                                        placeholder="e.g. Great through ball to striker"
+                                        className="w-full flex-1 min-h-[80px] px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#3B82F6]/50 transition-all resize-none mb-4"
+                                    />
+                                    <button
+                                        onClick={handleLogEvent}
+                                        disabled={!pendingOrigin || logLoading}
+                                        className="w-full py-3 shrink-0 rounded-xl font-semibold text-sm text-[#0A0A0F] bg-[#00FF87] hover:bg-[#00FF87]/90 transition-all hover:shadow-lg hover:shadow-[#00FF87]/25 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer active:scale-[0.97]"
+                                    >
+                                        {logLoading ? "Logging..." : "Log Event"}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {isCompleted && (
+                        <div className="shrink-0 h-[100px] border-t border-white/[0.06] bg-[#0d0d14] p-4 flex items-center justify-center w-full">
+                            <div className="text-center">
+                                <span className="text-lg mb-1 block">✅</span>
+                                <p className="text-sm font-medium text-white/80">Analysis Complete</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Right: Pitch & Timeline */}
+                <div className="w-[380px] lg:w-[420px] 2xl:w-[480px] border-l border-white/[0.06] flex flex-col bg-[#0d0d14] shrink-0">
+                    {/* Pitch Map Section */}
+                    <div className="p-4 border-b border-white/[0.06] shrink-0">
+                        <PitchMap
+                            events={events ?? []}
+                            onPitchClick={handlePitchClick}
+                            clickMode={clickMode}
+                            pendingOrigin={pendingOrigin}
+                            pendingDestination={pendingDestination}
+                        />
+                        <div className="flex flex-wrap gap-2 mt-4">
+                            {EVENT_TYPES.map((et) => {
+                                const count = events?.filter((e) => e.eventType === et.value).length ?? 0;
+                                if (count === 0) return null;
+                                return (
+                                    <span key={et.value} className="flex items-center gap-1 text-[10px] text-white/40">
+                                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: et.color }} />
+                                        {et.label} ({count})
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Timeline Header */}
+                    <div className="px-5 py-3 border-b border-white/[0.06] shrink-0 flex items-center justify-between bg-white/[0.01]">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-white/50">Timeline</span>
+                        <span className="text-xs font-medium text-[#3B82F6] bg-[#3B82F6]/10 px-2 py-0.5 rounded-full">{events?.length ?? 0} events</span>
+                    </div>
+
+                    {/* Timeline List */}
+                    <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                        {!events || events.length === 0 ? (
+                            <div className="text-center py-12">
+                                <div className="text-3xl mb-2 opacity-50">📋</div>
+                                <p className="text-xs text-white/30">No events logged yet</p>
+                            </div>
+                        ) : (
+                            [...events].reverse().map((ev) => {
+                                const color = eventColors[ev.eventType] ?? "#fff";
+                                return (
+                                    <div
+                                        key={ev._id}
+                                        className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/10 transition-all group"
+                                    >
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-start gap-2">
+                                                <div
+                                                    className="w-2 h-2 rounded-full mt-1.5 shrink-0"
+                                                    style={{ backgroundColor: color }}
+                                                />
+                                                <div>
+                                                    <p className="text-xs font-medium text-white capitalize flex items-center">
+                                                        {ev.eventType.replace("_", " ")}
+                                                        <span className="text-white/40 font-normal mx-1.5">· {ev.outcome}</span>
+                                                        {ev.isSetPiece && (
+                                                            <span className="text-[#A855F7] font-medium ml-1 text-[9px] uppercase tracking-wider bg-[#A855F7]/15 px-1.5 py-0.5 rounded">
+                                                                Set Piece
+                                                            </span>
+                                                        )}
+                                                    </p>
+                                                    <p className="text-[10px] text-white/25 mt-0.5">
+                                                        {formatTimestamp(ev.videoTimestamp * 60)} · ({ev.originX.toFixed(0)}, {ev.originY.toFixed(0)})
+                                                        {ev.destinationX !== undefined && ` → (${ev.destinationX.toFixed(0)}, ${ev.destinationY?.toFixed(0)})`}
+                                                    </p>
+                                                    {ev.notes && (
+                                                        <p className="text-[10px] text-white/30 mt-1 italic">{ev.notes}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            {!isCompleted && (
+                                                <button
+                                                    onClick={() => handleDeleteEvent(ev._id as Id<"analysisEvents">)}
+                                                    className="opacity-0 group-hover:opacity-100 text-red-400/60 hover:text-red-400 transition-all cursor-pointer p-1"
+                                                >
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                                                    </svg>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* ── Summary Modal ────────────────────────────────────────── */}
+            {showSummary && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowSummary(false)} />
+                    <div className="relative w-full max-w-lg bg-[#12121a] border border-white/10 rounded-2xl p-6 shadow-2xl max-h-[85vh] overflow-y-auto">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-lg font-bold text-white">Complete Analysis</h2>
+                            <button onClick={() => setShowSummary(false)} className="text-white/40 hover:text-white transition-colors cursor-pointer">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                            </button>
+                        </div>
+
+                        <div className="space-y-4">
+                            {/* Overall Rating */}
+                            <div>
+                                <label className="block text-sm font-medium text-white/60 mb-2">Overall Rating: <span className="text-[#00FF87] font-bold">{overallRating}/10</span></label>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="10"
+                                    value={overallRating}
+                                    onChange={(e) => setOverallRating(Number(e.target.value))}
+                                    className="w-full accent-[#00FF87]"
+                                />
+                                <div className="flex justify-between text-[10px] text-white/20 mt-1">
+                                    <span>Poor</span><span>Average</span><span>Excellent</span>
+                                </div>
+                            </div>
+
+                            {/* Strengths */}
+                            <div>
+                                <label className="block text-sm font-medium text-white/60 mb-1.5">Strengths</label>
+                                <input
+                                    type="text"
+                                    value={strengths}
+                                    onChange={(e) => setStrengths(e.target.value)}
+                                    placeholder="Passing accuracy, Vision, Work rate"
+                                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#00FF87]/50 transition-all"
+                                />
+                                <p className="text-[10px] text-white/20 mt-1">Comma-separated</p>
+                            </div>
+
+                            {/* Weaknesses */}
+                            <div>
+                                <label className="block text-sm font-medium text-white/60 mb-1.5">Weaknesses</label>
+                                <input
+                                    type="text"
+                                    value={weaknesses}
+                                    onChange={(e) => setWeaknesses(e.target.value)}
+                                    placeholder="Aerial duels, Defensive positioning"
+                                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#00FF87]/50 transition-all"
+                                />
+                                <p className="text-[10px] text-white/20 mt-1">Comma-separated</p>
+                            </div>
+
+                            {/* Written Summary */}
+                            <div>
+                                <label className="block text-sm font-medium text-white/60 mb-1.5">Written Summary</label>
+                                <textarea
+                                    value={writtenSummary}
+                                    onChange={(e) => setWrittenSummary(e.target.value)}
+                                    rows={5}
+                                    placeholder="Detailed analysis of the player's performance..."
+                                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#00FF87]/50 transition-all resize-none"
+                                />
+                            </div>
+
+                            {/* Engine Error */}
+                            {engineError && (
+                                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                                    <p className="font-semibold mb-1">⚠ Could not submit — your work is safe</p>
+                                    <p className="text-red-400/80">{engineError}</p>
+                                </div>
+                            )}
+
+                            {/* Submit */}
+                            <div className="flex gap-3 pt-2">
+                                <button onClick={() => setShowSummary(false)} className="flex-1 py-3 rounded-xl font-medium text-white/70 bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">Cancel</button>
+                                <button
+                                    onClick={handleSubmitSummary}
+                                    disabled={summaryLoading || !strengths || !weaknesses || !writtenSummary}
+                                    className="flex-1 py-3 rounded-xl font-semibold text-[#0A0A0F] bg-[#00FF87] hover:bg-[#00FF87]/90 transition-all hover:shadow-lg hover:shadow-[#00FF87]/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                >
+                                    {summaryLoading ? "Submitting..." : "Submit & Complete"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}

@@ -1,0 +1,169 @@
+import { v } from "convex/values";
+import { query, mutation } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
+
+// ── Create analysis request (player hires analyst) ───────────────────────
+export const createRequest = mutation({
+    args: {
+        analystId: v.id("users"),
+        matchId: v.id("matches"),
+        agreedPrice: v.number(),
+        stripePaymentIntentId: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+
+        const user = await ctx.db.get(userId);
+        if (!user || user.role !== "player") {
+            throw new Error("Only players can request analyses");
+        }
+
+        const requestId = await ctx.db.insert("analysisRequests", {
+            playerId: userId,
+            analystId: args.analystId,
+            matchId: args.matchId,
+            status: "pending",
+            stripePaymentIntentId: args.stripePaymentIntentId,
+            agreedPrice: args.agreedPrice,
+            createdAt: Date.now(),
+        });
+
+        // Send notification to analyst
+        await ctx.db.insert("notifications", {
+            userId: args.analystId,
+            type: "new_request",
+            message: `New analysis request from ${user.name}`,
+            relatedId: requestId,
+            isRead: false,
+            createdAt: Date.now(),
+        });
+
+        return requestId;
+    },
+});
+
+// ── Get requests by analyst ──────────────────────────────────────────────
+export const getRequestsByAnalyst = query({
+    args: { status: v.optional(v.string()) },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return [];
+
+        const requests = await ctx.db
+            .query("analysisRequests")
+            .withIndex("by_analystId", (q) => q.eq("analystId", userId))
+            .order("desc")
+            .collect();
+
+        if (args.status) {
+            return requests.filter((r) => r.status === args.status);
+        }
+        return requests;
+    },
+});
+
+// ── Get requests by player ───────────────────────────────────────────────
+export const getRequestsByPlayer = query({
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return [];
+
+        return await ctx.db
+            .query("analysisRequests")
+            .withIndex("by_playerId", (q) => q.eq("playerId", userId))
+            .order("desc")
+            .collect();
+    },
+});
+
+// ── Update request status ────────────────────────────────────────────────
+export const updateRequestStatus = mutation({
+    args: {
+        requestId: v.id("analysisRequests"),
+        status: v.union(
+            v.literal("accepted"),
+            v.literal("declined"),
+            v.literal("completed")
+        ),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+
+        const request = await ctx.db.get(args.requestId);
+        if (!request) throw new Error("Request not found");
+
+        await ctx.db.patch(args.requestId, { status: args.status });
+
+        // If accepted, assign analyst to match and update status
+        if (args.status === "accepted") {
+            await ctx.db.patch(request.matchId, {
+                analystId: request.analystId,
+                status: "analyst_assigned",
+            });
+
+            // Notify player
+            await ctx.db.insert("notifications", {
+                userId: request.playerId,
+                type: "request_accepted",
+                message: "Your analysis request has been accepted! The analyst will begin working on your match.",
+                relatedId: args.requestId,
+                isRead: false,
+                createdAt: Date.now(),
+            });
+        }
+
+        if (args.status === "declined") {
+            // Notify player
+            await ctx.db.insert("notifications", {
+                userId: request.playerId,
+                type: "request_declined",
+                message: "Your analysis request has been declined. Try reaching out to another analyst.",
+                relatedId: args.requestId,
+                isRead: false,
+                createdAt: Date.now(),
+            });
+        }
+    },
+});
+
+// ── Get analyst earnings ─────────────────────────────────────────────────
+export const getAnalystEarnings = query({
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            return { totalEarnings: 0, totalCompleted: 0, earningsByMonth: {} };
+        }
+
+        const completedRequests = await ctx.db
+            .query("analysisRequests")
+            .withIndex("by_analystId", (q) => q.eq("analystId", userId))
+            .collect();
+
+        const completed = completedRequests.filter(
+            (r) => r.status === "completed"
+        );
+
+        const totalEarnings = completed.reduce(
+            (sum, r) => sum + r.agreedPrice,
+            0
+        );
+
+        // Group by month for chart
+        const earningsByMonth: Record<string, number> = {};
+        for (const req of completed) {
+            const date = new Date(req.createdAt);
+            const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+            earningsByMonth[key] = (earningsByMonth[key] ?? 0) + req.agreedPrice;
+        }
+
+        return {
+            totalEarnings,
+            totalCompleted: completed.length,
+            earningsByMonth,
+        };
+    },
+});
