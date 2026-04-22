@@ -1,0 +1,32 @@
+# Python cache/build
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.pytest_cache/
+
+# Virtual envs
+.venv/
+venv/
+.env
+
+# IDE/editor
+.idea/
+.vscode/
+
+# Logs and local runtime artifacts
+*.log
+cb_train.log
+
+# Local/generated training artifacts
+training/models/
+
+# StatsBomb raw dataset (large, local only)
+data/statsbomb/
+
+# OS files
+.DS_Store
+Thumbs.db
+
