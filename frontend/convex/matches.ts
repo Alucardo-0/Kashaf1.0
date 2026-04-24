@@ -20,7 +20,7 @@ export const createMatch = mutation({
             throw new Error("Only players can upload matches");
         }
 
-        return await ctx.db.insert("matches", {
+        const matchId = await ctx.db.insert("matches", {
             playerId: userId,
             youtubeUrl: args.youtubeUrl,
             youtubeVideoId: args.youtubeVideoId,
@@ -29,6 +29,11 @@ export const createMatch = mutation({
             status: "pending_analyst",
             createdAt: Date.now(),
         });
+
+        // Auto-assign an analyst via least-busy round-robin
+        await ctx.scheduler.runAfter(0, internal.autoAssign.autoAssignAnalyst, { matchId });
+
+        return matchId;
     },
 });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
@@ -12,19 +12,28 @@ const EVENT_TYPES = [
     { value: "shot", label: "Shot", color: "#EF4444" },
     { value: "cross", label: "Cross", color: "#F59E0B" },
     { value: "dribble", label: "Dribble", color: "#8B5CF6" },
+    { value: "carry", label: "Carry", color: "#F97316" },
+    { value: "reception", label: "Reception", color: "#A78BFA" },
     { value: "tackle", label: "Tackle", color: "#06B6D4" },
     { value: "interception", label: "Interception", color: "#22C55E" },
     { value: "aerial", label: "Aerial Duel", color: "#EC4899" },
+    { value: "clearance", label: "Clearance", color: "#14B8A6" },
 ];
+
+/** Events that have a destination coordinate (ball goes somewhere) */
+const HAS_DESTINATION = new Set(["pass", "cross", "shot", "dribble", "carry"]);
 
 const OUTCOMES: Record<string, string[]> = {
     pass: ["Successful", "Failed", "Key Pass", "Assist"],
     shot: ["On Target", "Off Target", "Blocked", "Goal"],
     cross: ["Successful", "Failed", "Assist"],
     dribble: ["Successful", "Failed"],
+    carry: ["Successful", "Failed"],
+    reception: ["Successful"],
     tackle: ["Won", "Lost", "Foul"],
     interception: ["Successful", "Failed"],
     aerial: ["Won", "Lost"],
+    clearance: ["Successful"],
 };
 
 /* ── Format timestamp ─────────────────────────────────────────────────── */
@@ -101,6 +110,14 @@ function PitchMap({
                 <path d="M 67 0 A 1 1 0 0 0 68 1" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.3" />
                 <path d="M 0 104 A 1 1 0 0 1 1 105" fill="none" stroke="white" strokeWidth="0.2" strokeOpacity="0.3" />
                 <path d="M 67 105 A 1 1 0 0 0 68 104" fill="none" stroke="white" strokeWidth="0.15" strokeOpacity="0.3" />
+
+                {/* Goal orientation labels */}
+                <text x="34" y="3.5" textAnchor="middle" fill="white" fillOpacity="0.35" fontSize="2.8" fontWeight="600" fontFamily="system-ui, sans-serif" letterSpacing="0.15">
+                    OPP. GOAL
+                </text>
+                <text x="34" y="103.5" textAnchor="middle" fill="white" fillOpacity="0.35" fontSize="2.8" fontWeight="600" fontFamily="system-ui, sans-serif" letterSpacing="0.15">
+                    OWN GOAL
+                </text>
 
                 {/* Events */}
                 {events.map((ev) => {
@@ -210,6 +227,7 @@ export default function MatchAnalysisPage() {
     /* ── Mutations ────────────────────────────────────────────────────── */
     const logEvent = useMutation(api.analysisEvents.logEvent);
     const deleteEvent = useMutation(api.analysisEvents.deleteEvent);
+    const updateEvent = useMutation(api.analysisEvents.updateEvent);
     const updateMatchStatus = useMutation(api.matches.updateMatchStatus);
     const createSummary = useMutation(api.matchSummaries.createSummary);
     const getAndQueueEngineJob = useAction(api.engine.getAndQueueEngineJob);
@@ -217,13 +235,18 @@ export default function MatchAnalysisPage() {
     /* ── Event Logger State ───────────────────────────────────────────── */
     const [selectedEventType, setSelectedEventType] = useState("pass");
     const [selectedOutcome, setSelectedOutcome] = useState("Successful");
-    const [clickMode, setClickMode] = useState<"origin" | "destination" | null>(null);
+    const [clickMode, setClickMode] = useState<"origin" | "destination" | null>("origin");
     const [pendingOrigin, setPendingOrigin] = useState<{ x: number; y: number } | null>(null);
     const [pendingDestination, setPendingDestination] = useState<{ x: number; y: number } | null>(null);
-    const [videoTimestamp, setVideoTimestamp] = useState(0);
+    const playerRef = useRef<any>(null);
+    const ytContainerRef = useRef<HTMLDivElement>(null);
+    const [playerReady, setPlayerReady] = useState(false);
     const [eventNotes, setEventNotes] = useState("");
     const [isSetPiece, setIsSetPiece] = useState(false);
     const [logLoading, setLogLoading] = useState(false);
+    const [editingEventId, setEditingEventId] = useState<string | null>(null);
+
+    const needsDestination = HAS_DESTINATION.has(selectedEventType);
 
     /* ── Summary State ────────────────────────────────────────────────── */
     const [showSummary, setShowSummary] = useState(false);
@@ -236,6 +259,51 @@ export default function MatchAnalysisPage() {
 
     /* ── Tab state ────────────────────────────────────────────────────── */
     const [activePanel, setActivePanel] = useState<"events" | "timeline">("events");
+
+    /* ── YouTube IFrame API ────────────────────────────────────────── */
+    useEffect(() => {
+        if (!match?.youtubeVideoId) return;
+        let cancelled = false;
+
+        const initPlayer = () => {
+            if (cancelled || !ytContainerRef.current) return;
+            // Clear container and create a target div for the player
+            const target = document.createElement("div");
+            ytContainerRef.current.innerHTML = "";
+            ytContainerRef.current.appendChild(target);
+
+            playerRef.current = new (window as any).YT.Player(target, {
+                videoId: match.youtubeVideoId,
+                width: "100%",
+                height: "100%",
+                playerVars: { rel: 0, modestbranding: 1 },
+                events: {
+                    onReady: () => { if (!cancelled) setPlayerReady(true); },
+                },
+            });
+        };
+
+        if ((window as any).YT?.Player) {
+            initPlayer();
+        } else {
+            if (!document.getElementById("yt-api-script")) {
+                const tag = document.createElement("script");
+                tag.id = "yt-api-script";
+                tag.src = "https://www.youtube.com/iframe_api";
+                document.head.appendChild(tag);
+            }
+            (window as any).onYouTubeIframeAPIReady = initPlayer;
+        }
+
+        return () => {
+            cancelled = true;
+            setPlayerReady(false);
+            if (playerRef.current?.destroy) {
+                playerRef.current.destroy();
+                playerRef.current = null;
+            }
+        };
+    }, [match?.youtubeVideoId]);
 
     /* ── Loading ──────────────────────────────────────────────────────── */
     if (match === undefined || user === undefined) {
@@ -264,7 +332,12 @@ export default function MatchAnalysisPage() {
     const handlePitchClick = (x: number, y: number) => {
         if (clickMode === "origin") {
             setPendingOrigin({ x, y });
-            setClickMode("destination");
+            if (needsDestination) {
+                setClickMode("destination");
+            } else {
+                setPendingDestination(null);
+                setClickMode(null);
+            }
         } else if (clickMode === "destination") {
             setPendingDestination({ x, y });
             setClickMode(null);
@@ -275,35 +348,82 @@ export default function MatchAnalysisPage() {
         if (!pendingOrigin || !match.playerId) return;
         setLogLoading(true);
         try {
-            // Set match to "in progress" if it's still "assigned"
-            if (match.status === "analyst_assigned") {
-                await updateMatchStatus({ matchId, status: "analysis_in_progress" });
-            }
+            if (editingEventId) {
+                // ── Update existing event ──
+                await updateEvent({
+                    eventId: editingEventId as Id<"analysisEvents">,
+                    eventType: selectedEventType,
+                    outcome: selectedOutcome,
+                    originX: pendingOrigin.x,
+                    originY: pendingOrigin.y,
+                    destinationX: needsDestination ? pendingDestination?.x : undefined,
+                    destinationY: needsDestination ? pendingDestination?.y : undefined,
+                    notes: eventNotes || undefined,
+                    isSetPiece,
+                });
+                setEditingEventId(null);
+            } else {
+                // ── Create new event ──
+                // Set match to "in progress" if it's still "assigned"
+                if (match.status === "analyst_assigned") {
+                    await updateMatchStatus({ matchId, status: "analysis_in_progress" });
+                }
 
-            await logEvent({
-                matchId,
-                playerId: match.playerId as Id<"users">,
-                eventType: selectedEventType,
-                outcome: selectedOutcome,
-                originX: pendingOrigin.x,
-                originY: pendingOrigin.y,
-                destinationX: pendingDestination?.x,
-                destinationY: pendingDestination?.y,
-                videoTimestamp,
-                notes: eventNotes || undefined,
-                isSetPiece,
-            });
+                // Auto-capture timestamp: current video position minus 5 seconds
+                let videoTimestamp = 0;
+                if (playerRef.current?.getCurrentTime) {
+                    videoTimestamp = Math.max(0, Math.floor(playerRef.current.getCurrentTime()) - 5);
+                }
+
+                await logEvent({
+                    matchId,
+                    playerId: match.playerId as Id<"users">,
+                    eventType: selectedEventType,
+                    outcome: selectedOutcome,
+                    originX: pendingOrigin.x,
+                    originY: pendingOrigin.y,
+                    destinationX: needsDestination ? pendingDestination?.x : undefined,
+                    destinationY: needsDestination ? pendingDestination?.y : undefined,
+                    videoTimestamp,
+                    notes: eventNotes || undefined,
+                    isSetPiece,
+                });
+            }
 
             // Reset
             setPendingOrigin(null);
             setPendingDestination(null);
             setEventNotes("");
             setIsSetPiece(false);
-            setVideoTimestamp((prev) => prev);
+            setClickMode("origin");
         } catch {
             /* silent */
         }
         setLogLoading(false);
+    };
+
+    const handleEditEvent = (ev: any) => {
+        setEditingEventId(ev._id);
+        setSelectedEventType(ev.eventType);
+        setSelectedOutcome(ev.outcome);
+        setPendingOrigin({ x: ev.originX, y: ev.originY });
+        setPendingDestination(
+            ev.destinationX !== undefined && ev.destinationY !== undefined
+                ? { x: ev.destinationX, y: ev.destinationY }
+                : null
+        );
+        setEventNotes(ev.notes ?? "");
+        setIsSetPiece(ev.isSetPiece ?? false);
+        setClickMode(null);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingEventId(null);
+        setPendingOrigin(null);
+        setPendingDestination(null);
+        setEventNotes("");
+        setIsSetPiece(false);
+        setClickMode("origin");
     };
 
     const handleDeleteEvent = async (eventId: Id<"analysisEvents">) => {
@@ -431,12 +551,7 @@ export default function MatchAnalysisPage() {
                     {/* Video Embed */}
                     <div className="flex-1 p-4 lg:p-6 flex items-center justify-center overflow-auto min-h-[400px]">
                         <div className="w-full max-w-5xl aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl">
-                            <iframe
-                                src={`https://www.youtube.com/embed/${match.youtubeVideoId}?enablejsapi=1`}
-                                className="w-full h-full"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                                allowFullScreen
-                            />
+                            <div ref={ytContainerRef} className="w-full h-full" />
                         </div>
                     </div>
 
@@ -454,6 +569,12 @@ export default function MatchAnalysisPage() {
                                                 onClick={() => {
                                                     setSelectedEventType(et.value);
                                                     setSelectedOutcome(OUTCOMES[et.value]?.[0] ?? "Successful");
+                                                    // Auto-activate origin mode so user can immediately click the pitch
+                                                    if (!editingEventId) {
+                                                        setPendingOrigin(null);
+                                                        setPendingDestination(null);
+                                                        setClickMode("origin");
+                                                    }
                                                 }}
                                                 className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer border ${selectedEventType === et.value
                                                     ? "border-white/20 shadow-sm"
@@ -469,15 +590,30 @@ export default function MatchAnalysisPage() {
                                         ))}
                                     </div>
 
-                                    <label className="block text-xs font-medium text-white/50 mb-2 mt-5">Video Timestamp (min)</label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        step="0.5"
-                                        value={videoTimestamp}
-                                        onChange={(e) => setVideoTimestamp(Number(e.target.value))}
-                                        className="w-24 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-[#3B82F6]"
-                                    />
+                                    {editingEventId && (
+                                        <div className="mt-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EAB308" strokeWidth="2" className="shrink-0">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                            </svg>
+                                            <span className="text-[11px] text-yellow-400/90 font-medium">Editing event</span>
+                                            <button
+                                                onClick={handleCancelEdit}
+                                                className="ml-auto text-[10px] text-white/40 hover:text-white/70 transition-colors cursor-pointer"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {!editingEventId && (
+                                        <div className="mt-5 flex items-center gap-2 px-3 py-2 rounded-lg bg-[#3B82F6]/5 border border-[#3B82F6]/15">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2" className="shrink-0">
+                                                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                                            </svg>
+                                            <span className="text-[11px] text-[#3B82F6]/80">Timestamp auto-captured from video (−5s)</span>
+                                        </div>
+                                    )}
                                     
                                     <div className="flex items-center justify-between mt-5 w-48">
                                         <label className="block text-xs font-medium text-white/50">Is this a Set Piece?</label>
@@ -531,18 +667,20 @@ export default function MatchAnalysisPage() {
                                             >
                                                 {pendingOrigin ? `Origin: ${pendingOrigin.x.toFixed(0)}%, ${pendingOrigin.y.toFixed(0)}%` : "Set Origin"}
                                             </button>
-                                            <button
-                                                onClick={() => setClickMode("destination")}
-                                                disabled={!pendingOrigin}
-                                                className={`flex-1 px-3 py-2 text-center rounded-lg text-xs transition-all cursor-pointer border ${clickMode === "destination"
-                                                        ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30 animate-pulse"
-                                                        : pendingDestination
-                                                            ? "bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/30"
-                                                            : "bg-white/[0.03] text-white/40 border-white/[0.06] hover:bg-white/5 disabled:opacity-30"
-                                                    }`}
-                                            >
-                                                {pendingDestination ? `Dest: ${pendingDestination.x.toFixed(0)}%, ${pendingDestination.y.toFixed(0)}%` : "Set Destination"}
-                                            </button>
+                                            {needsDestination && (
+                                                <button
+                                                    onClick={() => setClickMode("destination")}
+                                                    disabled={!pendingOrigin}
+                                                    className={`flex-1 px-3 py-2 text-center rounded-lg text-xs transition-all cursor-pointer border ${clickMode === "destination"
+                                                            ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30 animate-pulse"
+                                                            : pendingDestination
+                                                                ? "bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/30"
+                                                                : "bg-white/[0.03] text-white/40 border-white/[0.06] hover:bg-white/5 disabled:opacity-30"
+                                                        }`}
+                                                >
+                                                    {pendingDestination ? `Dest: ${pendingDestination.x.toFixed(0)}%, ${pendingDestination.y.toFixed(0)}%` : "Set Destination"}
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -556,13 +694,30 @@ export default function MatchAnalysisPage() {
                                         placeholder="e.g. Great through ball to striker"
                                         className="w-full flex-1 min-h-[80px] px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#3B82F6]/50 transition-all resize-none mb-4"
                                     />
-                                    <button
-                                        onClick={handleLogEvent}
-                                        disabled={!pendingOrigin || logLoading}
-                                        className="w-full py-3 shrink-0 rounded-xl font-semibold text-sm text-[#0A0A0F] bg-[#00FF87] hover:bg-[#00FF87]/90 transition-all hover:shadow-lg hover:shadow-[#00FF87]/25 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer active:scale-[0.97]"
-                                    >
-                                        {logLoading ? "Logging..." : "Log Event"}
-                                    </button>
+                                    <div className="flex gap-2">
+                                        {editingEventId && (
+                                            <button
+                                                onClick={handleCancelEdit}
+                                                className="px-4 py-3 shrink-0 rounded-xl font-medium text-sm text-white/60 bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={handleLogEvent}
+                                            disabled={!pendingOrigin || logLoading}
+                                            className={`flex-1 py-3 shrink-0 rounded-xl font-semibold text-sm transition-all hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer active:scale-[0.97] ${
+                                                editingEventId
+                                                    ? "text-[#0A0A0F] bg-yellow-400 hover:bg-yellow-400/90 hover:shadow-yellow-400/25"
+                                                    : "text-[#0A0A0F] bg-[#00FF87] hover:bg-[#00FF87]/90 hover:shadow-[#00FF87]/25"
+                                            }`}
+                                        >
+                                            {logLoading
+                                                ? (editingEventId ? "Updating..." : "Logging...")
+                                                : (editingEventId ? "Update Event" : "Log Event")
+                                            }
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -641,7 +796,7 @@ export default function MatchAnalysisPage() {
                                                         )}
                                                     </p>
                                                     <p className="text-[10px] text-white/25 mt-0.5">
-                                                        {formatTimestamp(ev.videoTimestamp * 60)} · ({ev.originX.toFixed(0)}, {ev.originY.toFixed(0)})
+                                                        {formatTimestamp(ev.videoTimestamp)} · ({ev.originX.toFixed(0)}, {ev.originY.toFixed(0)})
                                                         {ev.destinationX !== undefined && ` → (${ev.destinationX.toFixed(0)}, ${ev.destinationY?.toFixed(0)})`}
                                                     </p>
                                                     {ev.notes && (
@@ -650,14 +805,31 @@ export default function MatchAnalysisPage() {
                                                 </div>
                                             </div>
                                             {!isCompleted && (
-                                                <button
-                                                    onClick={() => handleDeleteEvent(ev._id as Id<"analysisEvents">)}
-                                                    className="opacity-0 group-hover:opacity-100 text-red-400/60 hover:text-red-400 transition-all cursor-pointer p-1"
-                                                >
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                                                    </svg>
-                                                </button>
+                                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                                                    <button
+                                                        onClick={() => handleEditEvent(ev)}
+                                                        className={`p-1 transition-all cursor-pointer ${
+                                                            editingEventId === ev._id
+                                                                ? "text-yellow-400"
+                                                                : "text-white/30 hover:text-[#3B82F6]"
+                                                        }`}
+                                                        title="Edit event"
+                                                    >
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                        </svg>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteEvent(ev._id as Id<"analysisEvents">)}
+                                                        className="text-red-400/60 hover:text-red-400 transition-all cursor-pointer p-1"
+                                                        title="Delete event"
+                                                    >
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     </div>

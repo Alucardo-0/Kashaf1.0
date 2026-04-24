@@ -116,17 +116,4 @@ Failure:
 }
 ```
 
-## GitHub push checklist
-
-1. Create a new empty GitHub repo for this engine.
-2. Add remote and push:
-
-```powershell
-git remote add origin <YOUR_ENGINE_REPO_URL>
-git branch -M main
-git push -u origin main
-```
-
-3. In KASHAF, call this engine API when analyst tagging is completed.
-4. Implement a KASHAF callback endpoint to receive finished report payloads.
 

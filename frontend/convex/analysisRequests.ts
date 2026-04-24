@@ -1,13 +1,13 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { internal } from "./_generated/api";
 
 // ── Create analysis request (player hires analyst) ───────────────────────
 export const createRequest = mutation({
     args: {
         analystId: v.id("users"),
         matchId: v.id("matches"),
-        agreedPrice: v.number(),
         stripePaymentIntentId: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
@@ -25,7 +25,7 @@ export const createRequest = mutation({
             matchId: args.matchId,
             status: "pending",
             stripePaymentIntentId: args.stripePaymentIntentId,
-            agreedPrice: args.agreedPrice,
+            agreedPrice: 0,
             createdAt: Date.now(),
         });
 
@@ -116,11 +116,16 @@ export const updateRequestStatus = mutation({
         }
 
         if (args.status === "declined") {
+            // Reassign to next available analyst
+            await ctx.scheduler.runAfter(0, internal.autoAssign.reassignOnDecline, {
+                requestId: args.requestId,
+            });
+
             // Notify player
             await ctx.db.insert("notifications", {
                 userId: request.playerId,
                 type: "request_declined",
-                message: "Your analysis request has been declined. Try reaching out to another analyst.",
+                message: "An analyst couldn't take your match right now. We're assigning another one.",
                 relatedId: args.requestId,
                 isRead: false,
                 createdAt: Date.now(),

@@ -95,6 +95,7 @@ export const updateEvent = mutation({
         destinationX: v.optional(v.number()),
         destinationY: v.optional(v.number()),
         notes: v.optional(v.string()),
+        isSetPiece: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
@@ -116,6 +117,7 @@ export const updateEvent = mutation({
         if (args.destinationY !== undefined)
             updates.destinationY = args.destinationY;
         if (args.notes !== undefined) updates.notes = args.notes;
+        if (args.isSetPiece !== undefined) updates.isSetPiece = args.isSetPiece;
 
         await ctx.db.patch(args.eventId, updates);
     },

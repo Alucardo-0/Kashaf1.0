@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   description:
     "Get Discovered. Get Analyzed. Get Signed. The football talent discovery platform connecting players, analysts, and scouts.",
   icons: {
-    icon: "/KASHAF.png",
+    icon: "/kashaf-logo.png",
   },
 };
 

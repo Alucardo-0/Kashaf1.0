@@ -142,7 +142,7 @@ function FindAnalystModal({ matchId, onClose }: { matchId: string; onClose: () =
         setError("");
         try {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            await createRequest({ analystId: analystId as any, matchId: matchId as any, agreedPrice: rate });
+            await createRequest({ analystId: analystId as any, matchId: matchId as any });
             onClose();
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to send request");

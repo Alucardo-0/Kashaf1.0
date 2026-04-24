@@ -11,6 +11,7 @@
 import type * as analysisEvents from "../analysisEvents.js";
 import type * as analysisRequests from "../analysisRequests.js";
 import type * as auth from "../auth.js";
+import type * as autoAssign from "../autoAssign.js";
 import type * as engine from "../engine.js";
 import type * as engineJobs from "../engineJobs.js";
 import type * as engineProfiles from "../engineProfiles.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   analysisEvents: typeof analysisEvents;
   analysisRequests: typeof analysisRequests;
   auth: typeof auth;
+  autoAssign: typeof autoAssign;
   engine: typeof engine;
   engineJobs: typeof engineJobs;
   engineProfiles: typeof engineProfiles;

@@ -1,46 +1,96 @@
-# Welcome to your Convex + Next.js + Convex Auth app
+# Kashaf Frontend
 
-This is a [Convex](https://convex.dev/) project created with [`npm create convex`](https://www.npmjs.com/package/create-convex).
+Next.js 16 web application for the Kashaf football scouting platform, powered by Convex real-time backend and Convex Auth.
 
-After the initial setup (<2 minutes) you'll have a working full-stack app using:
+## Tech Stack
 
-- Convex as your backend (database, server logic)
-- [React](https://react.dev/) as your frontend (web page interactivity)
-- [Next.js](https://nextjs.org/) for optimized web hosting and page routing
-- [Tailwind](https://tailwindcss.com/) for building great looking accessible UI
-- [Convex Auth](https://labs.convex.dev/auth) for authentication
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Runtime | [Bun](https://bun.sh) |
+| Database / Real-time | [Convex](https://convex.dev/) |
+| Authentication | [Convex Auth](https://labs.convex.dev/auth) |
+| Styling | Tailwind CSS, custom CSS |
+| Animations | Framer Motion, Lenis smooth scroll |
 
-## Get started
+## Setup
 
-If you just cloned this codebase and didn't use `npm create convex`, run:
+```bash
+# Install dependencies
+bun install
+
+# Copy environment file and fill in your values
+cp .env.example .env.local
+
+# Start dev server (Next.js + Convex sync)
+bun run dev
+```
+
+See the root [README](../README.md) for full environment variable docs and the engine integration flow.
+
+## Environment Variables
+
+Copy `.env.example` → `.env.local` and fill in:
+
+| Variable | Description |
+|---|---|
+| `CONVEX_DEPLOYMENT` | Your Convex project deployment name (set by `bunx convex dev`) |
+| `NEXT_PUBLIC_CONVEX_URL` | Convex cloud URL |
+| `ENGINE_BASE_URL` | URL of the Python engine (default: `http://localhost:8080`) |
+| `ENGINE_CALLBACK_TOKEN` | Shared secret for engine → frontend callback auth |
+| `KASHAF_ENGINE_TOKEN` | Shared secret for frontend → engine request auth |
+| `DNS_PUBLIC_URL` | Public URL of this app, used as callback URL for the engine |
+
+> **Important:** `ENGINE_CALLBACK_TOKEN` must also be set in the Convex Dashboard → Settings → Environment Variables.
+
+## Project Structure
 
 ```
-npm install
-npm run dev
+frontend/
+├── app/                    # Next.js App Router pages
+│   ├── (auth)/             # Login / Sign-up pages
+│   ├── (dashboard)/        # Role-based dashboards + analysis page
+│   │   ├── analysis/       # Match analysis (video + event tagging)
+│   │   └── dashboard/      # Player, Analyst, Scout dashboards
+│   ├── api/engine/         # Engine proxy & callback API routes
+│   ├── players/            # Public player profile & match report pages
+│   └── onboarding/         # Role selection & profile setup
+├── components/             # UI components by feature area
+│   ├── analysis/           # Analysis-specific components
+│   ├── analyst/            # Analyst dashboard components
+│   ├── dashboard/          # Shared dashboard components
+│   ├── landing/            # Landing page sections
+│   ├── player/             # Player-facing components
+│   ├── scout/              # Scout dashboard components
+│   └── ui/                 # Shared UI primitives (shadcn/ui)
+├── convex/                 # Convex backend
+│   ├── schema.ts           # Database schema
+│   ├── analysisEvents.ts   # Event tagging mutations/queries
+│   ├── analysisRequests.ts # Analyst hiring workflow
+│   ├── engine.ts           # Engine job preparation & queuing
+│   ├── engineJobs.ts       # Engine job status tracking
+│   ├── matches.ts          # Match CRUD
+│   ├── matchSummaries.ts   # Analyst summary storage
+│   └── ...                 # Users, notifications, ratings, etc.
+└── lib/                    # Utility functions
 ```
 
-If you're reading this README on GitHub and want to use this template, run:
+## Key Flows
 
-```
-npm create convex@latest -- -t nextjs-convexauth
-```
+### Event Tagging (Analyst)
+1. Analyst opens a match → embedded YouTube player loads via IFrame API
+2. Analyst selects event type, outcome, set-piece flag, and clicks on the pitch map
+3. On "Log Event", the video timestamp is **auto-captured** (current playback position − 5 seconds)
+4. Events appear in the timeline panel with coordinates and timestamps
 
-## Learn more
+### Analysis Completion
+1. Analyst clicks "Complete Analysis" → fills in rating, strengths, weaknesses, written summary
+2. Frontend calls `getAndQueueEngineJob` → Convex prepares payload with events from this + up to 9 prior matches
+3. Payload is POSTed to the Python engine via `/api/engine/proxy`
+4. Engine processes async → calls back to `/api/engine/callback` → report saved to Convex DB
+5. Player and scout views update in real-time
 
-To learn more about developing your project with Convex, check out:
-
-- The [Tour of Convex](https://docs.convex.dev/get-started) for a thorough introduction to Convex principles.
-- The rest of [Convex docs](https://docs.convex.dev/) to learn about all Convex features.
-- [Stack](https://stack.convex.dev/) for in-depth articles on advanced topics.
-- [Convex Auth docs](https://labs.convex.dev/auth) for documentation on the Convex Auth library.
-
-## Configuring other authentication methods
-
-To configure different authentication methods, see [Configuration](https://labs.convex.dev/auth/config) in the Convex Auth docs.
-
-## Join the community
-
-Join thousands of developers building full-stack apps with Convex:
-
-- Join the [Convex Discord community](https://convex.dev/community) to get help in real-time.
-- Follow [Convex on GitHub](https://github.com/get-convex/), star and contribute to the open-source implementation of Convex.
+### Roles
+- **Player** — Uploads YouTube match links, hires analysts, views reports
+- **Analyst** — Accepts requests, tags events on matches, submits analysis
+- **Scout** — Browses player profiles, filters by archetypes, saves searches

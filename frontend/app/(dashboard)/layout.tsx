@@ -64,7 +64,7 @@ export default function DashboardLayout({
                 <div className="px-6 py-5 border-b border-white/5">
                     <Link href="/" className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg overflow-hidden">
-                            <img src="/KASHAF.png" alt="KASHAF Logo" className="w-full h-full object-cover" />
+                            <img src="/kashaf-logo.png" alt="KASHAF Logo" className="w-full h-full object-cover" />
                         </div>
                         <span className="text-lg font-bold text-white">KASHAF<span className="text-dns-green">.</span></span>
                     </Link>

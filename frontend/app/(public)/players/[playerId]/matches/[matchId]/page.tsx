@@ -85,11 +85,13 @@ function TwinCard({ twin }: { twin: { player_name: string; similarity: number; c
                 </span>
             </div>
             {twin.context && Object.keys(twin.context).length > 0 && (
-                <div className="grid grid-cols-2 gap-1.5">
-                    {Object.entries(twin.context).slice(0, 4).map(([k, v]) => (
-                        <div key={k} className="text-[10px] text-white/30">
-                            <span className="capitalize">{k.replace(/_/g, " ")}</span>
-                            <span className="ml-1 text-white/60 font-medium">{typeof v === "number" ? fmt(v, 2) : String(v)}</span>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-2 pt-2 border-t border-white/[0.04]">
+                    {Object.entries(twin.context).map(([k, v]) => (
+                        <div key={k} className="flex items-center justify-between text-[10px]">
+                            <span className="text-white/30 capitalize truncate mr-1">{k.replace(/_/g, " ")}</span>
+                            <span className="text-white/60 font-medium tabular-nums shrink-0">
+                                {typeof v === "number" ? (k.includes("pct") ? `${(v * 100).toFixed(1)}%` : fmt(v, 2)) : String(v)}
+                            </span>
                         </div>
                     ))}
                 </div>

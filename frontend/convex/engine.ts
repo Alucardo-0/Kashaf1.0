@@ -13,17 +13,37 @@ export const getEnginePayloadData = internalQuery({
     const match = await ctx.db.get(args.matchId);
     if (!match) throw new Error("Match not found");
     
-    // Get all events for this player in this match
-    const events = await ctx.db
-      .query("analysisEvents")
-      .withIndex("by_matchId", (q) => q.eq("matchId", args.matchId))
-      .filter((q) => q.eq(q.field("playerId"), args.playerId))
+    // Get all completed matches for this player (for cumulative profiling)
+    const allPlayerMatches = await ctx.db
+      .query("matches")
+      .withIndex("by_playerId", (q) => q.eq("playerId", args.playerId))
       .collect();
+
+    // Take up to 9 most recent completed matches + the current one = max 10
+    const completedMatches = allPlayerMatches
+      .filter((m) => m.status === "completed" && m._id !== args.matchId)
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 9);
+
+    // Collect match IDs: current match + previous completed ones
+    const matchIds = [args.matchId, ...completedMatches.map((m) => m._id)];
+
+    // Gather events from ALL these matches
+    const allEvents = [];
+    for (const mid of matchIds) {
+      const events = await ctx.db
+        .query("analysisEvents")
+        .withIndex("by_matchId", (q) => q.eq("matchId", mid))
+        .filter((q) => q.eq(q.field("playerId"), args.playerId))
+        .collect();
+      allEvents.push(...events);
+    }
 
     return { 
       player, 
       match, 
-      events 
+      events: allEvents,
+      matchCount: matchIds.length,
     };
   }
 });
@@ -46,7 +66,7 @@ export const getAndQueueEngineJob = action({
     analystId: v.id("users"),
   },
   handler: async (ctx, args): Promise<any> => {
-    const { player, events } = await ctx.runQuery(internal.engine.getEnginePayloadData, {
+    const { player, events, matchCount } = await ctx.runQuery(internal.engine.getEnginePayloadData, {
       matchId: args.matchId,
       playerId: args.playerId,
     });
@@ -63,12 +83,18 @@ export const getAndQueueEngineJob = action({
       unit: unitId,
       events: events.map((e: any) => ({
         // Map to Kashaf standard schema
+        // Frontend pitch is portrait (X=width, Y=length)
+        // Engine expects landscape (X=length, Y=width)
+        // Analyst convention: bottom=own goal, top=opponent goal
+        // Engine convention: x=0=own goal, x=100=opponent goal
+        // So: start_x = 100 - originY (invert length axis)
+        //     start_y = originX         (width axis stays)
         eventType: e.eventType,
         outcome: e.outcome,
-        originX: e.originX,
-        originY: e.originY,
-        destinationX: e.destinationX,
-        destinationY: e.destinationY,
+        originX: 100 - e.originY,
+        originY: e.originX,
+        destinationX: e.destinationY !== undefined ? 100 - e.destinationY : undefined,
+        destinationY: e.destinationX,
         videoTimestamp: e.videoTimestamp,
         notes: e.notes,
         isSetPiece: e.isSetPiece,
@@ -81,6 +107,7 @@ export const getAndQueueEngineJob = action({
         matchId: args.matchId.toString(),
         playerId: args.playerId.toString(),
         analystId: args.analystId.toString(),
+        matchCount,
       },
     };
 

@@ -51,7 +51,7 @@ export default function Navbar() {
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2 group">
                     <div className="w-9 h-9 rounded-lg overflow-hidden shadow-lg shadow-[#00FF87]/20 group-hover:shadow-[#00FF87]/40 transition-shadow">
-                        <img src="/KASHAF.png" alt="KASHAF Logo" className="w-full h-full object-cover" />
+                        <img src="/kashaf-logo.png" alt="KASHAF Logo" className="w-full h-full object-cover" />
                     </div>
                     <span className="text-xl font-bold text-white tracking-tight">
                         KASHAF<span className="text-[#00FF87]">.</span>

@@ -36,17 +36,6 @@ export default function SignUpPage() {
             color: "#00FF87",
         },
         {
-            id: "analyst" as const,
-            title: "Performance Analyst",
-            desc: "Analyze player performances using professional tools. Log events, build reports, and earn per analysis.",
-            icon: (
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                </svg>
-            ),
-            color: "#3B82F6",
-        },
-        {
             id: "scout" as const,
             title: "Club Scout",
             desc: "Search for talent using advanced filters. Access match reports, heatmaps, and player position profiles.",
@@ -139,7 +128,7 @@ export default function SignUpPage() {
             <div className="text-center mb-10">
                 <Link href="/" className="inline-flex items-center gap-2 group">
                     <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-[#00FF87]/20">
-                        <img src="/KASHAF.png" alt="KASHAF Logo" className="w-full h-full object-cover" />
+                        <img src="/kashaf-logo.png" alt="KASHAF Logo" className="w-full h-full object-cover" />
                     </div>
                     <span className="text-2xl font-bold text-white tracking-tight">
                         KASHAF<span className="text-[#00FF87]">.</span>

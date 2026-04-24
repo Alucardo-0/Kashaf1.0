@@ -492,7 +492,7 @@ export default function OnboardingPage() {
                 <div className="text-center mb-8">
                     <Link href="/" className="inline-flex items-center gap-2">
                         <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-[#00FF87]/20">
-                            <img src="/KASHAF.png" alt="KASHAF Logo" className="w-full h-full object-cover" />
+                            <img src="/kashaf-logo.png" alt="KASHAF Logo" className="w-full h-full object-cover" />
                         </div>
                         <span className="text-2xl font-bold text-white tracking-tight">
                             KASHAF<span className="text-[#00FF87]">.</span>
