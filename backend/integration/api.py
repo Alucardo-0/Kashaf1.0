@@ -174,10 +174,12 @@ class EngineHandler(BaseHTTPRequestHandler):
             job_id = str(payload.get("job_id") or uuid4())
             with JOBS_LOCK:
                 existing = JOBS.get(job_id)
-                if existing:
+                if existing and existing["status"] in ("queued", "running"):
+                    # Job is already in-flight — return current status without re-queuing
                     _json_response(self, 200, existing)
                     return
 
+                # New job or re-submit of a completed/failed job — (re-)queue it
                 record = {
                     "job_id": job_id,
                     "status": "queued",

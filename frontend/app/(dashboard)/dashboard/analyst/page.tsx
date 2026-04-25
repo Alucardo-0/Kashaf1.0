@@ -423,12 +423,20 @@ export default function AnalystDashboard() {
                                                     </button>
                                                 )}
                                                 {match.status === "completed" && (
-                                                    <button
-                                                        onClick={() => router.push(`/players/${match.playerId}/matches/${match._id}`)}
-                                                        className="text-xs px-3 py-1.5 rounded-lg bg-[#00FF87]/15 text-[#00FF87] hover:bg-[#00FF87]/25 transition-all cursor-pointer font-medium"
-                                                    >
-                                                        View Report
-                                                    </button>
+                                                    <>
+                                                        <button
+                                                            onClick={() => router.push(`/analysis/${match._id}`)}
+                                                            className="text-xs px-3 py-1.5 rounded-lg bg-yellow-500/15 text-yellow-400 hover:bg-yellow-500/25 transition-all cursor-pointer font-medium"
+                                                        >
+                                                            Edit Tags
+                                                        </button>
+                                                        <button
+                                                            onClick={() => router.push(`/players/${match.playerId}/matches/${match._id}`)}
+                                                            className="text-xs px-3 py-1.5 rounded-lg bg-[#00FF87]/15 text-[#00FF87] hover:bg-[#00FF87]/25 transition-all cursor-pointer font-medium"
+                                                        >
+                                                            View Report
+                                                        </button>
+                                                    </>
                                                 )}
                                                 <a
                                                     href={match.youtubeUrl}

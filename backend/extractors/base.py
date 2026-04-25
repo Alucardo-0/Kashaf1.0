@@ -83,31 +83,19 @@ def validate_events(events: list[dict]) -> list[dict]:
                     f"Event {i}: {coord} must be numeric, got {type(ev[coord])}"
                 )
 
-        # Coordinates in range
-        if not (0 <= ev["start_x"] <= 100):
-            raise ValueError(
-                f"Event {i}: start_x={ev['start_x']} out of range [0, 100]"
-            )
-        if not (0 <= ev["start_y"] <= 100):
-            raise ValueError(
-                f"Event {i}: start_y={ev['start_y']} out of range [0, 100]"
-            )
+        # Clamp coordinates to [0, 100] (handles floating-point rounding artifacts)
+        ev["start_x"] = max(0, min(100, ev["start_x"]))
+        ev["start_y"] = max(0, min(100, ev["start_y"]))
 
-        # End coordinates: validate if present
+        # End coordinates: validate type if present, then clamp
         if ev.get("end_x") is not None:
             if not isinstance(ev["end_x"], (int, float)):
                 raise ValueError(f"Event {i}: end_x must be numeric")
-            if not (0 <= ev["end_x"] <= 100):
-                raise ValueError(
-                    f"Event {i}: end_x={ev['end_x']} out of range [0, 100]"
-                )
+            ev["end_x"] = max(0, min(100, ev["end_x"]))
         if ev.get("end_y") is not None:
             if not isinstance(ev["end_y"], (int, float)):
                 raise ValueError(f"Event {i}: end_y must be numeric")
-            if not (0 <= ev["end_y"] <= 100):
-                raise ValueError(
-                    f"Event {i}: end_y={ev['end_y']} out of range [0, 100]"
-                )
+            ev["end_y"] = max(0, min(100, ev["end_y"]))
 
         # Minutes is positive
         if ev["minutes"] <= 0:

@@ -59,6 +59,11 @@ function mapPositionToUnit(position?: string): string {
   return "mf";
 }
 
+/** Clamp a numeric value to [0, 100] to prevent floating-point rounding artifacts. */
+function clamp100(v: number): number {
+  return Math.max(0, Math.min(100, v));
+}
+
 export const getAndQueueEngineJob = action({
   args: {
     matchId: v.id("matches"),
@@ -91,10 +96,10 @@ export const getAndQueueEngineJob = action({
         //     start_y = originX         (width axis stays)
         eventType: e.eventType,
         outcome: e.outcome,
-        originX: 100 - e.originY,
-        originY: e.originX,
-        destinationX: e.destinationY !== undefined ? 100 - e.destinationY : undefined,
-        destinationY: e.destinationX,
+        originX: clamp100(100 - e.originY),
+        originY: clamp100(e.originX),
+        destinationX: e.destinationY !== undefined ? clamp100(100 - e.destinationY) : undefined,
+        destinationY: e.destinationX !== undefined ? clamp100(e.destinationX) : undefined,
         videoTimestamp: e.videoTimestamp,
         notes: e.notes,
         isSetPiece: e.isSetPiece,

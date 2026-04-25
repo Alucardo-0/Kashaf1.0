@@ -223,6 +223,7 @@ export default function MatchAnalysisPage() {
     const events = useQuery(api.analysisEvents.getEventsByMatch, { matchId });
     const existingSummary = useQuery(api.matchSummaries.getSummaryByMatch, { matchId });
     const user = useQuery(api.users.getCurrentUser);
+    const engineJob = useQuery(api.engineJobs.getJobByMatchId, { matchId });
 
     /* ── Mutations ────────────────────────────────────────────────────── */
     const logEvent = useMutation(api.analysisEvents.logEvent);
@@ -256,6 +257,8 @@ export default function MatchAnalysisPage() {
     const [writtenSummary, setWrittenSummary] = useState("");
     const [summaryLoading, setSummaryLoading] = useState(false);
     const [engineError, setEngineError] = useState<string | null>(null);
+    const [isEditingTags, setIsEditingTags] = useState(false);
+    const [resubmitLoading, setResubmitLoading] = useState(false);
 
     /* ── Tab state ────────────────────────────────────────────────────── */
     const [activePanel, setActivePanel] = useState<"events" | "timeline">("events");
@@ -327,6 +330,9 @@ export default function MatchAnalysisPage() {
     }
 
     const isCompleted = match.status === "completed";
+    const canEdit = !isCompleted || isEditingTags;
+    const engineFailed = engineJob?.status === "failed";
+    const engineFailedMessage = engineJob?.error?.message ?? "Unknown error";
 
     /* ── Handlers ─────────────────────────────────────────────────────── */
     const handlePitchClick = (x: number, y: number) => {
@@ -496,6 +502,31 @@ export default function MatchAnalysisPage() {
         setSummaryLoading(false);
     };
 
+    const handleResubmitEngine = async () => {
+        if (!match.playerId || !match.analystId) return;
+        setResubmitLoading(true);
+        setEngineError(null);
+        try {
+            const payload = await getAndQueueEngineJob({
+                matchId,
+                playerId: match.playerId as Id<"users">,
+                analystId: match.analystId as Id<"users">,
+            });
+            const res = await fetch("/api/engine/proxy", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+            if (!res.ok) {
+                const errText = await res.text();
+                setEngineError(`Engine rejected the job (${res.status}): ${errText}`);
+            }
+        } catch (err: any) {
+            setEngineError("Could not reach the local engine. Is it running? Error: " + (err?.message || "Network error"));
+        }
+        setResubmitLoading(false);
+    };
+
     const eventColors: Record<string, string> = {};
     EVENT_TYPES.forEach((e) => { eventColors[e.value] = e.color; });
 
@@ -531,6 +562,15 @@ export default function MatchAnalysisPage() {
                             Complete Analysis
                         </button>
                     )}
+                    {isCompleted && engineFailed && (
+                        <button
+                            onClick={handleResubmitEngine}
+                            disabled={resubmitLoading}
+                            className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#3B82F6] hover:bg-[#3B82F6]/90 transition-all cursor-pointer disabled:opacity-50"
+                        >
+                            {resubmitLoading ? "Re-submitting…" : "Re-submit to Engine"}
+                        </button>
+                    )}
                     <a
                         href={match.youtubeUrl}
                         target="_blank"
@@ -548,6 +588,26 @@ export default function MatchAnalysisPage() {
             <div className="flex-1 flex overflow-hidden">
                 {/* Left: Video Space & Event Logger */}
                 <div className="flex-1 flex flex-col overflow-hidden bg-[#0A0A0F]">
+                    {/* Engine Failure Banner */}
+                    {engineFailed && (
+                        <div className="mx-4 mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-start gap-3">
+                            <span className="text-lg shrink-0">⚠</span>
+                            <div className="flex-1">
+                                <p className="font-semibold mb-1">Engine analysis failed</p>
+                                <p className="text-red-400/70 text-xs">{engineFailedMessage}</p>
+                                <p className="text-red-400/50 text-[10px] mt-1">You can edit your tags below and re-submit to the engine.</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Re-submit error from retry */}
+                    {engineError && isCompleted && (
+                        <div className="mx-4 mt-2 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                            <p className="font-semibold mb-1">⚠ Re-submit failed</p>
+                            <p className="text-red-400/80">{engineError}</p>
+                        </div>
+                    )}
+
                     {/* Video Embed */}
                     <div className="flex-1 p-4 lg:p-6 flex items-center justify-center overflow-auto min-h-[400px]">
                         <div className="w-full max-w-5xl aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl">
@@ -556,7 +616,7 @@ export default function MatchAnalysisPage() {
                     </div>
 
                     {/* Logger Panel (Bottom) */}
-                    {!isCompleted && (
+                    {canEdit && (
                         <div className="shrink-0 border-t border-white/[0.06] bg-[#0d0d14] p-4 lg:p-6 overflow-y-auto w-full">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
                                 {/* Column 1: Event Type */}
@@ -723,11 +783,48 @@ export default function MatchAnalysisPage() {
                         </div>
                     )}
 
-                    {isCompleted && (
-                        <div className="shrink-0 h-[100px] border-t border-white/[0.06] bg-[#0d0d14] p-4 flex items-center justify-center w-full">
+                    {isCompleted && !isEditingTags && (
+                        <div className="shrink-0 border-t border-white/[0.06] bg-[#0d0d14] p-4 flex items-center justify-center w-full gap-4">
                             <div className="text-center">
                                 <span className="text-lg mb-1 block">✅</span>
                                 <p className="text-sm font-medium text-white/80">Analysis Complete</p>
+                            </div>
+                            <button
+                                onClick={() => setIsEditingTags(true)}
+                                className="px-4 py-2 rounded-xl text-xs font-medium text-white/70 bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
+                            >
+                                Edit Tags
+                            </button>
+                            {engineFailed && (
+                                <button
+                                    onClick={handleResubmitEngine}
+                                    disabled={resubmitLoading}
+                                    className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#3B82F6] hover:bg-[#3B82F6]/90 transition-all cursor-pointer disabled:opacity-50"
+                                >
+                                    {resubmitLoading ? "Re-submitting…" : "Re-submit to Engine"}
+                                </button>
+                            )}
+                        </div>
+                    )}
+                    {isEditingTags && (
+                        <div className="shrink-0 border-t border-white/[0.06] bg-[#0d0d14] px-4 py-2 flex items-center justify-between w-full">
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-yellow-400/80 font-medium">✏️ Editing tags</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={handleResubmitEngine}
+                                    disabled={resubmitLoading}
+                                    className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#3B82F6] hover:bg-[#3B82F6]/90 transition-all cursor-pointer disabled:opacity-50"
+                                >
+                                    {resubmitLoading ? "Re-submitting…" : "Re-submit to Engine"}
+                                </button>
+                                <button
+                                    onClick={() => setIsEditingTags(false)}
+                                    className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
+                                >
+                                    Done Editing
+                                </button>
                             </div>
                         </div>
                     )}
@@ -804,7 +901,7 @@ export default function MatchAnalysisPage() {
                                                     )}
                                                 </div>
                                             </div>
-                                            {!isCompleted && (
+                                            {canEdit && (
                                                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
                                                     <button
                                                         onClick={() => handleEditEvent(ev)}
