@@ -11,7 +11,7 @@ export default function ScoutDashboard() {
   const user = useQuery(api.users.getCurrentUser);
 
   // Gate: scout must be approved
-  if (user && user.role === "scout" && user.scoutApprovalStatus !== "approved") {
+  if (user && user.role === "scout" && user.scoutApprovalStatus && user.scoutApprovalStatus !== "approved") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 gap-4">
         <div className="w-20 h-20 rounded-2xl bg-[#8B5CF6]/10 flex items-center justify-center text-4xl mb-2">
