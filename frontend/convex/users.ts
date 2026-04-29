@@ -480,6 +480,6 @@ export const getPendingScouts = query({
             .query("users")
             .withIndex("by_role", (q) => q.eq("role", "scout"))
             .collect();
-        return scouts.filter((s) => s.scoutApprovalStatus === "pending" || s.scoutApprovalStatus === undefined);
+        return scouts.filter((s) => s.scoutApprovalStatus === "pending");
     },
 });
