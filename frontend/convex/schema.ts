@@ -45,6 +45,7 @@ export default defineSchema({
         experience: v.number(),
         certifications: v.array(v.string()),
         languages: v.array(v.string()),
+        ratePerMatch: v.optional(v.number()), // Legacy field
         bio: v.string(),
       })
     ),
@@ -146,6 +147,8 @@ export default defineSchema({
       v.literal("declined"),
       v.literal("completed")
     ),
+    stripePaymentIntentId: v.optional(v.string()), // Legacy field
+    agreedPrice: v.optional(v.number()), // Legacy field
     createdAt: v.number(),
   })
     .index("by_playerId", ["playerId"])
