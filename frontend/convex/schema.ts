@@ -45,7 +45,6 @@ export default defineSchema({
         experience: v.number(),
         certifications: v.array(v.string()),
         languages: v.array(v.string()),
-        ratePerMatch: v.number(),
         bio: v.string(),
       })
     ),
@@ -56,7 +55,11 @@ export default defineSchema({
         country: v.string(),
         leagueLevel: v.string(),
         isVerified: v.boolean(),
+        verificationDocId: v.optional(v.id("_storage")),
       })
+    ),
+    scoutApprovalStatus: v.optional(
+      v.union(v.literal("pending"), v.literal("approved"), v.literal("rejected"))
     ),
   })
     .index("email", ["email"])
@@ -143,8 +146,6 @@ export default defineSchema({
       v.literal("declined"),
       v.literal("completed")
     ),
-    stripePaymentIntentId: v.optional(v.string()),
-    agreedPrice: v.number(),
     createdAt: v.number(),
   })
     .index("by_playerId", ["playerId"])
@@ -219,5 +220,6 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.optional(v.number()),
     completedAt: v.optional(v.number()),
-  }).index("by_jobId", ["jobId"]),
+  }).index("by_jobId", ["jobId"])
+    .index("by_playerId", ["playerId"]),
 });

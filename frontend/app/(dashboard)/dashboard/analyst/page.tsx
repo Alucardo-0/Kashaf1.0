@@ -29,7 +29,6 @@ type Tab = "overview" | "requests" | "matches";
 export default function AnalystDashboard() {
     const user = useQuery(api.users.getCurrentUser);
     const requests = useQuery(api.analysisRequests.getRequestsByAnalyst, {});
-    const earnings = useQuery(api.analysisRequests.getAnalystEarnings);
     const matches = useQuery(api.matches.getMatchesByAnalyst, {});
     const avgRating = useQuery(
         api.ratings.getAverageRating,
@@ -75,18 +74,8 @@ export default function AnalystDashboard() {
     /* ── Stat Cards Data ─────────────────────────────────────────────── */
     const stats = [
         {
-            label: "Total Earnings",
-            value: `$${earnings?.totalEarnings ?? 0}`,
-            icon: (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-            ),
-            color: "#00FF87",
-        },
-        {
             label: "Completed Analyses",
-            value: earnings?.totalCompleted ?? 0,
+            value: completedJobs.length,
             icon: (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="20 6 9 17 4 12" />
@@ -131,7 +120,7 @@ export default function AnalystDashboard() {
                         Welcome back, <span className="text-[#3B82F6]">{user?.name?.split(" ")[0] ?? "Analyst"}</span>
                     </h1>
                     <p className="text-sm text-white/40 mt-1">
-                        {user?.analystProfile?.experience ?? 0}yr experience · ${user?.analystProfile?.ratePerMatch ?? 0}/match
+                        {user?.analystProfile?.experience ?? 0}yr experience
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -212,7 +201,6 @@ export default function AnalystDashboard() {
                                             <div>
                                                 <p className="text-sm font-medium text-white">New Analysis Request</p>
                                                 <p className="text-xs text-white/40 mt-0.5">
-                                                    Rate: <span className="text-[#00FF87] font-medium">${req.agreedPrice}</span> ·{" "}
                                                     {new Date(req.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                                                 </p>
                                             </div>
@@ -246,12 +234,10 @@ export default function AnalystDashboard() {
                             <h3 className="text-sm font-semibold text-white mb-4">Your Profile</h3>
                             <div className="space-y-2.5">
                                 {[
-                                    { label: "Rate", value: `$${user?.analystProfile?.ratePerMatch ?? 0}/match` },
                                     { label: "Experience", value: `${user?.analystProfile?.experience ?? 0} years` },
                                     { label: "Languages", value: user?.analystProfile?.languages?.join(", ") },
                                     { label: "Rating", value: avgRating?.average ? `${avgRating.average} ★ (${avgRating.count})` : "No ratings yet" },
-                                    { label: "Total Earned", value: `$${earnings?.totalEarnings ?? 0}` },
-                                    { label: "Jobs Done", value: `${earnings?.totalCompleted ?? 0}` },
+                                    { label: "Jobs Done", value: `${completedJobs.length}` },
                                 ].map((item) => (
                                     <div key={item.label} className="flex items-center justify-between">
                                         <span className="text-xs text-white/40">{item.label}</span>
@@ -324,7 +310,7 @@ export default function AnalystDashboard() {
                                                 <div>
                                                     <p className="text-sm font-medium text-white">Analysis Request</p>
                                                     <p className="text-xs text-white/40 mt-0.5">
-                                                        ${req.agreedPrice} · {new Date(req.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                                        {new Date(req.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                                                     </p>
                                                 </div>
                                             </div>

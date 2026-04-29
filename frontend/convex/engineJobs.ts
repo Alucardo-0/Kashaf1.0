@@ -102,3 +102,43 @@ export const getJobByMatchId = query({
       .first();
   },
 });
+
+// ── Get latest completed engine job for a player (aggregate profile) ─────
+export const getLatestCompletedJobByPlayerId = query({
+  args: { playerId: v.id("users") },
+  handler: async (ctx, args) => {
+    const jobs = await ctx.db
+      .query("engineJobs")
+      .withIndex("by_playerId", (q) => q.eq("playerId", args.playerId))
+      .order("desc")
+      .collect();
+
+    // Find the most recent completed job with a valid report
+    const completedJob = jobs.find((j) => j.status === "completed" && j.report);
+    if (!completedJob) return null;
+
+    // Extract the engine report (nested inside job.report.report or directly in job.report)
+    const jobReport: any = completedJob.report;
+    const report: any = jobReport?.report ?? jobReport ?? null;
+    if (!report) return null;
+
+    return {
+      _id: completedJob._id,
+      playerId: completedJob.playerId,
+      unit: report.unit ?? completedJob.unit,
+      topArchetype: report.top_archetype ?? "",
+      topPct: report.top_pct ?? 0,
+      matchCount: report.match_count ?? completedJob.requestPayload?.metadata?.matchCount ?? 1,
+      archetypes: report.archetypes ?? {},
+      coreFeatures: report.core_features ?? {},
+      contextFeatures: report.context_features ?? {},
+      twins: (report.twins ?? []).map((t: any) => ({
+        player_name: t.player_name ?? "",
+        similarity: t.similarity ?? 0,
+        context: t.context ?? {},
+      })),
+      dataWarning: report.data_warning ?? null,
+      createdAt: completedJob.createdAt,
+    };
+  },
+});

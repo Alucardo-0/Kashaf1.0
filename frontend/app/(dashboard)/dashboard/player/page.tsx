@@ -137,7 +137,7 @@ function FindAnalystModal({ matchId, onClose }: { matchId: string; onClose: () =
     const [loading, setLoading] = useState<string | null>(null);
     const [error, setError] = useState("");
 
-    const handleHire = async (analystId: string, rate: number) => {
+    const handleHire = async (analystId: string) => {
         setLoading(analystId);
         setError("");
         try {
@@ -186,9 +186,8 @@ function FindAnalystModal({ matchId, onClose }: { matchId: string; onClose: () =
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-sm font-bold text-[#00FF87]">${analyst.analystProfile?.ratePerMatch ?? 0}</p>
                                         <button
-                                            onClick={() => handleHire(analyst._id, analyst.analystProfile?.ratePerMatch ?? 0)}
+                                            onClick={() => handleHire(analyst._id)}
                                             disabled={loading === analyst._id}
                                             className="mt-1 text-xs px-3 py-1 rounded-lg bg-[#3B82F6]/20 text-[#3B82F6] hover:bg-[#3B82F6]/30 transition-all cursor-pointer disabled:opacity-50"
                                         >

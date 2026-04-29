@@ -31,7 +31,6 @@ export default function Footer() {
                                 { label: "For Players", href: "#how-it-works" },
                                 { label: "For Analysts", href: "#how-it-works" },
                                 { label: "For Scouts", href: "#how-it-works" },
-                                { label: "Pricing", href: "#pricing" },
                             ].map((link) => (
                                 <li key={link.label}>
                                     <a

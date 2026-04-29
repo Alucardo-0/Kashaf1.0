@@ -100,7 +100,6 @@ export const autoAssignAnalyst = internalMutation({
             analystId: chosenAnalyst._id,
             matchId: args.matchId,
             status: "pending",
-            agreedPrice: 0,
             createdAt: Date.now(),
         });
 
@@ -218,7 +217,6 @@ export const reassignOnDecline = internalMutation({
             analystId: chosenAnalyst._id,
             matchId: request.matchId,
             status: "pending",
-            agreedPrice: 0,
             createdAt: Date.now(),
         });
 

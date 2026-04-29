@@ -30,9 +30,9 @@ def _normalize_outcome(value: Any) -> bool | None:
     text = str(value).strip().lower()
     if text in {"", "none", "null", "na", "n/a"}:
         return None
-    if text in {"true", "success", "complete", "completed", "won", "goal", "yes", "1"}:
+    if text in {"true", "success", "successful", "complete", "completed", "won", "goal", "yes", "1"}:
         return True
-    if text in {"false", "fail", "failed", "incomplete", "lost", "no", "0"}:
+    if text in {"false", "fail", "failed", "incomplete", "lost", "no", "0", "unsuccessful"}:
         return False
     return None
 

@@ -8,13 +8,34 @@ import { PlayerRow } from "@/components/scout/PlayerRow";
 import type { ScoutSearchPlayer } from "@/components/scout/PlayerRow";
 
 export default function ScoutDashboard() {
+  const user = useQuery(api.users.getCurrentUser);
+
+  // Gate: scout must be approved
+  if (user && user.role === "scout" && user.scoutApprovalStatus !== "approved") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 gap-4">
+        <div className="w-20 h-20 rounded-2xl bg-[#8B5CF6]/10 flex items-center justify-center text-4xl mb-2">
+          {user.scoutApprovalStatus === "rejected" ? "❌" : "⏳"}
+        </div>
+        <h1 className="text-2xl font-bold text-white">
+          {user.scoutApprovalStatus === "rejected" ? "Application Rejected" : "Pending Approval"}
+        </h1>
+        <p className="text-white/40 text-sm max-w-md">
+          {user.scoutApprovalStatus === "rejected"
+            ? "Your scout application was not approved. Please contact support for more information."
+            : "Your verification document is being reviewed by our team. You'll get full access once approved."}
+        </p>
+      </div>
+    );
+  }
+
   const [filters, setFilters] = useState<FilterState>({
     unit: "all",
     topArchetype: "any",
     archetypeThreshold: 0,
     minMatches: 3, // Default to reliable data only
-    ageRange: [18, 30],
-    heightRange: [175, 220],
+    ageRange: [10, 50],
+    heightRange: [100, 220],
     preferredFoot: 'any'
   });
 

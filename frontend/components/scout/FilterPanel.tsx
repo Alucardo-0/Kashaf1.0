@@ -5,6 +5,15 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// Archetypes per position unit — mirrors backend models/<unit>/cluster_names.json
+const ARCHETYPES_BY_POSITION: Record<string, string[]> = {
+  cb: ["Ball-Playing Defender", "Stopper", "Interceptor", "Sweeper"],
+  fb: ["Playmaking Fullback", "Wing-Back", "Defensive Fullback"],
+  mf: ["Advanced Playmaker", "Carrying Midfielder", "Deep Playmaker", "Anchor"],
+  wg: ["Inside Forward", "Wide Playmaker", "Wide Winger"],
+  st: ["Link-Up Striker", "Target Man", "Poacher"],
+};
+
 export interface FilterState {
   unit: string;
   topArchetype: string;
@@ -44,7 +53,10 @@ export function FilterPanel({ filters, setFilters }: FilterPanelProps) {
           
           <div className="space-y-2.5">
             <Label className="text-[11px] font-semibold text-white/50 uppercase tracking-wider">Position / Unit</Label>
-            <Select value={filters.unit} onValueChange={(val) => updateFilter("unit", val)}>
+            <Select value={filters.unit} onValueChange={(val) => {
+              updateFilter("unit", val);
+              updateFilter("topArchetype", "any");
+            }}>
               <SelectTrigger className="w-full bg-white/5 border-white/5 text-white rounded-lg h-10 focus:border-dns-blue focus:ring-1 focus:ring-dns-blue">
                 <SelectValue placeholder="All Positions" />
               </SelectTrigger>
@@ -59,23 +71,22 @@ export function FilterPanel({ filters, setFilters }: FilterPanelProps) {
             </Select>
           </div>
 
-          <div className="space-y-2.5">
-            <Label className="text-[11px] font-semibold text-white/50 uppercase tracking-wider">Top Archetype</Label>
-            <Select value={filters.topArchetype} onValueChange={(val) => updateFilter("topArchetype", val)}>
-              <SelectTrigger className="w-full bg-white/5 border-white/5 text-white rounded-lg h-10 focus:border-dns-green focus:ring-1 focus:ring-dns-green">
-                <SelectValue placeholder="Any Archetype" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#12121a] border-white/10 text-white rounded-xl">
-                <SelectItem value="any">Any Archetype</SelectItem>
-                <SelectItem value="Ball-Playing Defender">Ball-Playing Defender</SelectItem>
-                <SelectItem value="Interceptor">Interceptor</SelectItem>
-                <SelectItem value="Stopper">Stopper</SelectItem>
-                <SelectItem value="Box-to-Box">Box-to-Box Midfielder</SelectItem>
-                <SelectItem value="Advanced Playmaker">Advanced Playmaker</SelectItem>
-                <SelectItem value="Target Striker">Target Striker</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          {filters.unit !== "all" && (
+            <div className="space-y-2.5">
+              <Label className="text-[11px] font-semibold text-white/50 uppercase tracking-wider">Top Archetype</Label>
+              <Select value={filters.topArchetype} onValueChange={(val) => updateFilter("topArchetype", val)}>
+                <SelectTrigger className="w-full bg-white/5 border-white/5 text-white rounded-lg h-10 focus:border-dns-green focus:ring-1 focus:ring-dns-green">
+                  <SelectValue placeholder="Any Archetype" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#12121a] border-white/10 text-white rounded-xl">
+                  <SelectItem value="any">Any Archetype</SelectItem>
+                  {(ARCHETYPES_BY_POSITION[filters.unit] ?? []).map((name) => (
+                    <SelectItem key={name} value={name}>{name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
 
         {/* Physical Constraints */}
@@ -90,7 +101,7 @@ export function FilterPanel({ filters, setFilters }: FilterPanelProps) {
             <div className="px-1">
               <Slider
                 value={[filters.ageRange[0], filters.ageRange[1]]}
-                min={15} max={40} step={1}
+                min={10} max={50} step={1}
                 onValueChange={(vals) => updateFilter("ageRange", [vals[0], vals[1]])}
                 className="cursor-pointer"
               />
@@ -105,7 +116,7 @@ export function FilterPanel({ filters, setFilters }: FilterPanelProps) {
             <div className="px-1">
               <Slider
                 value={[filters.heightRange[0]]}
-                min={160} max={210} step={1}
+                min={100} max={210} step={1}
                 onValueChange={(vals) => updateFilter("heightRange", [vals[0], 220])}
                 className="cursor-pointer"
               />

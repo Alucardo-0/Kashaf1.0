@@ -7,7 +7,6 @@ import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Stats from "@/components/landing/Stats";
 import Testimonials from "@/components/landing/Testimonials";
-import Pricing from "@/components/landing/Pricing";
 import Footer from "@/components/landing/Footer";
 import LenisProvider from "@/components/LenisProvider";
 
@@ -46,9 +45,6 @@ export default function Home() {
           <SectionTransition>
             <Testimonials />
           </SectionTransition>
-          {/* <SectionTransition>
-            <Pricing />
-          </SectionTransition> */}
           <Footer />
         </div>
       </div>

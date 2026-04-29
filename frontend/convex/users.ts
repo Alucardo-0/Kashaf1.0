@@ -41,7 +41,6 @@ export const listUsersByRole = query({
 export const listAnalysts = query({
     args: {
         language: v.optional(v.string()),
-        maxPrice: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
         let analysts = await ctx.db
@@ -52,13 +51,6 @@ export const listAnalysts = query({
         if (args.language) {
             analysts = analysts.filter((a) =>
                 a.analystProfile?.languages.includes(args.language!)
-            );
-        }
-        if (args.maxPrice !== undefined) {
-            analysts = analysts.filter(
-                (a) =>
-                    a.analystProfile?.ratePerMatch !== undefined &&
-                    a.analystProfile.ratePerMatch <= args.maxPrice!
             );
         }
 
@@ -124,7 +116,6 @@ export const completeAnalystProfile = mutation({
             experience: v.number(),
             certifications: v.array(v.string()),
             languages: v.array(v.string()),
-            ratePerMatch: v.number(),
             bio: v.string(),
         }),
     },
@@ -151,6 +142,7 @@ export const completeScoutProfile = mutation({
             country: v.string(),
             leagueLevel: v.string(),
             isVerified: v.boolean(),
+            verificationDocId: v.optional(v.id("_storage")),
         }),
     },
     handler: async (ctx, args) => {
@@ -161,6 +153,7 @@ export const completeScoutProfile = mutation({
             profilePhoto: args.profilePhoto,
             scoutProfile: args.scoutProfile,
             onboardingComplete: true,
+            scoutApprovalStatus: "pending",
         });
     },
 });
@@ -196,7 +189,6 @@ export const updateUserProfile = mutation({
                 experience: v.number(),
                 certifications: v.array(v.string()),
                 languages: v.array(v.string()),
-                ratePerMatch: v.number(),
                 bio: v.string(),
             })
         ),
@@ -207,6 +199,7 @@ export const updateUserProfile = mutation({
                 country: v.string(),
                 leagueLevel: v.string(),
                 isVerified: v.boolean(),
+                verificationDocId: v.optional(v.id("_storage")),
             })
         ),
     },
@@ -284,7 +277,7 @@ export const listAllUsers = query({
     },
 });
 
-// ── Verify scout (admin) ─────────────────────────────────────────────────
+// ── Verify / approve scout (admin) ───────────────────────────────────────
 export const verifyScout = mutation({
     args: { scoutId: v.id("users") },
     handler: async (ctx, args) => {
@@ -297,6 +290,21 @@ export const verifyScout = mutation({
                 ...scout.scoutProfile,
                 isVerified: true,
             },
+            scoutApprovalStatus: "approved",
+        });
+    },
+});
+
+// ── Reject scout (admin) ─────────────────────────────────────────────────
+export const rejectScout = mutation({
+    args: { scoutId: v.id("users") },
+    handler: async (ctx, args) => {
+        const scout = await ctx.db.get(args.scoutId);
+        if (!scout || scout.role !== "scout") {
+            throw new Error("User is not a scout");
+        }
+        await ctx.db.patch(args.scoutId, {
+            scoutApprovalStatus: "rejected",
         });
     },
 });
@@ -386,5 +394,92 @@ export const searchPlayers = query({
         }
 
         return filtered;
+    },
+});
+
+// ── Check if current user is admin ───────────────────────────────────────
+export const isAdmin = query({
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return false;
+        const user = await ctx.db.get(userId);
+        if (!user) return false;
+        const adminEmails = (process.env.ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase()).filter(Boolean);
+        return adminEmails.includes(user.email.toLowerCase());
+    },
+});
+
+// ── Generate upload URL for scout verification doc ───────────────────────
+export const generateUploadUrl = mutation({
+    args: {},
+    handler: async (ctx) => {
+        return await ctx.storage.generateUploadUrl();
+    },
+});
+
+// ── Get scout verification doc URL ───────────────────────────────────────
+export const getScoutVerificationUrl = query({
+    args: { storageId: v.id("_storage") },
+    handler: async (ctx, args) => {
+        return await ctx.storage.getUrl(args.storageId);
+    },
+});
+
+// ── Create analyst account (admin) ───────────────────────────────────────
+export const createAnalystAccount = mutation({
+    args: {
+        name: v.string(),
+        email: v.string(),
+        analystProfile: v.object({
+            nationality: v.string(),
+            experience: v.number(),
+            certifications: v.array(v.string()),
+            languages: v.array(v.string()),
+            bio: v.string(),
+        }),
+    },
+    handler: async (ctx, args) => {
+        // Check if email already exists
+        const existing = await ctx.db
+            .query("users")
+            .withIndex("email", (q) => q.eq("email", args.email))
+            .first();
+        if (existing) {
+            throw new Error("A user with this email already exists");
+        }
+
+        // Create user record directly (admin-provisioned, no auth credentials)
+        const userId = await ctx.db.insert("users", {
+            name: args.name,
+            email: args.email,
+            role: "analyst",
+            analystProfile: args.analystProfile,
+            onboardingComplete: true,
+        });
+
+        return userId;
+    },
+});
+
+// ── Delete user (admin) ──────────────────────────────────────────────────
+export const deleteUser = mutation({
+    args: { userId: v.id("users") },
+    handler: async (ctx, args) => {
+        const user = await ctx.db.get(args.userId);
+        if (!user) throw new Error("User not found");
+        await ctx.db.delete(args.userId);
+    },
+});
+
+// ── Get pending scouts ───────────────────────────────────────────────────
+export const getPendingScouts = query({
+    args: {},
+    handler: async (ctx) => {
+        const scouts = await ctx.db
+            .query("users")
+            .withIndex("by_role", (q) => q.eq("role", "scout"))
+            .collect();
+        return scouts.filter((s) => s.scoutApprovalStatus === "pending");
     },
 });

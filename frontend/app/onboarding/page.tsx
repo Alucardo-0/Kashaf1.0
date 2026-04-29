@@ -214,7 +214,7 @@ function PlayerForm({ user, onSubmit, loading }: {
 /* ── Analyst Form ───────────────────────────────────────────────────── */
 function AnalystForm({ user, onSubmit, loading }: {
     user: { name?: string };
-    onSubmit: (data: { name: string; analystProfile: { nationality: string; experience: number; certifications: string[]; languages: string[]; ratePerMatch: number; bio: string } }) => void;
+    onSubmit: (data: { name: string; analystProfile: { nationality: string; experience: number; certifications: string[]; languages: string[]; bio: string } }) => void;
     loading: boolean;
 }) {
     const [name, setName] = useState(user.name ?? "");
@@ -222,7 +222,6 @@ function AnalystForm({ user, onSubmit, loading }: {
     const [experience, setExperience] = useState("");
     const [certifications, setCertifications] = useState<string[]>([]);
     const [languages, setLanguages] = useState<string[]>(["English"]);
-    const [ratePerMatch, setRatePerMatch] = useState("");
     const [bio, setBio] = useState("");
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -235,7 +234,6 @@ function AnalystForm({ user, onSubmit, loading }: {
                 experience: parseInt(experience),
                 certifications,
                 languages,
-                ratePerMatch: parseInt(ratePerMatch),
                 bio,
             },
         });
@@ -248,10 +246,7 @@ function AnalystForm({ user, onSubmit, loading }: {
                 <Select label="Nationality *" options={NATIONALITIES} value={nationality} onChange={(e) => setNationality(e.target.value)} required />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input label="Years of Experience *" type="number" value={experience} onChange={(e) => setExperience(e.target.value)} required min={0} max={40} placeholder="e.g. 5" />
-                <Input label="Rate per Match (USD) *" type="number" value={ratePerMatch} onChange={(e) => setRatePerMatch(e.target.value)} required min={5} max={1000} placeholder="e.g. 25" />
-            </div>
+            <Input label="Years of Experience *" type="number" value={experience} onChange={(e) => setExperience(e.target.value)} required min={0} max={40} placeholder="e.g. 5" />
 
             <MultiSelect label="Certifications" options={CERTIFICATIONS} selected={certifications} onChange={setCertifications} />
             <MultiSelect label="Languages *" options={LANGUAGES} selected={languages} onChange={setLanguages} />
@@ -277,16 +272,32 @@ function AnalystForm({ user, onSubmit, loading }: {
 /* ── Scout Form ─────────────────────────────────────────────────────── */
 function ScoutForm({ user, onSubmit, loading }: {
     user: { name?: string };
-    onSubmit: (data: { name: string; scoutProfile: { clubName: string; country: string; leagueLevel: string; isVerified: boolean } }) => void;
+    onSubmit: (data: { name: string; scoutProfile: { clubName: string; country: string; leagueLevel: string; isVerified: boolean; verificationDocId?: any } }) => void;
     loading: boolean;
 }) {
+    const generateUploadUrl = useMutation(api.users.generateUploadUrl);
     const [name, setName] = useState(user.name ?? "");
     const [clubName, setClubName] = useState("");
     const [country, setCountry] = useState("");
     const [leagueLevel, setLeagueLevel] = useState("");
+    const [docFile, setDocFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        let verificationDocId: any = undefined;
+
+        if (docFile) {
+            setUploading(true);
+            try {
+                const uploadUrl = await generateUploadUrl();
+                const res = await fetch(uploadUrl, { method: "POST", headers: { "Content-Type": docFile.type }, body: docFile });
+                const { storageId } = await res.json();
+                verificationDocId = storageId;
+            } catch { /* proceed without doc */ }
+            setUploading(false);
+        }
+
         onSubmit({
             name,
             scoutProfile: {
@@ -294,6 +305,7 @@ function ScoutForm({ user, onSubmit, loading }: {
                 country,
                 leagueLevel,
                 isVerified: false,
+                verificationDocId,
             },
         });
     };
@@ -305,6 +317,28 @@ function ScoutForm({ user, onSubmit, loading }: {
             <Select label="Country *" options={NATIONALITIES} value={country} onChange={(e) => setCountry(e.target.value)} required />
             <Select label="League Level *" options={LEAGUE_LEVELS} value={leagueLevel} onChange={(e) => setLeagueLevel(e.target.value)} required />
 
+            {/* Document Upload */}
+            <div>
+                <label className="block text-sm font-medium text-white/70 mb-1.5">Verification Document *</label>
+                <p className="text-xs text-white/35 mb-3">Upload proof of club employment (contract, ID card, letter). PDF, JPG, PNG accepted.</p>
+                <label className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 cursor-pointer hover:bg-white/8 transition-all">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[#8B5CF6] shrink-0">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    <span className="text-sm text-white/60 truncate flex-1">
+                        {docFile ? docFile.name : "Choose file..."}
+                    </span>
+                    <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        className="hidden"
+                        onChange={(e) => setDocFile(e.target.files?.[0] || null)}
+                        required
+                    />
+                </label>
+            </div>
+
             {/* Info box */}
             <div className="p-4 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/20">
                 <div className="flex items-start gap-3">
@@ -314,13 +348,12 @@ function ScoutForm({ user, onSubmit, loading }: {
                         <line x1="12" y1="8" x2="12.01" y2="8" />
                     </svg>
                     <p className="text-sm text-white/60">
-                        Your account will be reviewed by our team. Once verified, you&apos;ll receive a{" "}
-                        <span className="text-[#8B5CF6] font-medium">Verified Scout</span> badge visible to all players.
+                        Your account will be reviewed by our team after you submit your verification document. You&apos;ll gain full access once approved.
                     </p>
                 </div>
             </div>
 
-            <SubmitButton loading={loading} text="Complete Profile" />
+            <SubmitButton loading={loading || uploading} text={uploading ? "Uploading document..." : "Complete Profile"} />
         </form>
     );
 }

@@ -70,7 +70,8 @@ function StatRow({ label, value }: { label: string; value: string }) {
 }
 
 function TwinCard({ twin }: { twin: { player_name: string; similarity: number; context?: Record<string, number> } }) {
-    const simPct = (twin.similarity * 100).toFixed(1);
+    // Engine already returns similarity in 0-100 range
+    const simPct = twin.similarity.toFixed(1);
     return (
         <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-[#00FF87]/20 transition-all">
             <div className="flex items-center justify-between mb-3">
@@ -90,7 +91,7 @@ function TwinCard({ twin }: { twin: { player_name: string; similarity: number; c
                         <div key={k} className="flex items-center justify-between text-[10px]">
                             <span className="text-white/30 capitalize truncate mr-1">{k.replace(/_/g, " ")}</span>
                             <span className="text-white/60 font-medium tabular-nums shrink-0">
-                                {typeof v === "number" ? (k.includes("pct") ? `${(v * 100).toFixed(1)}%` : fmt(v, 2)) : String(v)}
+                                {typeof v === "number" ? (k.includes("pct") ? `${v.toFixed(1)}%` : fmt(v, 2)) : String(v)}
                             </span>
                         </div>
                     ))}

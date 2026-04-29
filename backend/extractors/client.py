@@ -51,11 +51,19 @@ def _parse_row(row: pd.Series) -> dict:
     # Outcome
     if action_type in ALWAYS_SUCCESS_ACTIONS:
         outcome = True
+    elif action_type == "pass":
+        raw_outcome = row.get("outcome")
+        if pd.isna(raw_outcome) or raw_outcome == "":
+            outcome = True   # no outcome on a pass = completed, same as StatsBomb
+        elif str(raw_outcome).strip().lower() in ("true", "1", "yes", "success", "successful"):
+            outcome = True
+        else:
+            outcome = False
     else:
         raw_outcome = row.get("outcome")
         if pd.isna(raw_outcome) or raw_outcome == "":
             outcome = None
-        elif str(raw_outcome).strip().lower() in ("true", "1", "yes", "success"):
+        elif str(raw_outcome).strip().lower() in ("true", "1", "yes", "success", "successful"):
             outcome = True
         else:
             outcome = False

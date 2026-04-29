@@ -35,7 +35,6 @@ export default function SettingsPage() {
     const [experience, setExperience] = useState(0);
     const [certifications, setCertifications] = useState("");
     const [languages, setLanguages] = useState("");
-    const [ratePerMatch, setRatePerMatch] = useState(0);
     const [bio, setBio] = useState("");
 
     /* ── Scout fields ─────────────────────────────────────────────────── */
@@ -68,7 +67,6 @@ export default function SettingsPage() {
             setExperience(a.experience ?? 0);
             setCertifications(a.certifications?.join(", ") ?? "");
             setLanguages(a.languages?.join(", ") ?? "");
-            setRatePerMatch(a.ratePerMatch ?? 0);
             setBio(a.bio ?? "");
         }
 
@@ -119,7 +117,6 @@ export default function SettingsPage() {
                     experience,
                     certifications: certifications.split(",").map((s) => s.trim()).filter(Boolean),
                     languages: languages.split(",").map((s) => s.trim()).filter(Boolean),
-                    ratePerMatch,
                     bio,
                 };
             }
@@ -244,10 +241,6 @@ export default function SettingsPage() {
                         <div>
                             <label className={labelClass}>Experience (years)</label>
                             <input type="number" value={experience || ""} onChange={(e) => setExperience(Number(e.target.value))} className={inputClass} />
-                        </div>
-                        <div>
-                            <label className={labelClass}>Rate per Match ($)</label>
-                            <input type="number" value={ratePerMatch || ""} onChange={(e) => setRatePerMatch(Number(e.target.value))} className={inputClass} />
                         </div>
                         <div>
                             <label className={labelClass}>Languages</label>

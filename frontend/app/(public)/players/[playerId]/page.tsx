@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useParams } from "next/navigation";
@@ -9,15 +10,19 @@ import {
     Radar, RadarChart, PolarGrid, PolarAngleAxis,
     PolarRadiusAxis, ResponsiveContainer, Tooltip,
 } from "recharts";
-import { ShieldCheck, ShieldAlert, ExternalLink, Play, User } from "lucide-react";
+import { ShieldCheck, ShieldAlert, Play, User, Eye } from "lucide-react";
+import Link from "next/link";
+import { MatchHighlightsViewer } from "@/components/scout/MatchHighlightsViewer";
 
 export default function PlayerPublicProfile() {
     const params = useParams();
     const playerId = params.playerId as Id<"users">;
 
     const user    = useQuery(api.users.getUserById, { userId: playerId });
-    const profile = useQuery(api.engineProfiles.getProfileByPlayerId, { playerId });
+    const profile = useQuery(api.engineJobs.getLatestCompletedJobByPlayerId, { playerId });
     const matches = useQuery(api.matches.getCompletedMatchesByPlayer, { playerId });
+
+    const [viewingMatch, setViewingMatch] = useState<Doc<"matches"> | null>(null);
 
     if (user === undefined || profile === undefined || matches === undefined) {
         return (
@@ -131,6 +136,14 @@ export default function PlayerPublicProfile() {
 
                         {profile ? (
                             <>
+                                {/* Data warning */}
+                                {profile.dataWarning && (
+                                    <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 text-sm flex gap-3">
+                                        <span className="text-lg shrink-0">⚠</span>
+                                        <p>{profile.dataWarning}</p>
+                                    </div>
+                                )}
+
                                 {/* Archetype + Radar side by side */}
                                 <section>
                                     <p className="text-[11px] font-bold uppercase tracking-widest text-white/25 mb-6">Engine Profile</p>
@@ -179,8 +192,8 @@ export default function PlayerPublicProfile() {
                                                         {fmt(key)}
                                                     </p>
                                                     <p className="text-2xl font-black text-white leading-none">
-                                                        {String(value)}
-                                                        {key.includes("pct") && <span className="text-sm text-dns-green ml-0.5">%</span>}
+                                                        {typeof value === "number" ? value.toFixed(1) : String(value)}
+                                                        {String(key).includes("pct") && <span className="text-sm text-dns-green ml-0.5">%</span>}
                                                     </p>
                                                 </div>
                                             ))}
@@ -224,18 +237,23 @@ export default function PlayerPublicProfile() {
                                                 </div>
                                             </div>
 
-                                            <div className="flex items-center gap-4 shrink-0">
+                                            <div className="flex items-center gap-3 shrink-0">
                                                 <span className="hidden sm:block text-[11px] font-semibold text-dns-green bg-dns-green/10 border border-dns-green/20 px-2.5 py-1 rounded-md">
                                                     Analysis Complete
                                                 </span>
-                                                <a
-                                                    href={match.youtubeUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-xs font-semibold text-white/40 hover:text-white flex items-center gap-1.5 transition-colors"
+                                                <Link
+                                                    href={`/players/${playerId}/matches/${match._id}`}
+                                                    className="text-xs font-semibold text-white/50 hover:text-white flex items-center gap-1.5 transition-colors"
                                                 >
-                                                    Watch <ExternalLink className="w-3.5 h-3.5" />
-                                                </a>
+                                                    Report
+                                                </Link>
+                                                <button
+                                                    onClick={() => setViewingMatch(match)}
+                                                    className="text-xs font-semibold text-dns-green hover:text-dns-green/80 flex items-center gap-1.5 transition-colors bg-dns-green/10 border border-dns-green/20 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-dns-green/15"
+                                                >
+                                                    <Eye className="w-3.5 h-3.5" />
+                                                    Highlights
+                                                </button>
                                             </div>
                                         </div>
                                     ))}
@@ -297,6 +315,18 @@ export default function PlayerPublicProfile() {
 
                 </div>
             </div>
+
+            {/* ─── Highlight Viewer Modal ─────────────────────────────────── */}
+            {viewingMatch && (
+                <MatchHighlightsViewer
+                    matchId={viewingMatch._id as Id<"matches">}
+                    playerId={playerId}
+                    youtubeVideoId={viewingMatch.youtubeVideoId}
+                    opponentName={viewingMatch.opponentName}
+                    matchDate={viewingMatch.matchDate}
+                    onClose={() => setViewingMatch(null)}
+                />
+            )}
         </div>
     );
 }

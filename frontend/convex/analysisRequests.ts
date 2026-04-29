@@ -8,7 +8,6 @@ export const createRequest = mutation({
     args: {
         analystId: v.id("users"),
         matchId: v.id("matches"),
-        stripePaymentIntentId: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
@@ -24,8 +23,6 @@ export const createRequest = mutation({
             analystId: args.analystId,
             matchId: args.matchId,
             status: "pending",
-            stripePaymentIntentId: args.stripePaymentIntentId,
-            agreedPrice: 0,
             createdAt: Date.now(),
         });
 
@@ -131,44 +128,5 @@ export const updateRequestStatus = mutation({
                 createdAt: Date.now(),
             });
         }
-    },
-});
-
-// ── Get analyst earnings ─────────────────────────────────────────────────
-export const getAnalystEarnings = query({
-    args: {},
-    handler: async (ctx) => {
-        const userId = await getAuthUserId(ctx);
-        if (!userId) {
-            return { totalEarnings: 0, totalCompleted: 0, earningsByMonth: {} };
-        }
-
-        const completedRequests = await ctx.db
-            .query("analysisRequests")
-            .withIndex("by_analystId", (q) => q.eq("analystId", userId))
-            .collect();
-
-        const completed = completedRequests.filter(
-            (r) => r.status === "completed"
-        );
-
-        const totalEarnings = completed.reduce(
-            (sum, r) => sum + r.agreedPrice,
-            0
-        );
-
-        // Group by month for chart
-        const earningsByMonth: Record<string, number> = {};
-        for (const req of completed) {
-            const date = new Date(req.createdAt);
-            const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-            earningsByMonth[key] = (earningsByMonth[key] ?? 0) + req.agreedPrice;
-        }
-
-        return {
-            totalEarnings,
-            totalCompleted: completed.length,
-            earningsByMonth,
-        };
     },
 });
