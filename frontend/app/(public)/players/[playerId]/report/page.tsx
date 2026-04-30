@@ -4,9 +4,11 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useParams } from "next/navigation";
 import type { Id } from "@/convex/_generated/dataModel";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
-function fmt(val: number | null | undefined, decimals = 1): string {
+function fmt(val: number | null | undefined, decimals = 2): string {
     if (val === null || val === undefined) return "–";
     return val.toFixed(decimals);
 }
@@ -34,6 +36,9 @@ const ARCHETYPE_COLORS: Record<string, string> = {
     "Target Man": "#EF4444",
     "Pressing Striker": "#F59E0B",
     "Link-Up Striker": "#06B6D4",
+    "Anchor": "#22C55E",
+    "Carrying Midfielder": "#3B82F6",
+    "Deep Playmaker": "#8B5CF6",
 };
 
 function archetypeColor(name: string): string {
@@ -70,7 +75,6 @@ function StatRow({ label, value }: { label: string; value: string }) {
 }
 
 function TwinCard({ twin }: { twin: { player_name: string; similarity: number; context?: Record<string, number> } }) {
-    // Engine already returns similarity in 0-100 range
     const simPct = twin.similarity.toFixed(2);
     return (
         <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-[#00FF87]/20 transition-all">
@@ -91,7 +95,7 @@ function TwinCard({ twin }: { twin: { player_name: string; similarity: number; c
                         <div key={k} className="flex items-center justify-between text-[10px]">
                             <span className="text-white/30 capitalize truncate mr-1">{k.replace(/_/g, " ")}</span>
                             <span className="text-white/60 font-medium tabular-nums shrink-0">
-                                {typeof v === "number" ? (k.includes("pct") ? `${v.toFixed(1)}%` : fmt(v, 2)) : String(v)}
+                                {typeof v === "number" ? (k.includes("pct") ? `${v.toFixed(2)}%` : fmt(v, 2)) : String(v)}
                             </span>
                         </div>
                     ))}
@@ -102,20 +106,17 @@ function TwinCard({ twin }: { twin: { player_name: string; similarity: number; c
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   MATCH REPORT PAGE
+   PLAYER REPORT PAGE
    ══════════════════════════════════════════════════════════════════════════ */
-export default function MatchReportPage() {
+export default function PlayerReportPage() {
     const params = useParams();
-    const matchId = params.matchId as Id<"matches">;
     const playerId = params.playerId as Id<"users">;
 
-    const match = useQuery(api.matches.getMatchById, { matchId });
     const player = useQuery(api.users.getUserById, { userId: playerId });
-    const summary = useQuery(api.matchSummaries.getSummaryByMatch, { matchId });
-    const engineJob = useQuery(api.engineJobs.getJobByMatchId, { matchId });
+    const profile = useQuery(api.engineJobs.getLatestCompletedJobByPlayerId, { playerId });
 
     /* Loading */
-    if (match === undefined || player === undefined) {
+    if (player === undefined || profile === undefined) {
         return (
             <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center">
                 <svg className="animate-spin h-8 w-8 text-[#00FF87]" viewBox="0 0 24 24">
@@ -126,28 +127,24 @@ export default function MatchReportPage() {
         );
     }
 
-    if (!match) {
+    if (!player) {
         return (
             <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center">
-                <p className="text-white/40">Match not found.</p>
+                <p className="text-white/40">Player not found.</p>
             </div>
         );
     }
 
-    /* Engine report data — nested inside job.report.report */
-    const jobReport: any = engineJob?.report;
-    const engineReport: any = jobReport?.report ?? jobReport ?? null;
-    const jobStatus = engineJob?.status ?? null;
-
-    const archetypes: Record<string, number> = engineReport?.archetypes ?? {};
+    const archetypes: Record<string, number> = profile?.archetypes ?? {};
     const maxPct = Math.max(...Object.values(archetypes), 0);
-    const coreFeatures: Record<string, number> = engineReport?.core_features ?? {};
-    const contextFeatures: Record<string, number> = engineReport?.context_features ?? {};
-    const twins: any[] = engineReport?.twins ?? [];
-    const topArchetype: string = engineReport?.top_archetype ?? "";
-    const topPct: number = engineReport?.top_pct ?? 0;
-    const dataWarning: string | null = engineReport?.data_warning ?? null;
-    const archetypesNote: string | null = engineReport?.archetypes_note ?? null;
+    const coreFeatures: Record<string, number> = profile?.coreFeatures ?? {};
+    const contextFeatures: Record<string, number> = profile?.contextFeatures ?? {};
+    const twins: { player_name: string; similarity: number; context?: Record<string, number> }[] = profile?.twins ?? [];
+    const topArchetype: string = profile?.topArchetype ?? "";
+    const topPct: number = profile?.topPct ?? 0;
+    const dataWarning: string | null = profile?.dataWarning ?? null;
+    const unit: string = profile?.unit ?? player.playerProfile?.position ?? "";
+    const matchCount: number = profile?.matchCount ?? 0;
 
     return (
         <div className="min-h-screen bg-[#0A0A0F] text-white">
@@ -155,29 +152,27 @@ export default function MatchReportPage() {
             <div className="border-b border-white/[0.06] bg-[#0d0d14]">
                 <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
                     <div>
-                        <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Match Report</p>
+                        <Link
+                            href={`/players/${playerId}`}
+                            className="text-xs text-white/30 hover:text-white/60 transition-colors flex items-center gap-1.5 mb-2"
+                        >
+                            <ArrowLeft className="w-3 h-3" />
+                            Back to Profile
+                        </Link>
+                        <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Player Report</p>
                         <h1 className="text-2xl font-bold text-white">
-                            {player?.name ?? "Player"}
-                            {match.opponentName && (
-                                <span className="text-white/40 font-normal ml-2">vs {match.opponentName}</span>
-                            )}
+                            {player.name ?? "Player"}
                         </h1>
+                        {matchCount > 0 && (
+                            <p className="text-xs text-white/40 mt-1">
+                                Based on {matchCount} analyzed {matchCount === 1 ? "match" : "matches"}
+                            </p>
+                        )}
                     </div>
                     <div className="flex items-center gap-3">
-                        {jobStatus && (
-                            <span className={`text-xs px-3 py-1.5 rounded-full font-medium border ${
-                                jobStatus === "completed"
-                                    ? "bg-[#00FF87]/10 text-[#00FF87] border-[#00FF87]/20"
-                                    : jobStatus === "failed"
-                                        ? "bg-red-500/10 text-red-400 border-red-500/20"
-                                        : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
-                            }`}>
-                                Engine: {jobStatus}
-                            </span>
-                        )}
-                        {match.status === "completed" && (
-                            <span className="text-xs px-3 py-1.5 rounded-full font-medium border bg-[#00FF87]/10 text-[#00FF87] border-[#00FF87]/20">
-                                ✅ Completed
+                        {unit && (
+                            <span className="text-xs px-3 py-1.5 rounded-full font-medium border bg-[#00FF87]/10 text-[#00FF87] border-[#00FF87]/20 uppercase tracking-wider">
+                                {unit}
                             </span>
                         )}
                     </div>
@@ -194,45 +189,17 @@ export default function MatchReportPage() {
                     </div>
                 )}
 
-                {/* ── Engine processing state ───────────────────────────────── */}
-                {!engineReport && jobStatus === "running" && (
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center gap-4">
-                        <svg className="animate-spin h-5 w-5 text-[#00FF87] shrink-0" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        <div>
-                            <p className="text-sm font-medium text-white">Engine is processing…</p>
-                            <p className="text-xs text-white/40 mt-0.5">The Kashaf AI engine is analyzing the player data. This page will update automatically.</p>
-                        </div>
-                    </div>
-                )}
-
-                {!engineReport && jobStatus === "queued" && (
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center gap-4">
-                        <span className="text-2xl shrink-0">⏳</span>
-                        <div>
-                            <p className="text-sm font-medium text-white">Job queued</p>
-                            <p className="text-xs text-white/40 mt-0.5">The analysis is in the queue and will begin shortly.</p>
-                        </div>
-                    </div>
-                )}
-
-                {!engineReport && jobStatus === "failed" && (
-                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                        <p className="font-semibold mb-1">Engine analysis failed</p>
-                        <p className="text-red-400/70 text-xs">{engineJob?.error?.message ?? "Unknown error"}</p>
-                    </div>
-                )}
-
-                {!engineReport && !jobStatus && summary && (
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-                        <p className="text-sm text-white/40">The AI engine report is not yet available for this match.</p>
+                {/* ── No report fallback ───────────────────────────────────── */}
+                {!profile && (
+                    <div className="text-center py-20">
+                        <div className="text-5xl mb-4 opacity-30">📋</div>
+                        <p className="text-white/30 text-sm">No engine report available yet for this player.</p>
+                        <p className="text-white/20 text-xs mt-2">Once matches are analyzed by the engine, the full report will appear here.</p>
                     </div>
                 )}
 
                 {/* ── ENGINE REPORT ─────────────────────────────────────────── */}
-                {engineReport && (
+                {profile && (
                     <>
                         {/* Top Archetype Hero */}
                         <div className="p-6 rounded-2xl border relative overflow-hidden"
@@ -249,7 +216,7 @@ export default function MatchReportPage() {
                                             {topArchetype}
                                         </h2>
                                         <p className="text-white/50 mt-1 text-sm">
-                                            {engineReport.unit?.toUpperCase()} · {topPct.toFixed(2)}% profile match
+                                            {unit.toUpperCase()} · {topPct.toFixed(2)}% profile match
                                         </p>
                                     </div>
                                 </div>
@@ -262,12 +229,7 @@ export default function MatchReportPage() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Archetypes */}
                             <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
-                                <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-sm font-semibold uppercase tracking-wider text-white/50">Position Profile</h3>
-                                    {archetypesNote && (
-                                        <span className="text-[10px] text-white/30 max-w-[180px] text-right">{archetypesNote}</span>
-                                    )}
-                                </div>
+                                <h3 className="text-sm font-semibold uppercase tracking-wider text-white/50 mb-2">Position Profile</h3>
                                 <div className="space-y-4">
                                     {Object.entries(archetypes)
                                         .sort(([, a], [, b]) => b - a)
@@ -285,7 +247,7 @@ export default function MatchReportPage() {
                                         <StatRow
                                             key={key}
                                             label={key}
-                                            value={typeof val === "number" ? fmt(val, 3) : String(val)}
+                                            value={typeof val === "number" ? fmt(val, 2) : String(val)}
                                         />
                                     ))}
                                 </div>
@@ -323,63 +285,6 @@ export default function MatchReportPage() {
                             </div>
                         )}
                     </>
-                )}
-
-                {/* ── ANALYST SUMMARY ───────────────────────────────────────── */}
-                {summary && (
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-5">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-sm font-semibold uppercase tracking-wider text-white/50">Analyst Assessment</h3>
-                            <div className="flex items-center gap-2">
-                                <span className="text-3xl font-black text-[#00FF87]">{summary.overallRating}</span>
-                                <span className="text-white/30 text-sm">/10</span>
-                            </div>
-                        </div>
-
-                        {/* Rating bar */}
-                        <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
-                            <div
-                                className="h-full rounded-full bg-gradient-to-r from-[#00FF87] to-[#3B82F6]"
-                                style={{ width: `${(summary.overallRating / 10) * 100}%` }}
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="p-4 rounded-xl bg-[#00FF87]/5 border border-[#00FF87]/10">
-                                <p className="text-xs font-semibold text-[#00FF87]/70 uppercase tracking-wider mb-2">Strengths</p>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {summary.strengths.map((s) => (
-                                        <span key={s} className="text-xs px-2.5 py-1 rounded-lg bg-[#00FF87]/10 text-[#00FF87] border border-[#00FF87]/15">
-                                            {s}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10">
-                                <p className="text-xs font-semibold text-red-400/70 uppercase tracking-wider mb-2">Areas to Improve</p>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {summary.weaknesses.map((w) => (
-                                        <span key={w} className="text-xs px-2.5 py-1 rounded-lg bg-red-500/10 text-red-400 border border-red-500/15">
-                                            {w}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                            <p className="text-xs text-white/30 uppercase tracking-wider mb-2">Written Analysis</p>
-                            <p className="text-sm text-white/70 leading-relaxed">{summary.writtenSummary}</p>
-                        </div>
-                    </div>
-                )}
-
-                {/* ── No data fallback ───────────────────────────────────────── */}
-                {!summary && !engineReport && !jobStatus && (
-                    <div className="text-center py-20">
-                        <div className="text-5xl mb-4 opacity-30">📋</div>
-                        <p className="text-white/30 text-sm">No report available yet for this match.</p>
-                    </div>
                 )}
             </div>
         </div>

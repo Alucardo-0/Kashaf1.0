@@ -5,12 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useParams } from "next/navigation";
 import type { Id, Doc } from "@/convex/_generated/dataModel";
-import { ArcDiagram } from "@/components/public/ArcDiagram";
-import {
-    Radar, RadarChart, PolarGrid, PolarAngleAxis,
-    PolarRadiusAxis, ResponsiveContainer, Tooltip,
-} from "recharts";
-import { ShieldCheck, ShieldAlert, Play, User, Eye } from "lucide-react";
+import { ShieldCheck, ShieldAlert, Play, User, Eye, FileText, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { MatchHighlightsViewer } from "@/components/scout/MatchHighlightsViewer";
 
@@ -40,18 +35,6 @@ export default function PlayerPublicProfile() {
         );
     }
 
-    const fmt = (str: string) =>
-        str.replace(/_/g, " ").replace("p90", "per 90").replace("pct", "%").replace("iqr", "variance");
-
-    const radarData = profile
-        ? Object.entries(profile.coreFeatures || {}).map(([k, v]) => ({
-              subject: fmt(k).substring(0, 14),
-              fullMark: 100,
-              val: v,
-              originalName: fmt(k),
-          }))
-        : [];
-
     const age        = user.playerProfile?.age;
     const height     = user.playerProfile?.height;
     const weight     = user.playerProfile?.weight;
@@ -67,7 +50,7 @@ export default function PlayerPublicProfile() {
 
             {/* ─── HERO ──────────────────────────────────────────────────────── */}
             <div className="border-b border-white/5">
-                <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10">
+                <div className="max-w-5xl mx-auto px-6 lg:px-10 py-10">
                     <div className="flex items-start gap-8">
 
                         {/* Avatar */}
@@ -126,85 +109,36 @@ export default function PlayerPublicProfile() {
             </div>
 
             {/* ─── BODY ──────────────────────────────────────────────────────── */}
-            <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10">
+            <div className="max-w-5xl mx-auto px-6 lg:px-10 py-10">
 
-                {/* Two column layout: main content left, sidebar right */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-                    {/* ── Left: Engine Stats ────────────────────────────────── */}
-                    <div className="lg:col-span-2 space-y-12">
+                    {/* ── Left: Report CTA + Match History ─────────────────────── */}
+                    <div className="lg:col-span-2 space-y-8">
 
-                        {profile ? (
-                            <>
-                                {/* Data warning */}
-                                {profile.dataWarning && (
-                                    <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 text-sm flex gap-3">
-                                        <span className="text-lg shrink-0">⚠</span>
-                                        <p>{profile.dataWarning}</p>
-                                    </div>
-                                )}
-
-                                {/* Archetype + Radar side by side */}
-                                <section>
-                                    <p className="text-[11px] font-bold uppercase tracking-widest text-white/25 mb-6">Engine Profile</p>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-
-                                        {/* Archetype */}
-                                        <div>
-                                            <p className="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-2">Top Archetype</p>
-                                            <h3 className="text-2xl font-black text-white mb-0.5">{profile.topArchetype}</h3>
-                                            <p className="text-xs text-white/35 mb-5">{profile.topPct}% confidence</p>
-                                            <div className="h-[160px]">
-                                                <ArcDiagram archetypes={profile.archetypes} />
-                                            </div>
+                        {/* View Full Report CTA */}
+                        {profile && (
+                            <Link
+                                href={`/players/${playerId}/report`}
+                                className="group block w-full p-5 rounded-2xl bg-gradient-to-br from-dns-green/10 via-blue-500/5 to-transparent border border-dns-green/20 hover:border-dns-green/40 transition-all duration-300"
+                            >
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 rounded-xl bg-dns-green/15 flex items-center justify-center group-hover:bg-dns-green/25 transition-colors">
+                                            <FileText className="w-5 h-5 text-dns-green" />
                                         </div>
-
-                                        {/* Radar */}
                                         <div>
-                                            <p className="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-2">Core DNA</p>
-                                            <div className="h-[220px]">
-                                                <ResponsiveContainer width="100%" height="100%">
-                                                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                                                        <PolarGrid stroke="rgba(255,255,255,0.06)" />
-                                                        <PolarAngleAxis dataKey="subject" tick={{ fill: "rgba(255,255,255,0.30)", fontSize: 10 }} />
-                                                        <PolarRadiusAxis angle={30} domain={[0, "auto"]} tick={false} axisLine={false} />
-                                                        <Radar name="Value" dataKey="val" stroke="#00FF87" strokeWidth={2} fill="#00FF87" fillOpacity={0.12} />
-                                                        <Tooltip
-                                                            contentStyle={{ background: "#12121a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, fontSize: 12 }}
-                                                            labelFormatter={(_, p) => p?.[0]?.payload?.originalName || ""}
-                                                            itemStyle={{ color: "#fff", fontWeight: 700 }}
-                                                        />
-                                                    </RadarChart>
-                                                </ResponsiveContainer>
-                                            </div>
+                                            <p className="text-sm font-semibold text-white group-hover:text-dns-green transition-colors">
+                                                View Full Report
+                                            </p>
+                                            <p className="text-xs text-white/35 mt-0.5">
+                                                Engine analysis across {profile.matchCount} {profile.matchCount === 1 ? "match" : "matches"} · {profile.topArchetype} profile
+                                            </p>
                                         </div>
                                     </div>
-                                </section>
-
-                                {/* Contextual Metrics */}
-                                {Object.keys(profile.contextFeatures || {}).length > 0 && (
-                                    <section>
-                                        <p className="text-[11px] font-bold uppercase tracking-widest text-white/25 mb-5">Contextual Metrics</p>
-                                        <div className="grid grid-cols-3 gap-px bg-white/5 border border-white/5 rounded-xl overflow-hidden">
-                                            {Object.entries(profile.contextFeatures || {}).map(([key, value]) => (
-                                                <div key={key} className="bg-dns-bg px-5 py-4 hover:bg-white/3 transition-colors">
-                                                    <p className="text-[10px] font-semibold text-white/35 uppercase tracking-widest mb-2 truncate" title={fmt(key)}>
-                                                        {fmt(key)}
-                                                    </p>
-                                                    <p className="text-2xl font-black text-white leading-none">
-                                                        {typeof value === "number" ? value.toFixed(1) : String(value)}
-                                                        {String(key).includes("pct") && <span className="text-sm text-dns-green ml-0.5">%</span>}
-                                                    </p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </section>
-                                )}
-                            </>
-                        ) : (
-                            <section>
-                                <p className="text-sm text-white/30">No engine profile generated yet. Analysis is pending.</p>
-                            </section>
+                                    <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-dns-green group-hover:translate-x-1 transition-all" />
+                                </div>
+                            </Link>
                         )}
 
                         {/* Match History */}
@@ -215,11 +149,11 @@ export default function PlayerPublicProfile() {
                             </div>
 
                             {matches.length > 0 ? (
-                                <div>
-                                    {matches.map((match: Doc<"matches">, i: number) => (
+                                <div className="rounded-xl border border-white/5 overflow-hidden divide-y divide-white/5">
+                                    {matches.map((match: Doc<"matches">) => (
                                         <div
                                             key={match._id}
-                                            className={`flex items-center justify-between py-4 ${i < matches.length - 1 ? "border-b border-white/5" : ""} hover:bg-white/2 -mx-2 px-2 rounded-lg transition-colors`}
+                                            className="flex items-center justify-between py-4 px-4 hover:bg-white/[0.02] transition-colors"
                                         >
                                             <div className="flex items-center gap-4 min-w-0">
                                                 <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
@@ -241,12 +175,6 @@ export default function PlayerPublicProfile() {
                                                 <span className="hidden sm:block text-[11px] font-semibold text-dns-green bg-dns-green/10 border border-dns-green/20 px-2.5 py-1 rounded-md">
                                                     Analysis Complete
                                                 </span>
-                                                <Link
-                                                    href={`/players/${playerId}/matches/${match._id}`}
-                                                    className="text-xs font-semibold text-white/50 hover:text-white flex items-center gap-1.5 transition-colors"
-                                                >
-                                                    Report
-                                                </Link>
                                                 <button
                                                     onClick={() => setViewingMatch(match)}
                                                     className="text-xs font-semibold text-dns-green hover:text-dns-green/80 flex items-center gap-1.5 transition-colors bg-dns-green/10 border border-dns-green/20 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-dns-green/15"
@@ -259,18 +187,18 @@ export default function PlayerPublicProfile() {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-sm text-white/25 py-2">No completed matches recorded for this player.</p>
+                                <div className="rounded-xl border border-white/5 p-8 text-center">
+                                    <p className="text-sm text-white/25">No completed matches recorded for this player.</p>
+                                </div>
                             )}
                         </section>
                     </div>
 
-                    {/* ── Right Sidebar ─────────────────────────────────────── */}
-                    <div className="space-y-10">
-
-                        {/* Player Info card */}
+                    {/* ── Right Sidebar: Player Info ───────────────────────────── */}
+                    <div>
                         <section>
                             <p className="text-[11px] font-bold uppercase tracking-widest text-white/25 mb-5">Player Info</p>
-                            <div className="space-y-3">
+                            <div className="rounded-xl border border-white/5 overflow-hidden divide-y divide-white/5">
                                 {[
                                     { label: "Position",    value: position },
                                     { label: "Nationality", value: nationality },
@@ -280,37 +208,13 @@ export default function PlayerPublicProfile() {
                                     { label: "Foot",        value: foot },
                                     { label: "Club",        value: club || "No Club" },
                                 ].filter(r => r.value).map(row => (
-                                    <div key={row.label} className="flex items-center justify-between py-2 border-b border-white/5">
+                                    <div key={row.label} className="flex items-center justify-between px-4 py-3">
                                         <span className="text-xs text-white/35">{row.label}</span>
                                         <span className="text-sm font-semibold text-white capitalize">{row.value}</span>
                                     </div>
                                 ))}
                             </div>
                         </section>
-
-                        {/* Statistical Twins */}
-                        {profile?.twins && profile.twins.length > 0 && (
-                            <section>
-                                <p className="text-[11px] font-bold uppercase tracking-widest text-white/25 mb-5">Statistical Twins</p>
-                                <div className="space-y-4">
-                                    {profile.twins.map((twin: { player_name: string; similarity: number }, i: number) => {
-                                        const m = twin.player_name.match(/(.+) \[(\d{4})\/(\d{4})\]/);
-                                        const name = m ? `${m[1]} (${m[2]}/${m[3].slice(2)})` : twin.player_name;
-                                        return (
-                                            <div key={i}>
-                                                <div className="flex items-center justify-between mb-1.5">
-                                                    <span className="text-sm text-white/70 truncate flex-1 pr-2">{name}</span>
-                                                    <span className="text-sm font-bold text-amber-400 shrink-0">{Math.round(twin.similarity)}%</span>
-                                                </div>
-                                                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                                                    <div className="h-full bg-amber-400 rounded-full" style={{ width: `${twin.similarity}%` }} />
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </section>
-                        )}
                     </div>
 
                 </div>

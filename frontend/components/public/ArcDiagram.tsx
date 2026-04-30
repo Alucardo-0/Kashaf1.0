@@ -54,7 +54,7 @@ export function ArcDiagram({ archetypes }: ArcDiagramProps) {
                                     <div className="bg-black/90 backdrop-blur-md border border-white/10 p-3 rounded-xl shadow-2xl">
                                         <p className="text-xs text-white/50 mb-1">{payload[0].name}</p>
                                         <p className="text-xl font-bold flex items-baseline gap-1" style={{ color: payload[0].payload.color }}>
-                                            {payload[0].value} <span className="text-xs text-white/40 font-normal">%</span>
+                                            {typeof payload[0].value === 'number' ? payload[0].value.toFixed(2) : payload[0].value} <span className="text-xs text-white/40 font-normal">%</span>
                                         </p>
                                     </div>
                                 );
@@ -74,7 +74,7 @@ export function ArcDiagram({ archetypes }: ArcDiagramProps) {
                 {data.map((entry, i) => (
                     <div key={i} className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
                         <div className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" style={{ backgroundColor: entry.color, boxShadow: `0 0 8px ${entry.color}60` }} />
-                        <span className="text-[10px] text-white/70 whitespace-nowrap">{entry.name} ({entry.value}%)</span>
+                        <span className="text-[10px] text-white/70 whitespace-nowrap">{entry.name} ({Number(entry.value).toFixed(2)}%)</span>
                     </div>
                 ))}
             </div>
