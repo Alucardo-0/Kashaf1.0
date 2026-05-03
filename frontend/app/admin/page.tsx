@@ -8,9 +8,11 @@ import { OverviewTab } from "@/components/admin/OverviewTab";
 import { UsersTab } from "@/components/admin/UsersTab";
 import { AnalystsTab } from "@/components/admin/AnalystsTab";
 import { ScoutApprovalsTab } from "@/components/admin/ScoutApprovalsTab";
+import { MatchAssignmentsTab } from "@/components/admin/MatchAssignmentsTab";
 
 const TABS = [
     { id: "overview", label: "Overview", icon: "📊" },
+    { id: "matches", label: "Matches", icon: "⚽" },
     { id: "users", label: "Users", icon: "👥" },
     { id: "analysts", label: "Analysts", icon: "📋" },
     { id: "scouts", label: "Scout Approvals", icon: "🔍" },
@@ -99,6 +101,7 @@ export default function AdminPanel() {
                     <p className="text-sm text-white/30 mb-8">KASHAF Administration</p>
 
                     {activeTab === "overview" && <OverviewTab />}
+                    {activeTab === "matches" && <MatchAssignmentsTab />}
                     {activeTab === "users" && <UsersTab />}
                     {activeTab === "analysts" && <AnalystsTab />}
                     {activeTab === "scouts" && <ScoutApprovalsTab />}
