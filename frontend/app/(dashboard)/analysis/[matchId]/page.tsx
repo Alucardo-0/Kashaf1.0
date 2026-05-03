@@ -21,7 +21,7 @@ const EVENT_TYPES = [
 ];
 
 /** Events that have a destination coordinate (ball goes somewhere) */
-const HAS_DESTINATION = new Set(["pass", "cross", "shot", "dribble", "carry"]);
+const HAS_DESTINATION = new Set(["pass", "cross", "carry"]);
 
 const OUTCOMES: Record<string, string[]> = {
     pass: ["Successful", "Failed", "Key Pass", "Assist"],
@@ -30,11 +30,14 @@ const OUTCOMES: Record<string, string[]> = {
     dribble: ["Successful", "Failed"],
     carry: ["Successful", "Failed"],
     reception: ["Successful"],
-    tackle: ["Won", "Lost", "Foul"],
-    interception: ["Successful", "Failed"],
+    tackle: ["Successful"],
+    interception: ["Successful"],
     aerial: ["Won", "Lost"],
     clearance: ["Successful"],
 };
+
+/** Events that support body part selection */
+const HAS_BODY_PART = new Set(["pass", "shot", "cross", "clearance", "aerial"]);
 
 /* ── Format timestamp ─────────────────────────────────────────────────── */
 function formatTimestamp(seconds: number) {
@@ -244,6 +247,7 @@ export default function MatchAnalysisPage() {
     const [playerReady, setPlayerReady] = useState(false);
     const [eventNotes, setEventNotes] = useState("");
     const [isSetPiece, setIsSetPiece] = useState(false);
+    const [bodyPart, setBodyPart] = useState<"foot" | "head">("foot");
     const [logLoading, setLogLoading] = useState(false);
     const [editingEventId, setEditingEventId] = useState<string | null>(null);
 
@@ -366,6 +370,7 @@ export default function MatchAnalysisPage() {
                     destinationY: needsDestination ? pendingDestination?.y : undefined,
                     notes: eventNotes || undefined,
                     isSetPiece,
+                    bodyPart: HAS_BODY_PART.has(selectedEventType) ? bodyPart : undefined,
                 });
                 setEditingEventId(null);
             } else {
@@ -393,6 +398,7 @@ export default function MatchAnalysisPage() {
                     videoTimestamp,
                     notes: eventNotes || undefined,
                     isSetPiece,
+                    bodyPart: HAS_BODY_PART.has(selectedEventType) ? bodyPart : undefined,
                 });
             }
 
@@ -401,6 +407,7 @@ export default function MatchAnalysisPage() {
             setPendingDestination(null);
             setEventNotes("");
             setIsSetPiece(false);
+            setBodyPart("foot");
             setClickMode("origin");
         } catch {
             /* silent */
@@ -420,6 +427,7 @@ export default function MatchAnalysisPage() {
         );
         setEventNotes(ev.notes ?? "");
         setIsSetPiece(ev.isSetPiece ?? false);
+        setBodyPart(ev.bodyPart === "head" ? "head" : "foot");
         setClickMode(null);
     };
 
@@ -429,6 +437,7 @@ export default function MatchAnalysisPage() {
         setPendingDestination(null);
         setEventNotes("");
         setIsSetPiece(false);
+        setBodyPart("foot");
         setClickMode("origin");
     };
 
@@ -687,6 +696,32 @@ export default function MatchAnalysisPage() {
                                             {isSetPiece ? "Yes" : "No"}
                                         </button>
                                     </div>
+
+                                    {HAS_BODY_PART.has(selectedEventType) && (
+                                        <div className="flex items-center justify-between mt-3 w-48">
+                                            <label className="block text-xs font-medium text-white/50">Body Part</label>
+                                            <div className="flex gap-1.5">
+                                                <button
+                                                    onClick={() => setBodyPart("foot")}
+                                                    className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer border ${bodyPart === "foot"
+                                                        ? "bg-[#00FF87]/10 text-[#00FF87] border-[#00FF87]/30"
+                                                        : "bg-white/[0.03] text-white/40 border-transparent hover:bg-white/5"
+                                                    }`}
+                                                >
+                                                    🦶 Foot
+                                                </button>
+                                                <button
+                                                    onClick={() => setBodyPart("head")}
+                                                    className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer border ${bodyPart === "head"
+                                                        ? "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30"
+                                                        : "bg-white/[0.03] text-white/40 border-transparent hover:bg-white/5"
+                                                    }`}
+                                                >
+                                                    🗣️ Head
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Column 2: Outcome & Pitch Controls */}

@@ -103,6 +103,7 @@ export const getAndQueueEngineJob = action({
         videoTimestamp: e.videoTimestamp,
         notes: e.notes,
         isSetPiece: e.isSetPiece,
+        body_part: e.bodyPart || "foot",
       })),
       callback_url: `${process.env.DNS_PUBLIC_URL || "http://localhost:3000"}/api/engine/callback`,
       callback_headers: {

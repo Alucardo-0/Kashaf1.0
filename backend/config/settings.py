@@ -195,7 +195,9 @@ SB_FAILURE_OUTCOMES = {
 }
 
 # Action types where outcome is ALWAYS True (success by definition)
-ALWAYS_SUCCESS_ACTIONS = {"reception", "interception", "clearance"}
+# StatsBomb: tackles are only logged when the defender wins the ball.
+# A failed tackle attempt is a Duel (Lost), not a tackle.
+ALWAYS_SUCCESS_ACTIONS = {"reception", "interception", "clearance", "tackle"}
 
 # Action types where end coordinates are not needed
 NO_END_COORDS_ACTIONS = {

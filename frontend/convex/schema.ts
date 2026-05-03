@@ -100,6 +100,7 @@ export default defineSchema({
     videoTimestamp: v.number(),
     notes: v.optional(v.string()),
     isSetPiece: v.optional(v.boolean()),
+    bodyPart: v.optional(v.string()),
     createdAt: v.number(),
   })
     .index("by_matchId", ["matchId"])

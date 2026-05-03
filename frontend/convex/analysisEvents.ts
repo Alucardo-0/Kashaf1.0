@@ -16,6 +16,7 @@ export const logEvent = mutation({
         videoTimestamp: v.number(),
         notes: v.optional(v.string()),
         isSetPiece: v.optional(v.boolean()),
+        bodyPart: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
@@ -39,6 +40,7 @@ export const logEvent = mutation({
             videoTimestamp: args.videoTimestamp,
             notes: args.notes,
             isSetPiece: args.isSetPiece,
+            bodyPart: args.bodyPart,
             createdAt: Date.now(),
         });
     },
@@ -96,6 +98,7 @@ export const updateEvent = mutation({
         destinationY: v.optional(v.number()),
         notes: v.optional(v.string()),
         isSetPiece: v.optional(v.boolean()),
+        bodyPart: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
@@ -118,6 +121,7 @@ export const updateEvent = mutation({
             updates.destinationY = args.destinationY;
         if (args.notes !== undefined) updates.notes = args.notes;
         if (args.isSetPiece !== undefined) updates.isSetPiece = args.isSetPiece;
+        if (args.bodyPart !== undefined) updates.bodyPart = args.bodyPart;
 
         await ctx.db.patch(args.eventId, updates);
     },
