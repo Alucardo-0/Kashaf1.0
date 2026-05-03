@@ -8,7 +8,8 @@ import { internalMutation } from "./_generated/server";
  * 1. Get all analysts with onboardingComplete = true
  * 2. Count their active jobs (pending or accepted requests)
  * 3. Exclude analysts who have already declined this match
- * 4. Pick the one with the fewest active jobs (ties broken by earliest registration)
+ * 4. Pick the one with the fewest active jobs
+ *    Tiebreaker: whoever was last assigned the longest ago (idle priority)
  */
 export const autoAssignAnalyst = internalMutation({
     args: { matchId: v.id("matches") },
@@ -68,28 +69,41 @@ export const autoAssignAnalyst = internalMutation({
             return null;
         }
 
-        // Count active load per analyst (pending + accepted requests)
+        // Count active load + track last assignment time per analyst
         const allRequests = await ctx.db
             .query("analysisRequests")
             .collect();
 
         const loadMap = new Map<string, number>();
+        const lastAssignedMap = new Map<string, number>();
         for (const analyst of eligibleAnalysts) {
-            loadMap.set(analyst._id.toString(), 0);
+            const aid = analyst._id.toString();
+            loadMap.set(aid, 0);
+            lastAssignedMap.set(aid, 0); // 0 = never assigned → highest priority
         }
         for (const req of allRequests) {
             const aid = req.analystId.toString();
-            if (loadMap.has(aid) && (req.status === "pending" || req.status === "accepted")) {
-                loadMap.set(aid, (loadMap.get(aid) ?? 0) + 1);
+            if (loadMap.has(aid)) {
+                // Count active load
+                if (req.status === "pending" || req.status === "accepted") {
+                    loadMap.set(aid, (loadMap.get(aid) ?? 0) + 1);
+                }
+                // Track most recent assignment timestamp
+                const prev = lastAssignedMap.get(aid) ?? 0;
+                if (req.createdAt > prev) {
+                    lastAssignedMap.set(aid, req.createdAt);
+                }
             }
         }
 
-        // Sort by load ascending, then by creation time ascending (earliest registered first)
+        // Sort by: 1) active load ascending, 2) last assigned ascending (idle analysts first)
         eligibleAnalysts.sort((a, b) => {
             const loadA = loadMap.get(a._id.toString()) ?? 0;
             const loadB = loadMap.get(b._id.toString()) ?? 0;
             if (loadA !== loadB) return loadA - loadB;
-            return a._creationTime - b._creationTime;
+            const lastA = lastAssignedMap.get(a._id.toString()) ?? 0;
+            const lastB = lastAssignedMap.get(b._id.toString()) ?? 0;
+            return lastA - lastB; // whoever was assigned longest ago (or never) wins
         });
 
         const chosenAnalyst = eligibleAnalysts[0];
@@ -192,14 +206,25 @@ export const reassignOnDecline = internalMutation({
             return null;
         }
 
-        // Least-busy selection
+        // Least-busy selection + idle priority
         const allReqs = await ctx.db.query("analysisRequests").collect();
         const loadMap = new Map<string, number>();
-        for (const a of eligibleAnalysts) loadMap.set(a._id.toString(), 0);
+        const lastAssignedMap = new Map<string, number>();
+        for (const a of eligibleAnalysts) {
+            const aid = a._id.toString();
+            loadMap.set(aid, 0);
+            lastAssignedMap.set(aid, 0);
+        }
         for (const r of allReqs) {
             const aid = r.analystId.toString();
-            if (loadMap.has(aid) && (r.status === "pending" || r.status === "accepted")) {
-                loadMap.set(aid, (loadMap.get(aid) ?? 0) + 1);
+            if (loadMap.has(aid)) {
+                if (r.status === "pending" || r.status === "accepted") {
+                    loadMap.set(aid, (loadMap.get(aid) ?? 0) + 1);
+                }
+                const prev = lastAssignedMap.get(aid) ?? 0;
+                if (r.createdAt > prev) {
+                    lastAssignedMap.set(aid, r.createdAt);
+                }
             }
         }
 
@@ -207,7 +232,9 @@ export const reassignOnDecline = internalMutation({
             const loadA = loadMap.get(a._id.toString()) ?? 0;
             const loadB = loadMap.get(b._id.toString()) ?? 0;
             if (loadA !== loadB) return loadA - loadB;
-            return a._creationTime - b._creationTime;
+            const lastA = lastAssignedMap.get(a._id.toString()) ?? 0;
+            const lastB = lastAssignedMap.get(b._id.toString()) ?? 0;
+            return lastA - lastB;
         });
 
         const chosenAnalyst = eligibleAnalysts[0];
