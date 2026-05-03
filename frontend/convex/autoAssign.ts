@@ -66,6 +66,24 @@ export const autoAssignAnalyst = internalMutation({
                     createdAt: Date.now(),
                 });
             }
+
+            // Notify all admins so they can manually reassign
+            const adminEmails = (process.env.ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase()).filter(Boolean);
+            if (adminEmails.length > 0) {
+                const allUsers = await ctx.db.query("users").collect();
+                const admins = allUsers.filter(u => adminEmails.includes(u.email.toLowerCase()));
+                for (const admin of admins) {
+                    await ctx.db.insert("notifications", {
+                        userId: admin._id,
+                        type: "all_analysts_declined",
+                        message: `All analysts have declined match${match.opponentName ? ` vs ${match.opponentName}` : ""}${player?.name ? ` for ${player.name}` : ""}. Manual reassignment required.`,
+                        relatedId: args.matchId,
+                        isRead: false,
+                        createdAt: Date.now(),
+                    });
+                }
+            }
+
             return null;
         }
 
@@ -203,6 +221,24 @@ export const reassignOnDecline = internalMutation({
                     createdAt: Date.now(),
                 });
             }
+
+            // Notify all admins so they can manually reassign
+            const adminEmails = (process.env.ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase()).filter(Boolean);
+            if (adminEmails.length > 0) {
+                const allUsers = await ctx.db.query("users").collect();
+                const admins = allUsers.filter(u => adminEmails.includes(u.email.toLowerCase()));
+                for (const admin of admins) {
+                    await ctx.db.insert("notifications", {
+                        userId: admin._id,
+                        type: "all_analysts_declined",
+                        message: `All analysts have declined match${match.opponentName ? ` vs ${match.opponentName}` : ""}${player?.name ? ` for ${player.name}` : ""}. Manual reassignment required.`,
+                        relatedId: request.matchId,
+                        isRead: false,
+                        createdAt: Date.now(),
+                    });
+                }
+            }
+
             return null;
         }
 

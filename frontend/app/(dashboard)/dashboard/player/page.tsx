@@ -130,79 +130,6 @@ function UploadMatchModal({ onClose }: { onClose: () => void }) {
     );
 }
 
-/* ── Find Analyst Modal ──────────────────────────────────────────────── */
-function FindAnalystModal({ matchId, onClose }: { matchId: string; onClose: () => void }) {
-    const analysts = useQuery(api.users.listAnalysts, {});
-    const createRequest = useMutation(api.analysisRequests.createRequest);
-    const [loading, setLoading] = useState<string | null>(null);
-    const [error, setError] = useState("");
-
-    const handleHire = async (analystId: string) => {
-        setLoading(analystId);
-        setError("");
-        try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            await createRequest({ analystId: analystId as any, matchId: matchId as any });
-            onClose();
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to send request");
-            setLoading(null);
-        }
-    };
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-            <div className="relative w-full max-w-lg bg-[#12121a] border border-white/10 rounded-2xl p-6 shadow-2xl animate-fade-in-up max-h-[80vh] overflow-y-auto">
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold text-white">Choose an Analyst</h2>
-                    <button onClick={onClose} className="text-white/40 hover:text-white transition-colors cursor-pointer">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                    </button>
-                </div>
-
-                {error && (
-                    <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-4">{error}</div>
-                )}
-
-                {!analysts ? (
-                    <div className="text-center py-8 text-white/40">Loading analysts...</div>
-                ) : analysts.length === 0 ? (
-                    <div className="text-center py-8 text-white/40">No analysts available yet</div>
-                ) : (
-                    <div className="space-y-3">
-                        {analysts.map((analyst) => (
-                            <div key={analyst._id} className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-[#3B82F6]/10 flex items-center justify-center text-sm font-bold text-[#3B82F6]">
-                                            {analyst.name?.charAt(0)?.toUpperCase() ?? "A"}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-white">{analyst.name}</p>
-                                            <p className="text-xs text-white/40">
-                                                {analyst.analystProfile?.experience ?? 0}yr exp · {analyst.analystProfile?.languages?.join(", ")}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <button
-                                            onClick={() => handleHire(analyst._id)}
-                                            disabled={loading === analyst._id}
-                                            className="mt-1 text-xs px-3 py-1 rounded-lg bg-[#3B82F6]/20 text-[#3B82F6] hover:bg-[#3B82F6]/30 transition-all cursor-pointer disabled:opacity-50"
-                                        >
-                                            {loading === analyst._id ? "Sending..." : "Hire"}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-}
 
 /* ══════════════════════════════════════════════════════════════════════
    PLAYER DASHBOARD
@@ -210,7 +137,6 @@ function FindAnalystModal({ matchId, onClose }: { matchId: string; onClose: () =
 export default function PlayerDashboard() {
     const user = useQuery(api.users.getCurrentUser);
     const matches = useQuery(api.matches.getMatchesByPlayer, {});
-    const requests = useQuery(api.analysisRequests.getRequestsByPlayer);
     const notifications = useQuery(api.notifications.getNotificationsByUser);
     const positionProfile = useQuery(
         api.positionProfiles.getPositionProfile,
@@ -219,7 +145,6 @@ export default function PlayerDashboard() {
     const router = useRouter();
 
     const [showUpload, setShowUpload] = useState(false);
-    const [findAnalystFor, setFindAnalystFor] = useState<string | null>(null);
 
     if (user === undefined) {
         return (
@@ -241,7 +166,7 @@ export default function PlayerDashboard() {
     const totalMatches = matches?.length ?? 0;
     const completedMatches = matches?.filter((m) => m.status === "completed").length ?? 0;
     const pendingMatches = matches?.filter((m) => m.status === "pending_analyst").length ?? 0;
-    const activeRequests = requests?.filter((r) => r.status === "pending" || r.status === "accepted").length ?? 0;
+    const inProgress = matches?.filter((m) => m.status === "analyst_assigned" || m.status === "analysis_in_progress").length ?? 0;
 
     return (
         <div className="p-6 lg:p-8 max-w-7xl mx-auto">
@@ -270,7 +195,7 @@ export default function PlayerDashboard() {
                     { label: "Total Matches", value: totalMatches, icon: "🎬", color: "#00FF87" },
                     { label: "Completed", value: completedMatches, icon: "✅", color: "#22c55e" },
                     { label: "Awaiting Analyst", value: pendingMatches, icon: "⏳", color: "#eab308" },
-                    { label: "Active Requests", value: activeRequests, icon: "📨", color: "#3B82F6" },
+                    { label: "In Progress", value: inProgress, icon: "🔄", color: "#3B82F6" },
                 ].map((stat) => (
                     <div
                         key={stat.label}
@@ -346,12 +271,9 @@ export default function PlayerDashboard() {
                                             {/* Actions */}
                                             <div className="flex items-center gap-2">
                                                 {match.status === "pending_analyst" && (
-                                                    <button
-                                                        onClick={() => setFindAnalystFor(match._id)}
-                                                        className="text-xs px-3 py-1.5 rounded-lg bg-[#3B82F6]/15 text-[#3B82F6] hover:bg-[#3B82F6]/25 transition-all cursor-pointer font-medium"
-                                                    >
-                                                        Find Analyst
-                                                    </button>
+                                                    <span className="text-xs px-3 py-1.5 rounded-lg bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 font-medium">
+                                                        Auto-assigning…
+                                                    </span>
                                                 )}
                                                 {match.status === "completed" && (
                                                     <button
@@ -475,7 +397,6 @@ export default function PlayerDashboard() {
 
             {/* Modals */}
             {showUpload && <UploadMatchModal onClose={() => setShowUpload(false)} />}
-            {findAnalystFor && <FindAnalystModal matchId={findAnalystFor} onClose={() => setFindAnalystFor(null)} />}
         </div>
     );
 }
