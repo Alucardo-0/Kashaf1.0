@@ -39,6 +39,162 @@ const OUTCOMES: Record<string, string[]> = {
 /** Events that support body part selection */
 const HAS_BODY_PART = new Set(["pass", "shot", "cross", "clearance", "aerial"]);
 
+/* ── Tagger Guidelines Data ───────────────────────────────────────────── */
+const GUIDELINES: Record<string, {
+    tagWhen: string;
+    requiredFields: string[];
+    doNotTag: string[];
+    hint: string;
+}> = {
+    pass: {
+        tagWhen: "Player deliberately plays the ball to a teammate, regardless of distance or direction — short, long, forward, backward, sideways all count.",
+        requiredFields: [
+            "Start and end coordinates — end coordinates are critical, they drive crossing detection, progressive passing, and distribution stats",
+            "Body part: foot or head",
+            "Set piece: True for corners, free kicks, goal kicks, throw-ins, kick-offs",
+        ],
+        doNotTag: [
+            "Goalkeeper distributions unless the goalkeeper is the profiled player",
+        ],
+        hint: "Start + End coords critical · Body part needed",
+    },
+    shot: {
+        tagWhen: "Player makes a deliberate attempt at goal.",
+        requiredFields: [
+            "Start coordinates only — end coordinates not needed",
+            "Body part: foot or head",
+            "Set piece: True for direct free kick shots and penalties",
+        ],
+        doNotTag: [
+            "Blocked attempts that clearly weren't aimed at goal",
+        ],
+        hint: "Start coords only · Body part needed",
+    },
+    cross: {
+        tagWhen: "Player deliberately delivers the ball into the box from a wide position in the final third.",
+        requiredFields: [
+            "Start and end coordinates — both critical",
+            "Body part: almost always foot",
+            "Set piece: True for corner kick deliveries",
+        ],
+        doNotTag: [
+            "Crosses that don't start from a wide final third position — those are passes",
+            "Low cutbacks along the ground — tag as pass instead",
+        ],
+        hint: "Start + End coords critical · Wide → box only",
+    },
+    dribble: {
+        tagWhen: "Player deliberately attempts to beat a defender in a direct 1v1 ground challenge.",
+        requiredFields: [
+            "Start coordinates only — end coordinates not needed",
+            "No body part needed",
+        ],
+        doNotTag: [
+            "Running past a defender who isn't actively challenging — that's a carry",
+            "Failed dribbles that result in a foul — tag the foul instead",
+        ],
+        hint: "Start coords only · Must be a 1v1 attempt",
+    },
+    carry: {
+        tagWhen: "Player runs purposefully with the ball in space — no defender being actively beaten.",
+        requiredFields: [
+            "Start AND end coordinates — both critical, they drive progressive carries and wide carry stats",
+            "No body part needed",
+        ],
+        doNotTag: [
+            "Very minor touch adjustments with no real movement — only tag if the player clearly moved with the ball with intent",
+        ],
+        hint: "Start + End coords both critical · No 1v1 involved",
+    },
+    reception: {
+        tagWhen: "Player successfully receives a deliberate pass from a teammate.",
+        requiredFields: [
+            "Start coordinates — where the player received the ball. This is critical: box receptions and positional stats are all derived from this location",
+            "No end coordinates needed",
+            "Body part optional but useful if headed",
+        ],
+        doNotTag: [
+            "After interceptions, tackles, or ball recoveries — reception only follows a teammate's deliberate pass",
+            "If the player miscontrolled and immediately lost the ball on the first touch — skip it",
+            "After aerial duels — if the player won the header and controlled it, the aerial duel covers it",
+        ],
+        hint: "Start coords only · Only after a teammate's pass",
+    },
+    tackle: {
+        tagWhen: "Player successfully wins the ball from an opponent in a ground challenge.",
+        requiredFields: [
+            "Start coordinates only",
+            "No body part, no end coordinates needed",
+        ],
+        doNotTag: [
+            "Failed tackle attempts — no tag at all if the opponent kept the ball",
+            "Aerial challenges — use Aerial Duel instead",
+            "Challenges that result in a foul — use Foul instead",
+        ],
+        hint: "Start coords only · Only if ball was won",
+    },
+    interception: {
+        tagWhen: "Player actively cuts off a pass that was intended for an opponent — the ball must be in flight toward that opponent when intercepted.",
+        requiredFields: [
+            "Start coordinates only",
+            "No body part, no end coordinates needed",
+        ],
+        doNotTag: [
+            "Collecting a loose ball — that is a recovery, not an interception",
+            "Blocking a shot — that is not an interception",
+            "Winning a header from a pass — use Aerial Duel instead",
+            "Do NOT follow with a Reception tag — interception stands alone",
+        ],
+        hint: "Start coords only · Must cut off an opponent's pass",
+    },
+    aerial: {
+        tagWhen: "Player challenges an opponent for a header in the air.",
+        requiredFields: [
+            "Start coordinates",
+            "Set piece: True if the aerial comes from a corner, free kick delivery, or goal kick",
+        ],
+        doNotTag: [
+            "Ground challenges — use Tackle instead",
+            "If the player wins the aerial and immediately heads the ball somewhere — tag Aerial Duel first, then separately tag the headed Pass or headed Clearance as two separate events",
+        ],
+        hint: "Start coords · Won = your player won the header",
+    },
+    clearance: {
+        tagWhen: "Player deliberately kicks or heads the ball away from danger with no specific intended target.",
+        requiredFields: [
+            "Start coordinates",
+            "Body part: foot or head — this is critical, headed clearances directly feed aerial dominance stats for defenders",
+            "Set piece: True if clearing from a corner or free kick delivery",
+        ],
+        doNotTag: [
+            "If the player had a clear intended target — that's a Pass, not a clearance",
+            "Goalkeeper punches or saves — unless the goalkeeper is the profiled player",
+            "Blocks — a clearance is proactive, a block is reactive to a shot or cross",
+        ],
+        hint: "Start coords · Body part critical (head vs foot)",
+    },
+};
+
+const GENERAL_RULES = [
+    "Tag only the profiled player's actions — ignore everything else on the pitch",
+    "Every action needs a start location — where the player was when the action happened",
+    "Tag actions in chronological order — the engine processes sequences",
+    "One action = one tag. If a player receives and immediately passes, that's two separate tags: Reception then Pass",
+];
+
+const COMMON_MISTAKES: Array<{ situation: string; wrong: string; right: string }> = [
+    { situation: "Player receives and immediately shoots", wrong: "Reception + Shot together", right: "Reception → Shot (two separate tags in order)" },
+    { situation: "Player wins aerial duel and heads to teammate", wrong: "Aerial Duel only", right: "Aerial Duel → Pass (two tags)" },
+    { situation: "Player intercepts a pass", wrong: "Interception → Reception", right: "Interception only" },
+    { situation: "Player tackles and immediately carries", wrong: "Tackle + Carry together", right: "Tackle → Carry (two separate tags)" },
+    { situation: "Player makes a failed tackle", wrong: "Tackle (Failed)", right: "No tag at all" },
+    { situation: "Player carries then dribbles past defender", wrong: "Dribble only", right: "Carry (with end coords) → Dribble (two tags)" },
+    { situation: "Long pass that doesn't reach teammate", wrong: "No tag", right: "Pass with outcome = Failed" },
+    { situation: "Corner kick delivery", wrong: "Pass with no set piece", right: "Pass with set piece = True" },
+    { situation: "Header from corner to score", wrong: "Shot only", right: "Shot (body part = head, set piece = True)" },
+    { situation: "Ball recovery after a clearance", wrong: "Reception", right: "No tag — player wasn't receiving a teammate's pass" },
+];
+
 /* ── Format timestamp ─────────────────────────────────────────────────── */
 function formatTimestamp(seconds: number) {
     const m = Math.floor(seconds / 60);
@@ -263,6 +419,7 @@ export default function MatchAnalysisPage() {
     const [engineError, setEngineError] = useState<string | null>(null);
     const [isEditingTags, setIsEditingTags] = useState(false);
     const [resubmitLoading, setResubmitLoading] = useState(false);
+    const [showGuidelines, setShowGuidelines] = useState(false);
 
     /* ── Tab state ────────────────────────────────────────────────────── */
     const [activePanel, setActivePanel] = useState<"events" | "timeline">("events");
@@ -580,6 +737,13 @@ export default function MatchAnalysisPage() {
                             {resubmitLoading ? "Re-submitting…" : "Re-submit to Engine"}
                         </button>
                     )}
+                    <button
+                        onClick={() => setShowGuidelines(true)}
+                        className="px-3 py-1.5 rounded-lg text-[11px] font-medium text-white/50 bg-white/[0.03] border border-white/[0.06] hover:bg-white/5 hover:text-white/70 transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
+                        Guidelines
+                    </button>
                     <a
                         href={match.youtubeUrl}
                         target="_blank"
@@ -682,6 +846,22 @@ export default function MatchAnalysisPage() {
                                             </svg>
                                             <span className="text-[11px] text-[#3B82F6]/80">Timestamp auto-captured from video (−5s)</span>
                                         </div>
+                                    )}
+
+                                    {/* Contextual guideline hint */}
+                                    {GUIDELINES[selectedEventType] && (
+                                        <button
+                                            onClick={() => setShowGuidelines(true)}
+                                            className="mt-3 w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.04] transition-all cursor-pointer text-left group"
+                                        >
+                                            <span className="text-[10px] shrink-0">💡</span>
+                                            <span className="text-[10px] text-white/35 group-hover:text-white/50 transition-colors leading-tight">
+                                                {GUIDELINES[selectedEventType].hint}
+                                            </span>
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/20 group-hover:text-white/40 transition-colors ml-auto shrink-0">
+                                                <polyline points="9 18 15 12 9 6" />
+                                            </svg>
+                                        </button>
                                     )}
                                     
                                     <div className="flex items-center justify-between mt-5 w-48">
@@ -971,6 +1151,143 @@ export default function MatchAnalysisPage() {
                     </div>
                 </div>
             </div>
+
+            {/* ── Guidelines Drawer ──────────────────────────────────────── */}
+            {showGuidelines && (
+                <div className="fixed inset-0 z-50 flex justify-end">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowGuidelines(false)} />
+                    <div className="relative w-full max-w-[540px] bg-[#0d0d14] border-l border-white/10 shadow-2xl flex flex-col animate-in slide-in-from-right">
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] shrink-0">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
+                                </div>
+                                <div>
+                                    <h2 className="text-sm font-bold text-white">Tagger Guidelines</h2>
+                                    <p className="text-[10px] text-white/30">StatsBomb-compatible tagging reference</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setShowGuidelines(false)} className="text-white/40 hover:text-white transition-colors cursor-pointer p-1">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                            </button>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+                            {/* General Rules */}
+                            <div>
+                                <h3 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
+                                    General Rules
+                                </h3>
+                                <ul className="space-y-2">
+                                    {GENERAL_RULES.map((rule, i) => (
+                                        <li key={i} className="text-[11px] text-white/50 leading-relaxed pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-white/20">
+                                            {rule}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div className="border-t border-white/[0.04]" />
+
+                            {/* Per-event guidelines */}
+                            {EVENT_TYPES.map((et) => {
+                                const g = GUIDELINES[et.value];
+                                if (!g) return null;
+                                const isActive = selectedEventType === et.value;
+                                return (
+                                    <div
+                                        key={et.value}
+                                        className={`rounded-xl border transition-all ${isActive
+                                            ? "border-white/10 bg-white/[0.02]"
+                                            : "border-transparent"
+                                        }`}
+                                        style={isActive ? { borderColor: `${et.color}25` } : {}}
+                                    >
+                                        <div className={`${isActive ? "px-4 py-4" : "py-3"}`}>
+                                            {/* Event title */}
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: et.color }} />
+                                                <h4 className="text-xs font-bold text-white">{et.label}</h4>
+                                                {isActive && (
+                                                    <span className="text-[9px] font-medium px-2 py-0.5 rounded-full bg-white/5 text-white/40 ml-auto">SELECTED</span>
+                                                )}
+                                            </div>
+
+                                            {/* Tag when */}
+                                            <p className="text-[11px] text-white/40 mb-3 leading-relaxed">
+                                                <span className="text-white/60 font-semibold">Tag when: </span>
+                                                {g.tagWhen}
+                                            </p>
+
+                                            {/* Required fields */}
+                                            <div className="mb-3">
+                                                <p className="text-[10px] font-semibold text-[#00FF87]/70 uppercase tracking-wider mb-1.5">Required</p>
+                                                <ul className="space-y-1">
+                                                    {g.requiredFields.map((f, i) => (
+                                                        <li key={i} className="text-[10px] text-white/40 leading-relaxed pl-3 relative before:content-['✓'] before:absolute before:left-0 before:text-[#00FF87]/50 before:text-[9px]">
+                                                            {f}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                            {/* Do not tag */}
+                                            {g.doNotTag.length > 0 && (
+                                                <div>
+                                                    <p className="text-[10px] font-semibold text-red-400/70 uppercase tracking-wider mb-1.5">Do Not Tag</p>
+                                                    <ul className="space-y-1">
+                                                        {g.doNotTag.map((d, i) => (
+                                                            <li key={i} className="text-[10px] text-white/35 leading-relaxed pl-3 relative before:content-['✗'] before:absolute before:left-0 before:text-red-400/50 before:text-[9px]">
+                                                                {d}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Separator between events */}
+                                        {!isActive && <div className="border-b border-white/[0.03]" />}
+                                    </div>
+                                );
+                            })}
+
+                            <div className="border-t border-white/[0.04]" />
+
+                            {/* Common Mistakes Table */}
+                            <div>
+                                <h3 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+                                    Common Mistakes to Avoid
+                                </h3>
+                                <div className="rounded-xl border border-white/[0.06] overflow-hidden">
+                                    <table className="w-full text-[10px]">
+                                        <thead>
+                                            <tr className="bg-white/[0.03]">
+                                                <th className="text-left text-white/50 font-semibold px-3 py-2 border-b border-white/[0.06]">Situation</th>
+                                                <th className="text-left text-red-400/60 font-semibold px-3 py-2 border-b border-white/[0.06]">❌ Wrong</th>
+                                                <th className="text-left text-[#00FF87]/60 font-semibold px-3 py-2 border-b border-white/[0.06]">✅ Right</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {COMMON_MISTAKES.map((m, i) => (
+                                                <tr key={i} className="border-b border-white/[0.03] last:border-0 hover:bg-white/[0.02] transition-colors">
+                                                    <td className="px-3 py-2.5 text-white/45 leading-tight">{m.situation}</td>
+                                                    <td className="px-3 py-2.5 text-red-400/50 leading-tight">{m.wrong}</td>
+                                                    <td className="px-3 py-2.5 text-[#00FF87]/50 leading-tight">{m.right}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* ── Summary Modal ────────────────────────────────────────── */}
             {showSummary && (
