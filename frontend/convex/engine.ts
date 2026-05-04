@@ -71,6 +71,17 @@ export const getAndQueueEngineJob = action({
     analystId: v.id("users"),
   },
   handler: async (ctx, args): Promise<any> => {
+    // Log: Data gathering started
+    const dataGatherStart = Date.now();
+    await ctx.runMutation(internal.engineLogs.logStep, {
+      jobId: `dns-${args.matchId.toString()}-${args.playerId.toString()}`,
+      matchId: args.matchId,
+      playerId: args.playerId,
+      step: "Data Gathering",
+      status: "started",
+      inputSummary: `Match: ${args.matchId}, Player: ${args.playerId}`,
+    });
+
     const { player, events, matchCount } = await ctx.runQuery(internal.engine.getEnginePayloadData, {
       matchId: args.matchId,
       playerId: args.playerId,
@@ -81,6 +92,28 @@ export const getAndQueueEngineJob = action({
     const unitId = player.playerProfile?.position ? unit : "mf"; // fallback
 
     const jobId = `dns-${args.matchId.toString()}-${args.playerId.toString()}-${unitId}`;
+
+    // Log: Data gathering completed
+    await ctx.runMutation(internal.engineLogs.logStep, {
+      jobId,
+      matchId: args.matchId,
+      playerId: args.playerId,
+      step: "Data Gathering",
+      status: "completed",
+      durationMs: Date.now() - dataGatherStart,
+      outputSummary: `Player: ${player.name || "Unknown"}, Position: ${position || "N/A"}, Unit: ${unitId}, Events: ${events.length}, Matches: ${matchCount}`,
+    });
+
+    // Log: Payload preparation started
+    const payloadStart = Date.now();
+    await ctx.runMutation(internal.engineLogs.logStep, {
+      jobId,
+      matchId: args.matchId,
+      playerId: args.playerId,
+      step: "Payload Preparation",
+      status: "started",
+      inputSummary: `${events.length} raw events, unit=${unitId}`,
+    });
 
     const payload = {
       job_id: jobId,
@@ -117,6 +150,27 @@ export const getAndQueueEngineJob = action({
       },
     };
 
+    // Log: Payload preparation completed
+    await ctx.runMutation(internal.engineLogs.logStep, {
+      jobId,
+      matchId: args.matchId,
+      playerId: args.playerId,
+      step: "Payload Preparation",
+      status: "completed",
+      durationMs: Date.now() - payloadStart,
+      outputSummary: `Payload built with ${payload.events.length} transformed events`,
+    });
+
+    // Log: Job queuing
+    await ctx.runMutation(internal.engineLogs.logStep, {
+      jobId,
+      matchId: args.matchId,
+      playerId: args.playerId,
+      step: "Job Queuing",
+      status: "started",
+      inputSummary: `Job ID: ${jobId}, Callback: ${payload.callback_url}`,
+    });
+
     // 1. Initial write: Queued
     await ctx.runMutation(internal.engineJobs.createOrUpdateJob, {
       jobId,
@@ -126,6 +180,16 @@ export const getAndQueueEngineJob = action({
       unit: unitId,
       status: "queued",
       requestPayload: payload,
+    });
+
+    // Log: Job queued successfully
+    await ctx.runMutation(internal.engineLogs.logStep, {
+      jobId,
+      matchId: args.matchId,
+      playerId: args.playerId,
+      step: "Job Queuing",
+      status: "completed",
+      outputSummary: `Job ${jobId} queued successfully`,
     });
 
     return payload;

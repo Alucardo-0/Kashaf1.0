@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import time
+import logging
 from pathlib import Path
 from typing import Any
 from urllib import request
@@ -10,6 +12,9 @@ from urllib import request
 from extractors.base import events_to_dataframe, validate_events
 from extractors.client import parse_client_csv_to_dataframe
 from report.builder import build_report
+
+logger = logging.getLogger("kashaf.engine")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
 
 
 _DNS_TO_ENGINE_ACTION = {
@@ -100,6 +105,9 @@ def run_engine_job(payload: dict[str, Any]) -> dict[str, Any]:
       - unit: cb|fb|mf|wg|st
       - events (list) OR csv_path (str)
     """
+    process_logs: list[dict[str, Any]] = []
+    job_id = str(payload.get("job_id", "unknown"))
+
     player_name = str(payload.get("player_name", "")).strip()
     unit = str(payload.get("unit", "")).strip().lower()
 
@@ -108,16 +116,77 @@ def run_engine_job(payload: dict[str, Any]) -> dict[str, Any]:
     if unit not in {"cb", "fb", "mf", "wg", "st"}:
         raise ValueError("'unit' must be one of: cb, fb, mf, wg, st.")
 
-    df = _build_dataframe(payload)
+    # Step 1: Build DataFrame
+    step_name = "DataFrame Construction"
+    logger.info(f"[{job_id}] {step_name}: Starting (player={player_name}, unit={unit})")
+    t0 = time.time()
+    event_count = len(payload.get("events", []))
+    process_logs.append({
+        "step": step_name,
+        "status": "started",
+        "input_summary": f"{event_count} raw events, player={player_name}, unit={unit}",
+    })
+    try:
+        df = _build_dataframe(payload)
+        duration_ms = int((time.time() - t0) * 1000)
+        logger.info(f"[{job_id}] {step_name}: Completed in {duration_ms}ms ({len(df)} rows)")
+        process_logs.append({
+            "step": step_name,
+            "status": "completed",
+            "duration_ms": duration_ms,
+            "output_summary": f"{len(df)} rows in DataFrame",
+        })
+    except Exception as e:
+        duration_ms = int((time.time() - t0) * 1000)
+        logger.error(f"[{job_id}] {step_name}: Failed in {duration_ms}ms — {e}")
+        process_logs.append({"step": step_name, "status": "failed", "duration_ms": duration_ms, "details": str(e)})
+        raise
+
+    # Step 2: Filter to player
+    step_name = "Player Filtering"
+    logger.info(f"[{job_id}] {step_name}: Starting")
+    t0 = time.time()
+    process_logs.append({"step": step_name, "status": "started", "input_summary": f"Filter for '{player_name}'"})
     player_df = df[df["player_name"] == player_name].reset_index(drop=True)
     if player_df.empty:
+        process_logs.append({"step": step_name, "status": "failed", "details": f"No events found for '{player_name}'"})
         raise ValueError(f"No events found for player '{player_name}' in supplied payload.")
+    duration_ms = int((time.time() - t0) * 1000)
+    logger.info(f"[{job_id}] {step_name}: Completed in {duration_ms}ms ({len(player_df)} events)")
+    process_logs.append({
+        "step": step_name,
+        "status": "completed",
+        "duration_ms": duration_ms,
+        "output_summary": f"{len(player_df)} events for {player_name}",
+    })
 
-    report = build_report(player_df, unit, player_name)
+    # Step 3: Build report
+    step_name = "Report Generation"
+    logger.info(f"[{job_id}] {step_name}: Starting")
+    t0 = time.time()
+    process_logs.append({"step": step_name, "status": "started", "input_summary": f"{len(player_df)} events, unit={unit}"})
+    try:
+        report = build_report(player_df, unit, player_name)
+        duration_ms = int((time.time() - t0) * 1000)
+        archetype = report.get("top_archetype", "N/A")
+        logger.info(f"[{job_id}] {step_name}: Completed in {duration_ms}ms (archetype={archetype})")
+        process_logs.append({
+            "step": step_name,
+            "status": "completed",
+            "duration_ms": duration_ms,
+            "output_summary": f"Report generated, top archetype: {archetype}",
+        })
+    except Exception as e:
+        duration_ms = int((time.time() - t0) * 1000)
+        logger.error(f"[{job_id}] {step_name}: Failed in {duration_ms}ms — {e}")
+        process_logs.append({"step": step_name, "status": "failed", "duration_ms": duration_ms, "details": str(e)})
+        raise
+
     return {
         "player_name": player_name,
         "unit": unit,
         "report": report,
+        "process_logs": process_logs,
     }
 
 

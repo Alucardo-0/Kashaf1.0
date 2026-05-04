@@ -34,6 +34,8 @@ function UploadMatchModal({ onClose }: { onClose: () => void }) {
     const [url, setUrl] = useState("");
     const [opponent, setOpponent] = useState("");
     const [matchDate, setMatchDate] = useState("");
+    const [shirtNumber, setShirtNumber] = useState("");
+    const [playerNote, setPlayerNote] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -42,6 +44,11 @@ function UploadMatchModal({ onClose }: { onClose: () => void }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!videoId) { setError("Please enter a valid YouTube URL"); return; }
+        const shirtNum = parseInt(shirtNumber, 10);
+        if (!shirtNumber || isNaN(shirtNum) || shirtNum < 1 || shirtNum > 99) {
+            setError("Please enter a valid shirt number (1-99)");
+            return;
+        }
         setError("");
         setLoading(true);
         try {
@@ -50,6 +57,8 @@ function UploadMatchModal({ onClose }: { onClose: () => void }) {
                 youtubeVideoId: videoId,
                 opponentName: opponent || undefined,
                 matchDate: matchDate ? new Date(matchDate).getTime() : undefined,
+                shirtNumber: shirtNum,
+                playerNote: playerNote || undefined,
             });
             onClose();
         } catch (err) {
@@ -109,6 +118,27 @@ function UploadMatchModal({ onClose }: { onClose: () => void }) {
                                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-[#00FF87]/50 focus:ring-1 focus:ring-[#00FF87]/30 transition-all [color-scheme:dark]"
                             />
                         </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-white/70 mb-1.5">Shirt Number *</label>
+                        <input
+                            type="number" value={shirtNumber} onChange={(e) => setShirtNumber(e.target.value)}
+                            min="1" max="99" required
+                            placeholder="e.g. 10"
+                            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-[#00FF87]/50 focus:ring-1 focus:ring-[#00FF87]/30 transition-all"
+                        />
+                        <p className="text-[10px] text-white/25 mt-1">Your jersey number in this match (required)</p>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-white/70 mb-1.5">Note (optional)</label>
+                        <textarea
+                            value={playerNote} onChange={(e) => setPlayerNote(e.target.value)}
+                            rows={2}
+                            placeholder="Any additional details about the match..."
+                            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-[#00FF87]/50 focus:ring-1 focus:ring-[#00FF87]/30 transition-all resize-none"
+                        />
                     </div>
 
                     {error && (

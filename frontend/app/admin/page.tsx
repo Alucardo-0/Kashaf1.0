@@ -9,6 +9,7 @@ import { UsersTab } from "@/components/admin/UsersTab";
 import { AnalystsTab } from "@/components/admin/AnalystsTab";
 import { ScoutApprovalsTab } from "@/components/admin/ScoutApprovalsTab";
 import { MatchAssignmentsTab } from "@/components/admin/MatchAssignmentsTab";
+import { EngineLogsTab } from "@/components/admin/EngineLogsTab";
 
 const TABS = [
     { id: "overview", label: "Overview", icon: "📊" },
@@ -16,6 +17,7 @@ const TABS = [
     { id: "users", label: "Users", icon: "👥" },
     { id: "analysts", label: "Analysts", icon: "📋" },
     { id: "scouts", label: "Scout Approvals", icon: "🔍" },
+    { id: "engine", label: "Engine Logs", icon: "⚙️" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -105,6 +107,7 @@ export default function AdminPanel() {
                     {activeTab === "users" && <UsersTab />}
                     {activeTab === "analysts" && <AnalystsTab />}
                     {activeTab === "scouts" && <ScoutApprovalsTab />}
+                    {activeTab === "engine" && <EngineLogsTab />}
                 </div>
             </main>
         </div>

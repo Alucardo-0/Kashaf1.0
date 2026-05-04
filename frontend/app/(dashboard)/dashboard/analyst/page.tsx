@@ -29,7 +29,7 @@ type Tab = "overview" | "requests" | "matches";
 export default function AnalystDashboard() {
     const user = useQuery(api.users.getCurrentUser);
     const requests = useQuery(api.analysisRequests.getRequestsByAnalyst, {});
-    const matches = useQuery(api.matches.getMatchesByAnalyst, {});
+    const matches = useQuery(api.matches.getMatchesByAnalystWithPlayerDetails, {});
     const avgRating = useQuery(
         api.ratings.getAverageRating,
         user?._id ? { userId: user._id } : "skip"
@@ -390,6 +390,11 @@ export default function AnalystDashboard() {
                                                         {st.label}
                                                     </span>
                                                 </div>
+                                                <p className="text-xs text-white/50 font-medium">
+                                                    <span className="text-[#3B82F6]">{(match as any).playerName ?? "Unknown Player"}</span>
+                                                    <span className="text-white/25 mx-1.5">·</span>
+                                                    <span className="text-white/40">#{(match as any).playerShirtNumber ?? 5}</span>
+                                                </p>
                                                 <p className="text-xs text-white/30">
                                                     {match.matchDate
                                                         ? new Date(match.matchDate).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })

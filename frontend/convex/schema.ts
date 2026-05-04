@@ -74,6 +74,8 @@ export default defineSchema({
     youtubeVideoId: v.string(),
     opponentName: v.optional(v.string()),
     matchDate: v.optional(v.number()),
+    shirtNumber: v.number(),
+    playerNote: v.optional(v.string()),
     status: v.union(
       v.literal("pending_analyst"),
       v.literal("analyst_assigned"),
@@ -226,4 +228,27 @@ export default defineSchema({
     completedAt: v.optional(v.number()),
   }).index("by_jobId", ["jobId"])
     .index("by_playerId", ["playerId"]),
+
+  // ── Engine Logs (process tracking) ────────────────────────────────────
+  engineLogs: defineTable({
+    jobId: v.string(),
+    matchId: v.id("matches"),
+    playerId: v.id("users"),
+    step: v.string(),
+    status: v.union(v.literal("started"), v.literal("completed"), v.literal("failed")),
+    details: v.optional(v.string()),
+    durationMs: v.optional(v.number()),
+    inputSummary: v.optional(v.string()),
+    outputSummary: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_jobId", ["jobId"])
+    .index("by_matchId", ["matchId"]),
+
+  // ── Keyboard Shortcuts (analyst preferences) ──────────────────────────
+  keyboardShortcuts: defineTable({
+    userId: v.id("users"),
+    shortcuts: v.any(), // Record<eventTypeValue, shortcutKey>
+    updatedAt: v.number(),
+  }).index("by_userId", ["userId"]),
 });

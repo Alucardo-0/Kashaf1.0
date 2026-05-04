@@ -1,10 +1,33 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import type { Id } from "@/convex/_generated/dataModel";
+
+/* ── YouTube reserved shortcuts (must not be overridden) ──────────────── */
+const YOUTUBE_RESERVED_KEYS = new Set([
+    " ", "k", "j", "l", "f", "m", "c", "t",
+    "arrowleft", "arrowright", "arrowup", "arrowdown",
+    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+    "/", ".", ",", ">", "<", "escape", "tab", "enter",
+    "home", "end",
+]);
+
+/** Default shortcut assignments (avoiding YouTube's keys) */
+const DEFAULT_SHORTCUTS: Record<string, string> = {
+    pass: "q",
+    shot: "w",
+    cross: "e",
+    dribble: "r",
+    carry: "a",
+    reception: "s",
+    tackle: "d",
+    interception: "g",
+    aerial: "z",
+    clearance: "x",
+};
 
 /* ── Constants ────────────────────────────────────────────────────────── */
 const EVENT_TYPES = [
@@ -383,6 +406,8 @@ export default function MatchAnalysisPage() {
     const existingSummary = useQuery(api.matchSummaries.getSummaryByMatch, { matchId });
     const user = useQuery(api.users.getCurrentUser);
     const engineJob = useQuery(api.engineJobs.getJobByMatchId, { matchId });
+    const engineLogs = useQuery(api.engineLogs.getLogsByMatch, { matchId });
+    const savedShortcuts = useQuery(api.keyboardShortcuts.getShortcuts);
 
     /* ── Mutations ────────────────────────────────────────────────────── */
     const logEvent = useMutation(api.analysisEvents.logEvent);
@@ -391,6 +416,7 @@ export default function MatchAnalysisPage() {
     const updateMatchStatus = useMutation(api.matches.updateMatchStatus);
     const createSummary = useMutation(api.matchSummaries.createSummary);
     const getAndQueueEngineJob = useAction(api.engine.getAndQueueEngineJob);
+    const saveShortcutsMutation = useMutation(api.keyboardShortcuts.saveShortcuts);
 
     /* ── Event Logger State ───────────────────────────────────────────── */
     const [selectedEventType, setSelectedEventType] = useState("pass");
@@ -420,6 +446,56 @@ export default function MatchAnalysisPage() {
     const [isEditingTags, setIsEditingTags] = useState(false);
     const [resubmitLoading, setResubmitLoading] = useState(false);
     const [showGuidelines, setShowGuidelines] = useState(false);
+    const [showShortcutConfig, setShowShortcutConfig] = useState(false);
+    const [showEngineLogs, setShowEngineLogs] = useState(false);
+    const [customShortcuts, setCustomShortcuts] = useState<Record<string, string>>(DEFAULT_SHORTCUTS);
+    const [shortcutEditKey, setShortcutEditKey] = useState<string | null>(null);
+    const [shortcutError, setShortcutError] = useState<string | null>(null);
+
+    /* ── Load saved shortcuts ─────────────────────────────────────────── */
+    useEffect(() => {
+        if (savedShortcuts?.shortcuts) {
+            setCustomShortcuts({ ...DEFAULT_SHORTCUTS, ...savedShortcuts.shortcuts });
+        }
+    }, [savedShortcuts]);
+
+    /* ── Keyboard shortcut key map (reverse lookup) ───────────────────── */
+    const shortcutKeyMap = useMemo(() => {
+        const map: Record<string, string> = {};
+        for (const [eventType, key] of Object.entries(customShortcuts)) {
+            map[key.toLowerCase()] = eventType;
+        }
+        return map;
+    }, [customShortcuts]);
+
+    /* ── Keyboard shortcut handler ────────────────────────────────────── */
+    const isMatchCompleted = match?.status === "completed";
+    useEffect(() => {
+        // canEdit = !isCompleted || isEditingTags — compute inline to avoid hooks-after-return issue
+        const canEditNow = !isMatchCompleted || isEditingTags;
+        if (!canEditNow) return;
+        const handler = (e: KeyboardEvent) => {
+            // Don't trigger if user is typing in an input/textarea
+            const target = e.target as HTMLElement;
+            if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) return;
+
+            const key = e.key.toLowerCase();
+            const eventType = shortcutKeyMap[key];
+            if (eventType) {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedEventType(eventType);
+                setSelectedOutcome(OUTCOMES[eventType]?.[0] ?? "Successful");
+                if (!editingEventId) {
+                    setPendingOrigin(null);
+                    setPendingDestination(null);
+                    setClickMode("origin");
+                }
+            }
+        };
+        window.addEventListener("keydown", handler, true);
+        return () => window.removeEventListener("keydown", handler, true);
+    }, [shortcutKeyMap, isMatchCompleted, isEditingTags, editingEventId]);
 
     /* ── Tab state ────────────────────────────────────────────────────── */
     const [activePanel, setActivePanel] = useState<"events" | "timeline">("events");
@@ -586,6 +662,11 @@ export default function MatchAnalysisPage() {
         setIsSetPiece(ev.isSetPiece ?? false);
         setBodyPart(ev.bodyPart === "head" ? "head" : "foot");
         setClickMode(null);
+
+        // Jump to the event's timestamp in the YouTube player
+        if (playerRef.current?.seekTo && typeof ev.videoTimestamp === "number") {
+            playerRef.current.seekTo(ev.videoTimestamp, true);
+        }
     };
 
     const handleCancelEdit = () => {
@@ -744,6 +825,22 @@ export default function MatchAnalysisPage() {
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
                         Guidelines
                     </button>
+                    {canEdit && (
+                        <button
+                            onClick={() => setShowShortcutConfig(true)}
+                            className="px-3 py-1.5 rounded-lg text-[11px] font-medium text-white/50 bg-white/[0.03] border border-white/[0.06] hover:bg-white/5 hover:text-white/70 transition-all cursor-pointer flex items-center gap-1.5"
+                        >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2" /><line x1="6" y1="8" x2="6.01" y2="8" /><line x1="10" y1="8" x2="10.01" y2="8" /><line x1="14" y1="8" x2="14.01" y2="8" /><line x1="18" y1="8" x2="18.01" y2="8" /><line x1="8" y1="12" x2="16" y2="12" /></svg>
+                            Shortcuts
+                        </button>
+                    )}
+                    <button
+                        onClick={() => setShowEngineLogs(!showEngineLogs)}
+                        className="px-3 py-1.5 rounded-lg text-[11px] font-medium text-white/50 bg-white/[0.03] border border-white/[0.06] hover:bg-white/5 hover:text-white/70 transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>
+                        Logs
+                    </button>
                     <a
                         href={match.youtubeUrl}
                         target="_blank"
@@ -819,6 +916,11 @@ export default function MatchAnalysisPage() {
                                                 }}
                                             >
                                                 {et.label}
+                                                {customShortcuts[et.value] && (
+                                                    <span className="ml-1.5 px-1 py-0.5 rounded text-[8px] font-bold uppercase bg-white/10 text-white/40">
+                                                        {customShortcuts[et.value]}
+                                                    </span>
+                                                )}
                                             </button>
                                         ))}
                                     </div>
@@ -1375,6 +1477,231 @@ export default function MatchAnalysisPage() {
                                     {summaryLoading ? "Submitting..." : "Submit & Complete"}
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Keyboard Shortcuts Config Modal ──────────────────────── */}
+            {showShortcutConfig && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowShortcutConfig(false)} />
+                    <div className="relative w-full max-w-md bg-[#12121a] border border-white/10 rounded-2xl p-6 shadow-2xl max-h-[85vh] overflow-y-auto">
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 className="text-lg font-bold text-white">Keyboard Shortcuts</h2>
+                                <p className="text-[10px] text-white/30 mt-0.5">Press a key to assign it. YouTube shortcuts are blocked.</p>
+                            </div>
+                            <button onClick={() => { setShowShortcutConfig(false); setShortcutEditKey(null); setShortcutError(null); }} className="text-white/40 hover:text-white transition-colors cursor-pointer">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                            </button>
+                        </div>
+
+                        {shortcutError && (
+                            <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
+                                {shortcutError}
+                            </div>
+                        )}
+
+                        <div className="space-y-2">
+                            {EVENT_TYPES.map((et) => {
+                                const currentKey = customShortcuts[et.value] ?? "";
+                                const isEditing = shortcutEditKey === et.value;
+                                return (
+                                    <div
+                                        key={et.value}
+                                        className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                                            isEditing
+                                                ? "border-[#3B82F6]/40 bg-[#3B82F6]/5"
+                                                : "border-white/[0.06] bg-white/[0.02]"
+                                        }`}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: et.color }} />
+                                            <span className="text-xs font-medium text-white">{et.label}</span>
+                                        </div>
+                                        {isEditing ? (
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[10px] text-[#3B82F6] animate-pulse">Press a key...</span>
+                                                <button
+                                                    onClick={() => { setShortcutEditKey(null); setShortcutError(null); }}
+                                                    className="text-[10px] text-white/40 hover:text-white/60 cursor-pointer"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => { setShortcutEditKey(et.value); setShortcutError(null); }}
+                                                className="px-2 py-1 rounded-lg text-[11px] font-bold uppercase bg-white/10 text-white/60 hover:bg-white/15 transition-all cursor-pointer min-w-[32px] text-center"
+                                            >
+                                                {currentKey || "—"}
+                                            </button>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Capture keydown when editing */}
+                        {shortcutEditKey && (
+                            <div
+                                tabIndex={0}
+                                ref={(el) => el?.focus()}
+                                onKeyDown={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    const key = e.key.toLowerCase();
+                                    
+                                    // Check YouTube reserved keys
+                                    if (YOUTUBE_RESERVED_KEYS.has(key)) {
+                                        setShortcutError(`"${e.key}" is reserved by YouTube and cannot be used.`);
+                                        return;
+                                    }
+
+                                    // Check if already assigned to another event type
+                                    const existingEvent = Object.entries(customShortcuts).find(
+                                        ([evType, k]) => k.toLowerCase() === key && evType !== shortcutEditKey
+                                    );
+                                    if (existingEvent) {
+                                        const existingLabel = EVENT_TYPES.find((et) => et.value === existingEvent[0])?.label ?? existingEvent[0];
+                                        setShortcutError(`"${e.key}" is already assigned to ${existingLabel}.`);
+                                        return;
+                                    }
+
+                                    const updated = { ...customShortcuts, [shortcutEditKey!]: key };
+                                    setCustomShortcuts(updated);
+                                    setShortcutEditKey(null);
+                                    setShortcutError(null);
+                                    // Persist
+                                    saveShortcutsMutation({ shortcuts: updated });
+                                }}
+                                className="fixed inset-0 z-[60] bg-transparent focus:outline-none"
+                                style={{ pointerEvents: "all" }}
+                            />
+                        )}
+
+                        <div className="mt-4 flex gap-2">
+                            <button
+                                onClick={() => {
+                                    setCustomShortcuts(DEFAULT_SHORTCUTS);
+                                    saveShortcutsMutation({ shortcuts: DEFAULT_SHORTCUTS });
+                                }}
+                                className="flex-1 py-2 rounded-xl text-xs font-medium text-white/60 bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
+                            >
+                                Reset to Defaults
+                            </button>
+                            <button
+                                onClick={() => { setShowShortcutConfig(false); setShortcutEditKey(null); setShortcutError(null); }}
+                                className="flex-1 py-2 rounded-xl text-xs font-semibold text-[#0A0A0F] bg-[#00FF87] hover:bg-[#00FF87]/90 transition-all cursor-pointer"
+                            >
+                                Done
+                            </button>
+                        </div>
+
+                        <div className="mt-4 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                            <p className="text-[10px] text-white/30 leading-relaxed">
+                                <span className="text-white/50 font-semibold">YouTube shortcuts are blocked:</span>{" "}
+                                Space, K, J, L, F, M, C, T, Arrow keys, 0-9, and others. These will be handled by the video player instead.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Engine Logs Drawer ──────────────────────────────────────── */}
+            {showEngineLogs && (
+                <div className="fixed inset-0 z-50 flex justify-end">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowEngineLogs(false)} />
+                    <div className="relative w-full max-w-[480px] bg-[#0d0d14] border-l border-white/10 shadow-2xl flex flex-col animate-in slide-in-from-right">
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] shrink-0">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-[#F59E0B]/10 flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
+                                </div>
+                                <div>
+                                    <h2 className="text-sm font-bold text-white">Engine Process Logs</h2>
+                                    <p className="text-[10px] text-white/30">Before/after tracking for engine processing</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setShowEngineLogs(false)} className="text-white/40 hover:text-white transition-colors cursor-pointer p-1">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                            </button>
+                        </div>
+
+                        {/* Match info */}
+                        {match && (
+                            <div className="px-6 py-3 border-b border-white/[0.06] bg-white/[0.01]">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-white/50">Shirt #</span>
+                                    <span className="text-xs font-bold text-[#00FF87]">{match.shirtNumber ?? 5}</span>
+                                    {match.playerNote && (
+                                        <>
+                                            <span className="text-white/20 mx-1">·</span>
+                                            <span className="text-xs text-white/40 italic truncate">{match.playerNote}</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Log entries */}
+                        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+                            {!engineLogs || engineLogs.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <div className="text-3xl mb-2 opacity-50">📄</div>
+                                    <p className="text-xs text-white/30">No engine logs yet</p>
+                                    <p className="text-[10px] text-white/20 mt-1">Logs will appear after you submit the analysis to the engine</p>
+                                </div>
+                            ) : (
+                                engineLogs.map((log) => {
+                                    const statusColors: Record<string, string> = {
+                                        started: "#3B82F6",
+                                        completed: "#22C55E",
+                                        failed: "#EF4444",
+                                    };
+                                    const color = statusColors[log.status] ?? "#fff";
+                                    return (
+                                        <div key={log._id} className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                                                    <span className="text-xs font-medium text-white">{log.step}</span>
+                                                </div>
+                                                <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full" style={{ backgroundColor: `${color}20`, color }}>
+                                                    {log.status.toUpperCase()}
+                                                </span>
+                                            </div>
+                                            {log.inputSummary && (
+                                                <div className="mb-1.5">
+                                                    <span className="text-[9px] text-white/30 font-semibold uppercase">Input: </span>
+                                                    <span className="text-[10px] text-white/50">{log.inputSummary}</span>
+                                                </div>
+                                            )}
+                                            {log.outputSummary && (
+                                                <div className="mb-1.5">
+                                                    <span className="text-[9px] text-[#00FF87]/50 font-semibold uppercase">Output: </span>
+                                                    <span className="text-[10px] text-white/50">{log.outputSummary}</span>
+                                                </div>
+                                            )}
+                                            {log.details && (
+                                                <p className="text-[10px] text-white/35 italic">{log.details}</p>
+                                            )}
+                                            <div className="flex items-center gap-2 mt-1.5">
+                                                <span className="text-[9px] text-white/20">
+                                                    {new Date(log.createdAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                                                </span>
+                                                {log.durationMs !== undefined && (
+                                                    <span className="text-[9px] text-white/30">
+                                                        {log.durationMs}ms
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            )}
                         </div>
                     </div>
                 </div>

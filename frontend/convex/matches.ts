@@ -10,6 +10,8 @@ export const createMatch = mutation({
         youtubeVideoId: v.string(),
         opponentName: v.optional(v.string()),
         matchDate: v.optional(v.number()),
+        shirtNumber: v.number(),
+        playerNote: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
@@ -26,6 +28,8 @@ export const createMatch = mutation({
             youtubeVideoId: args.youtubeVideoId,
             opponentName: args.opponentName,
             matchDate: args.matchDate,
+            shirtNumber: args.shirtNumber,
+            playerNote: args.playerNote,
             status: "pending_analyst",
             createdAt: Date.now(),
         });
@@ -69,6 +73,38 @@ export const getMatchesByAnalyst = query({
             return matches.filter((m) => m.status === args.status);
         }
         return matches;
+    },
+});
+
+// ── Get matches by analyst with player details (name + shirt number) ─────
+export const getMatchesByAnalystWithPlayerDetails = query({
+    args: { status: v.optional(v.string()) },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return [];
+
+        let matches = await ctx.db
+            .query("matches")
+            .withIndex("by_analystId", (q) => q.eq("analystId", userId))
+            .order("desc")
+            .collect();
+
+        if (args.status) {
+            matches = matches.filter((m) => m.status === args.status);
+        }
+
+        const enriched = await Promise.all(
+            matches.map(async (match) => {
+                const player = await ctx.db.get(match.playerId);
+                return {
+                    ...match,
+                    playerName: player?.name ?? "Unknown Player",
+                    playerShirtNumber: match.shirtNumber ?? 5,
+                };
+            })
+        );
+
+        return enriched;
     },
 });
 
