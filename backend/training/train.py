@@ -63,8 +63,6 @@ SB_POSITION_NAME_MAP = {
     "Right Attacking Midfield":"AM",
     "Left Wing":              "LW",
     "Right Wing":             "RW",
-    "Left Midfield":          "LW",
-    "Right Midfield":         "RW",
     "Center Forward":         "ST",
     "Left Center Forward":    "ST",
     "Right Center Forward":   "ST",
@@ -78,6 +76,19 @@ LINEUPS_DIR = Path("data/statsbomb/data/lineups")
 MATCHES_DIR = Path("data/statsbomb/data/matches")
 OUTPUT_DIR  = Path("models")
 OUTPUT_DIR.mkdir(exist_ok=True)
+
+# Positions that are unambiguously winger
+DEFINITE_WINGER_POSITIONS = {"Left Wing", "Right Wing"}
+
+# Positions that are unambiguously midfielder
+DEFINITE_MF_POSITIONS = {
+    "Defensive Midfield", "Left Defensive Midfield", "Right Defensive Midfield",
+    "Center Midfield", "Left Center Midfield", "Right Center Midfield",
+    "Attacking Midfield", "Left Attacking Midfield", "Right Attacking Midfield",
+}
+
+# Ambiguous — could be either depending on system
+AMBIGUOUS_WIDE_POSITIONS = {"Left Midfield", "Right Midfield"}
 
 
 def _safe_console_text(text: str) -> str:
@@ -153,16 +164,24 @@ def _strip_season(versioned_name: str) -> str:
     return versioned_name
 
 
+
 def build_player_unit_map(
     lineups_dir: Path,
     player_index: dict[str, list[str]],
 ) -> dict[str, str]:
     """
-    Reads lineup files once, then maps versioned player keys to dominant unit.
+    Reads lineup files once and returns {versioned_player_season_key: unit}.
+    
+    For ambiguous wide positions (Left Midfield, Right Midfield):
+    - If the player also has definite winger appearances → WG
+    - If the player only has midfielder + ambiguous appearances → MF
+    - If the player only has ambiguous appearances with no context → MF
+      (safer default: better to miss a winger than add a CM to WG pool)
     """
+    # {raw_name: {position_name: count}}
     position_counts: dict[str, dict[str, int]] = {}
-    lineup_files = list(lineups_dir.glob("*.json"))
 
+    lineup_files = list(lineups_dir.glob("*.json"))
     for i, lineup_file in enumerate(lineup_files, 1):
         print(f"    Reading lineup files... {i}/{len(lineup_files)}", end="\r")
         with open(lineup_file, encoding="utf-8") as f:
@@ -173,24 +192,60 @@ def build_player_unit_map(
                 for pos_entry in player.get("positions", []):
                     pos = pos_entry.get("position", {})
                     pos_name = pos.get("name", "") if isinstance(pos, dict) else str(pos)
-                    pos_abbr = SB_POSITION_NAME_MAP.get(pos_name)
-                    if pos_abbr and pos_abbr in POSITION_UNIT_MAP:
-                        unit = POSITION_UNIT_MAP[pos_abbr]
+                    if pos_name:
                         position_counts.setdefault(name, {})
-                        position_counts[name][unit] = position_counts[name].get(unit, 0) + 1
+                        position_counts[name][pos_name] = (
+                            position_counts[name].get(pos_name, 0) + 1
+                        )
     print()
 
-    raw_name_to_unit = {
-        name: max(units, key=units.get)
-        for name, units in position_counts.items()
-    }
+    raw_name_to_unit: dict[str, str] = {}
 
+    for player_name, pos_counts in position_counts.items():
+        # Separate appearances by category
+        winger_appearances  = sum(
+            count for pos, count in pos_counts.items()
+            if pos in DEFINITE_WINGER_POSITIONS
+        )
+        mf_appearances = sum(
+            count for pos, count in pos_counts.items()
+            if pos in DEFINITE_MF_POSITIONS
+        )
+        ambiguous_appearances = sum(
+            count for pos, count in pos_counts.items()
+            if pos in AMBIGUOUS_WIDE_POSITIONS
+        )
+
+        # Build unit counts using SB_POSITION_NAME_MAP for non-ambiguous positions
+        unit_counts: dict[str, int] = {}
+        for pos, count in pos_counts.items():
+            if pos in AMBIGUOUS_WIDE_POSITIONS:
+                continue  # handle separately below
+            pos_abbr = SB_POSITION_NAME_MAP.get(pos)
+            if pos_abbr and pos_abbr in POSITION_UNIT_MAP:
+                unit = POSITION_UNIT_MAP[pos_abbr]
+                unit_counts[unit] = unit_counts.get(unit, 0) + count
+
+        # Resolve ambiguous wide positions
+        if ambiguous_appearances > 0:
+            if winger_appearances > 0:
+                # Has genuine winger appearances — ambiguous ones are also winger
+                unit_counts["wg"] = unit_counts.get("wg", 0) + ambiguous_appearances
+            else:
+                # No genuine winger appearances — treat as midfielder
+                unit_counts["mf"] = unit_counts.get("mf", 0) + ambiguous_appearances
+
+        if not unit_counts:
+            continue
+
+        raw_name_to_unit[player_name] = max(unit_counts, key=unit_counts.get)
+
+    # Map versioned keys → unit using stripped names
     return {
         versioned_key: raw_name_to_unit[raw_name]
         for versioned_key in player_index
         if (raw_name := _strip_season(versioned_key)) in raw_name_to_unit
     }
-
 
 def build_feature_matrix(
     unit: str,
@@ -256,8 +311,8 @@ def diagnose_unit_sample(
     module = FEATURE_MODULES[unit]
     print(f"  Running diagnostic for {unit.upper()}...")
 
-    EXPECTED_CORE_COUNTS = {"cb": 6, "fb": 5, "mf": 6, "wg": 6, "st": 5}
-    EXPECTED_CTX_COUNTS = {"cb": 6, "fb": 6, "mf": 8, "wg": 7, "st": 6}
+    EXPECTED_CORE_COUNTS = {"cb": 6, "fb": 5, "mf": 6, "wg": 7, "st": 5}
+    EXPECTED_CTX_COUNTS = {"cb": 6, "fb": 6, "mf": 8, "wg": 6, "st": 6}
     threshold = _events_threshold(unit)
 
 

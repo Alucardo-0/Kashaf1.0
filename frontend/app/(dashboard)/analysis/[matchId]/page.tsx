@@ -1655,7 +1655,7 @@ export default function MatchAnalysisPage() {
                                     <p className="text-[10px] text-white/20 mt-1">Logs will appear after you submit the analysis to the engine</p>
                                 </div>
                             ) : (
-                                engineLogs.map((log) => {
+                                engineLogs.map((log: any) => {
                                     const statusColors: Record<string, string> = {
                                         started: "#3B82F6",
                                         completed: "#22C55E",
