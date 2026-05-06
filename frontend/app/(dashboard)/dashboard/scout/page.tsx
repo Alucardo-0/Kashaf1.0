@@ -10,6 +10,24 @@ import type { ScoutSearchPlayer } from "@/components/scout/PlayerRow";
 export default function ScoutDashboard() {
   const user = useQuery(api.users.getCurrentUser);
 
+  const [filters, setFilters] = useState<FilterState>({
+    unit: "all",
+    topArchetype: "any",
+    archetypeThreshold: 0,
+    minMatches: 3, // Default to reliable data only
+    ageRange: [10, 50],
+    heightRange: [100, 220],
+    preferredFoot: 'any'
+  });
+
+  const rawProfiles = useQuery(api.users.searchPlayers, {
+    position: filters.unit !== "all" ? filters.unit : undefined,
+    minAge: filters.ageRange[0],
+    maxAge: filters.ageRange[1],
+    foot: filters.preferredFoot !== 'any' ? (filters.preferredFoot as "left" | "right" | "both") : undefined,
+    minAnalyzedMatches: filters.minMatches > 0 ? filters.minMatches : undefined,
+  });
+
   // Gate: scout must be approved
   if (user && user.role === "scout" && user.scoutApprovalStatus && user.scoutApprovalStatus !== "approved") {
     return (
@@ -28,24 +46,6 @@ export default function ScoutDashboard() {
       </div>
     );
   }
-
-  const [filters, setFilters] = useState<FilterState>({
-    unit: "all",
-    topArchetype: "any",
-    archetypeThreshold: 0,
-    minMatches: 3, // Default to reliable data only
-    ageRange: [10, 50],
-    heightRange: [100, 220],
-    preferredFoot: 'any'
-  });
-
-  const rawProfiles = useQuery(api.users.searchPlayers, {
-    position: filters.unit !== "all" ? filters.unit : undefined,
-    minAge: filters.ageRange[0],
-    maxAge: filters.ageRange[1],
-    foot: filters.preferredFoot !== 'any' ? (filters.preferredFoot as "left" | "right" | "both") : undefined,
-    minAnalyzedMatches: filters.minMatches > 0 ? filters.minMatches : undefined,
-  });
 
   // We need to calculate a simulated "Match %" score since we don't have an ElasticSearch backend yet.
   // We use a stable hashing function so the score stays the same for a player during navigation.
