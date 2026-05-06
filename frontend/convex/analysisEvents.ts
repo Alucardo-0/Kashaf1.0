@@ -143,16 +143,14 @@ export const getPlayerEventStats = query({
                 stats[event.eventType] = { total: 0, successful: 0 };
             }
             stats[event.eventType].total++;
-            // "Successful", "On Target", "Goal", "Key Pass", "Assist" count as successful outcomes
+            // "Successful", "Goal", "Won", "Key Pass", "Assist" count as successful outcomes
             const successOutcomes = [
                 "Successful",
-                "On Target",
                 "Goal",
                 "Completed",
                 "Won",
                 "Key Pass",
                 "Assist",
-                "Saved",
             ];
             if (successOutcomes.includes(event.outcome)) {
                 stats[event.eventType].successful++;
