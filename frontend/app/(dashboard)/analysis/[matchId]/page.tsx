@@ -48,13 +48,13 @@ const HAS_DESTINATION = new Set(["pass", "cross", "carry"]);
 
 const OUTCOMES: Record<string, string[]> = {
     pass: ["Successful", "Failed", "Key Pass", "Assist"],
-    shot: ["On Target", "Off Target", "Blocked", "Goal"],
+    shot: ["Goal", "Saved", "Blocked", "Off Target", "Post"],
     cross: ["Successful", "Failed", "Assist"],
     dribble: ["Successful", "Failed"],
     carry: ["Successful", "Failed"],
-    reception: ["Successful"],
-    tackle: ["Successful"],
-    interception: ["Successful"],
+    reception: ["Successful", "Failed"],
+    tackle: ["Successful", "Failed"],
+    interception: ["Successful", "Failed"],
     aerial: ["Won", "Lost"],
     clearance: ["Successful"],
 };
@@ -87,11 +87,12 @@ const GUIDELINES: Record<string, {
             "Start coordinates only — end coordinates not needed",
             "Body part: foot or head",
             "Set piece: True for direct free kick shots and penalties",
+            "Outcome: Goal, Saved, Blocked, Off Target, or Post — categorical, not binary",
         ],
         doNotTag: [
             "Blocked attempts that clearly weren't aimed at goal",
         ],
-        hint: "Start coords only · Body part needed",
+        hint: "Start coords only · Body part needed · Use categorical outcome",
     },
     cross: {
         tagWhen: "Player deliberately delivers the ball into the box from a wide position in the final third.",
@@ -102,9 +103,9 @@ const GUIDELINES: Record<string, {
         ],
         doNotTag: [
             "Crosses that don't start from a wide final third position — those are passes",
-            "Low cutbacks along the ground — tag as pass instead",
+            "Standard sideways passes along the ground — tag as pass instead",
         ],
-        hint: "Start + End coords critical · Wide → box only",
+        hint: "Start + End coords critical · Wide → box only · Low cutbacks from byline count",
     },
     dribble: {
         tagWhen: "Player deliberately attempts to beat a defender in a direct 1v1 ground challenge.",
@@ -130,37 +131,38 @@ const GUIDELINES: Record<string, {
         hint: "Start + End coords both critical · No 1v1 involved",
     },
     reception: {
-        tagWhen: "Player successfully receives a deliberate pass from a teammate.",
+        tagWhen: "Player receives a deliberate pass from a teammate — whether controlled or miscontrolled.",
         requiredFields: [
             "Start coordinates — where the player received the ball. This is critical: box receptions and positional stats are all derived from this location",
             "No end coordinates needed",
             "Body part optional but useful if headed",
+            "Outcome: Successful (controlled) or Failed (heavy touch/miscontrol leading to turnover)",
         ],
         doNotTag: [
             "After interceptions, tackles, or ball recoveries — reception only follows a teammate's deliberate pass",
-            "If the player miscontrolled and immediately lost the ball on the first touch — skip it",
             "After aerial duels — if the player won the header and controlled it, the aerial duel covers it",
         ],
-        hint: "Start coords only · Only after a teammate's pass",
+        hint: "Start coords only · Tag miscontrols as Failed · Only after teammate's pass",
     },
     tackle: {
-        tagWhen: "Player successfully wins the ball from an opponent in a ground challenge.",
+        tagWhen: "Player attempts a ground challenge to win the ball from an opponent — tag regardless of success or failure.",
         requiredFields: [
             "Start coordinates only",
             "No body part, no end coordinates needed",
+            "Outcome: Successful (won the ball/stopped attack) or Failed (missed/beaten/fouled)",
         ],
         doNotTag: [
-            "Failed tackle attempts — no tag at all if the opponent kept the ball",
             "Aerial challenges — use Aerial Duel instead",
             "Challenges that result in a foul — use Foul instead",
         ],
-        hint: "Start coords only · Only if ball was won",
+        hint: "Start coords only · Tag both won AND failed tackles",
     },
     interception: {
         tagWhen: "Player actively cuts off a pass that was intended for an opponent — the ball must be in flight toward that opponent when intercepted.",
         requiredFields: [
             "Start coordinates only",
             "No body part, no end coordinates needed",
+            "Outcome: Successful (retained possession) or Failed (ball fell to opponent/went out)",
         ],
         doNotTag: [
             "Collecting a loose ball — that is a recovery, not an interception",
@@ -168,7 +170,7 @@ const GUIDELINES: Record<string, {
             "Winning a header from a pass — use Aerial Duel instead",
             "Do NOT follow with a Reception tag — interception stands alone",
         ],
-        hint: "Start coords only · Must cut off an opponent's pass",
+        hint: "Start coords only · Must cut off opponent's pass · Tag outcome",
     },
     aerial: {
         tagWhen: "Player challenges an opponent for a header in the air.",
@@ -209,13 +211,17 @@ const COMMON_MISTAKES: Array<{ situation: string; wrong: string; right: string }
     { situation: "Player receives and immediately shoots", wrong: "Reception + Shot together", right: "Reception → Shot (two separate tags in order)" },
     { situation: "Player wins aerial duel and heads to teammate", wrong: "Aerial Duel only", right: "Aerial Duel → Pass (two tags)" },
     { situation: "Player intercepts a pass", wrong: "Interception → Reception", right: "Interception only" },
-    { situation: "Player tackles and immediately carries", wrong: "Tackle + Carry together", right: "Tackle → Carry (two separate tags)" },
-    { situation: "Player makes a failed tackle", wrong: "Tackle (Failed)", right: "No tag at all" },
+    { situation: "Player tackles and immediately carries", wrong: "Tackle + Carry together", right: "Tackle (Successful) → Carry (two separate tags)" },
+    { situation: "Player makes a failed tackle", wrong: "No tag at all", right: "Tackle with outcome = Failed" },
     { situation: "Player carries then dribbles past defender", wrong: "Dribble only", right: "Carry (with end coords) → Dribble (two tags)" },
     { situation: "Long pass that doesn't reach teammate", wrong: "No tag", right: "Pass with outcome = Failed" },
     { situation: "Corner kick delivery", wrong: "Pass with no set piece", right: "Pass with set piece = True" },
-    { situation: "Header from corner to score", wrong: "Shot only", right: "Shot (body part = head, set piece = True)" },
+    { situation: "Header from corner to score", wrong: "Shot only", right: "Shot (body part = head, set piece = True, outcome = Goal)" },
     { situation: "Ball recovery after a clearance", wrong: "Reception", right: "No tag — player wasn't receiving a teammate's pass" },
+    { situation: "Player miscontrols a pass", wrong: "Skip — don't tag", right: "Reception with outcome = Failed" },
+    { situation: "Interception deflects out of play", wrong: "Interception (Successful)", right: "Interception with outcome = Failed" },
+    { situation: "Shot saved by keeper", wrong: "Shot (Off Target)", right: "Shot with outcome = Saved" },
+    { situation: "Shot hits the post", wrong: "Shot (Off Target)", right: "Shot with outcome = Post" },
 ];
 
 /* ── Format timestamp ─────────────────────────────────────────────────── */

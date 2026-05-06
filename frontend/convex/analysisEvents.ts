@@ -152,6 +152,7 @@ export const getPlayerEventStats = query({
                 "Won",
                 "Key Pass",
                 "Assist",
+                "Saved",
             ];
             if (successOutcomes.includes(event.outcome)) {
                 stats[event.eventType].successful++;

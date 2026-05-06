@@ -39,7 +39,7 @@ def _normalize_outcome(value: Any) -> bool | None:
                 "key pass", "assist"}:
         return True
     if text in {"false", "fail", "failed", "incomplete", "lost", "no", "0", "unsuccessful",
-                "on target", "off target", "blocked"}:
+                "on target", "off target", "blocked", "post", "saved"}:
         return False
     return None
 

@@ -153,11 +153,18 @@ def _parse_event(
                 _safe_get(event, "shot", "outcome", "name") or
                 _safe_get(event, "dribble", "outcome", "name") or
                 _safe_get(event, "interception", "outcome", "name") or
-                _safe_get(event, "clearance", "outcome", "name")
+                _safe_get(event, "clearance", "outcome", "name") or
+                _safe_get(event, "ball_receipt", "outcome", "name")
         )
 
         # StatsBomb pass-specific: no outcome field = complete
         if action_type == "pass" and outcome_name is None:
+            outcome = True
+        # StatsBomb reception-specific: no outcome field = successful receipt
+        elif action_type == "reception" and outcome_name is None:
+            outcome = True
+        # StatsBomb interception-specific: no outcome field = successful interception
+        elif action_type == "interception" and outcome_name is None:
             outcome = True
         else:
             outcome = _map_outcome(outcome_name, action_type)
