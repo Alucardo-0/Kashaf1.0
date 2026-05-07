@@ -583,3 +583,61 @@ def penalty_area_touches_p90(df: pd.DataFrame, minutes: float) -> float:
     in_box = is_in_box(events["start_x"], events["start_y"])
     return per90(in_box.sum(), minutes)
 
+
+def action_bias(df: pd.DataFrame) -> float:
+    """
+    Shot/Cross Preference: shots / (shots + crosses).
+    1.0 = pure shooter (Inside Forward).
+    0.0 = pure crosser (Touchline Winger).
+    Returns 0.5 (neutral) if no shots or crosses.
+    """
+    shots = len(open_play(action_filter(df, "shot")))
+    crosses = open_play(action_filter(df, "pass"))
+    cross_count = crosses["is_cross"].sum() if not crosses.empty else 0
+    total = shots + cross_count
+    return safe_ratio(shots, total, default=0.5)
+
+
+def attacking_directness(df: pd.DataFrame) -> float:
+    """
+    End-Product Rate: (shots + crosses) / final_third_receptions.
+    Measures how efficiently possession in the final third
+    converts into scoring actions.  Neutralizes team possession level.
+    Wide Playmakers score low; IFs and TWs score high.
+    Returns 0.0 if no final third receptions.
+    """
+    shots = len(open_play(action_filter(df, "shot")))
+    crosses = open_play(action_filter(df, "pass"))
+    cross_count = crosses["is_cross"].sum() if not crosses.empty else 0
+
+    receptions = open_play(action_filter(df, "reception"))
+    if receptions.empty:
+        return 0.0
+    ft_receptions = is_in_final_third(receptions["start_x"]).sum()
+    if ft_receptions == 0:
+        return 0.0
+
+    return safe_ratio(shots + cross_count, ft_receptions)
+
+
+def box_magnetism(df: pd.DataFrame) -> float:
+    """
+    Penalty Area Reception %: box_receptions / attacking_half_receptions.
+    Where the player gravitates to receive the ball.
+    Inside Forwards score high; Touchline Wingers score very low.
+    Returns 0.0 if no attacking half receptions.
+    """
+    from config.settings import ATTACKING_HALF_X_MIN
+
+    receptions = open_play(action_filter(df, "reception"))
+    if receptions.empty:
+        return 0.0
+
+    attacking_half = receptions["start_x"] >= ATTACKING_HALF_X_MIN
+    ah_count = attacking_half.sum()
+    if ah_count == 0:
+        return 0.0
+
+    in_box = is_in_box(receptions["start_x"], receptions["start_y"])
+    box_count = (in_box & attacking_half).sum()
+    return safe_ratio(box_count, ah_count)

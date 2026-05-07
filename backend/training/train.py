@@ -312,7 +312,7 @@ def diagnose_unit_sample(
     print(f"  Running diagnostic for {unit.upper()}...")
 
     EXPECTED_CORE_COUNTS = {"cb": 6, "fb": 5, "mf": 6, "wg": 7, "st": 5}
-    EXPECTED_CTX_COUNTS = {"cb": 6, "fb": 6, "mf": 8, "wg": 6, "st": 6}
+    EXPECTED_CTX_COUNTS = {"cb": 6, "fb": 6, "mf": 8, "wg": 5, "st": 6}
     threshold = _events_threshold(unit)
 
 

@@ -138,6 +138,7 @@ export const getLatestCompletedJobByPlayerId = query({
         context: t.context ?? {},
       })),
       dataWarning: report.data_warning ?? null,
+      archetypesNote: report.archetypes_note ?? null,
       createdAt: completedJob.createdAt,
     };
   },

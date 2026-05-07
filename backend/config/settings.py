@@ -18,6 +18,9 @@ MIDDLE_THIRD_X_MIN   = 33.3
 MIDDLE_THIRD_X_MAX   = 66.7
 FINAL_THIRD_X_MIN    = 66.7
 
+# Attacking half (x >= 50.0 in our space = location[0] >= 60 in SB 120-unit)
+ATTACKING_HALF_X_MIN = 50.0
+
 # Wide zones (for cross detection and cut-inside carry)
 
 WIDE_ZONE_Y_MAX      = 25.0   # top wide channel  (y < 25)
@@ -82,7 +85,7 @@ MIN_EVENTS_THRESHOLD    = 150    # minimum total events for a player to enter tr
 
 MIN_EVENTS_THRESHOLD_BY_UNIT = {
     "cb": 200,
-    "fb": 150,
+    "fb": 200,
     "mf": 250,
     "wg": 150,
     "st": 150,

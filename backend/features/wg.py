@@ -1,30 +1,34 @@
 """
 Winger feature extraction.
-K=4: Wide Winger / Inside Forward / Wide Playmaker / Low Data Winger
+K=3: Inside Forward / Wide Playmaker / Wide Winger
 
 Design notes:
-- progressive_carries_p90 replaced in core with wide_carries_p90,
-  then kept in context as narrative volume.
-- median_lateral_position provides a stable width axis independent of volume.
+- action_bias:           shot/cross preference ratio — cleanly separates
+                         shooters (IF) from crossers (TW)
+- attacking_directness:  end-product rate — neutralizes team possession level
+- box_magnetism:         where the player gravitates to receive the ball
+- cut_inside_carry_pct:  ratio of carries moving wide → central
+- dribble_attempts_p90:  attacking intent volume
+- progressive_passes_p90: wide playmaker distribution signal
+- median_lateral_position: touchline proximity axis
 """
 
 import pandas as pd
 from features.base import (
     get_total_minutes,
-    crosses_p90,
-    shots_p90,
-    wide_carries_p90,
-    progressive_passes_p90,
-    penalty_area_receptions_p90,
-    median_lateral_position,
-    # context
-    progressive_carries_p90,
+    action_bias,
+    attacking_directness,
+    box_magnetism,
+    cut_inside_carry_pct,
     dribble_attempts_p90,
+    progressive_passes_p90,
+    median_lateral_position,
+    passes_into_final_third_p90,
+    # context
     dribble_success_pct,
     cross_completion_pct,
     pass_completion_pct,
     progressive_pass_pct,
-    cut_inside_carry_pct,
 )
 
 UNIT = "wg"
@@ -35,30 +39,29 @@ def extract_core_features(df: pd.DataFrame) -> dict:
     7 core features for WG clustering.
 
     Feature → Archetype signal:
-      crosses_p90:                  Wide Winger — delivery from wide
-      shots_p90:                    Inside Forward — goal threat
-      cut_inside_carry_pct:         Inside Forward — ratio of carries
-                                    moving from wide to central zone.
-                                    Volume-independent: works even for
-                                    low-activity players, breaks garbage
-                                    cluster the same way
-                                    tackle_to_interception_ratio fixed CB
-      dribble_attempts_p90:         attacking intent — separates active
-                                    from passive within archetypes
-      progressive_passes_p90:       Wide Playmaker — distribution
-      penalty_area_receptions_p90:  Inside Forward — box presence
-      median_lateral_position:      Touchline Winger = high,
-                                    Inside Forward = low
+      action_bias:                Inside Forward = high (shooter),
+                                  Wide Winger = low (crosser)
+      attacking_directness:       IF + TW high, Wide Playmaker low
+      box_magnetism:              Inside Forward high, TW very low
+      cut_inside_carry_pct:       Inside Forward — ratio of carries
+                                  moving from wide to central zone.
+                                  Volume-independent: works even for
+                                  low-activity players
+      dribble_attempts_p90:       attacking intent — separates active
+                                  from passive within archetypes
+      progressive_passes_p90:     Wide Playmaker — distribution
+      median_lateral_position:    Touchline Winger = high,
+                                  Inside Forward = low
     """
     minutes = get_total_minutes(df)
 
     return {
-        "crosses_p90":                  crosses_p90(df, minutes),
-        "shots_p90":                    shots_p90(df, minutes),
+        "action_bias":                  action_bias(df),
+        "attacking_directness":         attacking_directness(df),
+        "box_magnetism":                box_magnetism(df),
         "cut_inside_carry_pct":         cut_inside_carry_pct(df),
         "dribble_attempts_p90":         dribble_attempts_p90(df, minutes),
         "progressive_passes_p90":       progressive_passes_p90(df, minutes, UNIT),
-        "penalty_area_receptions_p90":  penalty_area_receptions_p90(df, minutes),
         "median_lateral_position":      median_lateral_position(df),
     }
 
@@ -68,12 +71,11 @@ def extract_context_features(df: pd.DataFrame) -> dict:
     minutes = get_total_minutes(df)
 
     return {
-        "progressive_carries_p90":  progressive_carries_p90(df, minutes, UNIT),
-        "wide_carries_p90":         wide_carries_p90(df, minutes),
-        "dribble_success_pct":      dribble_success_pct(df),
-        "cross_completion_pct":     cross_completion_pct(df),
-        "pass_completion_pct":      pass_completion_pct(df),
-        "progressive_pass_pct":     progressive_pass_pct(df, UNIT),
+        "passes_into_final_third_p90":  passes_into_final_third_p90(df, minutes),
+        "dribble_success_pct":          dribble_success_pct(df),
+        "cross_completion_pct":         cross_completion_pct(df),
+        "pass_completion_pct":          pass_completion_pct(df),
+        "progressive_pass_pct":         progressive_pass_pct(df, UNIT),
     }
 
 

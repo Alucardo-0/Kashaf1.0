@@ -143,6 +143,7 @@ export default function PlayerReportPage() {
     const topArchetype: string = profile?.topArchetype ?? "";
     const topPct: number = profile?.topPct ?? 0;
     const dataWarning: string | null = profile?.dataWarning ?? null;
+    const archetypesNote: string | null = profile?.archetypesNote ?? null;
     const unit: string = profile?.unit ?? player.playerProfile?.position ?? "";
     const matchCount: number = profile?.matchCount ?? 0;
 
@@ -229,7 +230,12 @@ export default function PlayerReportPage() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Archetypes */}
                             <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
-                                <h3 className="text-sm font-semibold uppercase tracking-wider text-white/50 mb-2">Position Profile</h3>
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="text-sm font-semibold uppercase tracking-wider text-white/50">Position Profile</h3>
+                                    {archetypesNote && (
+                                        <span className="text-[10px] text-white/30 max-w-[180px] text-right">{archetypesNote}</span>
+                                    )}
+                                </div>
                                 <div className="space-y-4">
                                     {Object.entries(archetypes)
                                         .sort(([, a], [, b]) => b - a)
