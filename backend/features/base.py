@@ -322,15 +322,11 @@ def wide_carries_p90(df: pd.DataFrame, minutes: float) -> float:
 
 
 def crosses_p90(df: pd.DataFrame, minutes: float) -> float:
-    """Crosses per 90 (derived from pass coordinates)."""
+    """Crosses per 90 (using explicit is_cross flag from source data)."""
     passes = open_play(action_filter(df, "pass"))
     if passes.empty:
         return 0.0
-    cross_mask = is_cross(
-        passes["start_x"], passes["start_y"],
-        passes["end_x"],   passes["end_y"],
-    )
-    return per90(cross_mask.sum(), minutes)
+    return per90(passes["is_cross"].sum(), minutes)
 
 
 def dribble_attempts_p90(df: pd.DataFrame, minutes: float) -> float:
@@ -471,24 +467,17 @@ def tackle_win_pct(df: pd.DataFrame) -> float:
 
 
 def cross_completion_pct(df: pd.DataFrame) -> float:
-    passes = open_play(successful(action_filter(df, "pass")))
     all_passes = open_play(action_filter(df, "pass"))
     if all_passes.empty:
         return 0.0
 
-    all_crosses = is_cross(
-        all_passes["start_x"], all_passes["start_y"],
-        all_passes["end_x"],   all_passes["end_y"],
-    )
-    total_crosses = all_crosses.sum()
+    all_crosses = all_passes[all_passes["is_cross"]]
+    total_crosses = len(all_crosses)
     if total_crosses == 0:
         return 0.0
 
-    completed_crosses = is_cross(
-        passes["start_x"], passes["start_y"],
-        passes["end_x"],   passes["end_y"],
-    )
-    return safe_ratio(completed_crosses.sum(), total_crosses)
+    completed = (all_crosses["outcome"] == True).sum()
+    return safe_ratio(completed, total_crosses)
 
 
 def progressive_pass_pct(df: pd.DataFrame, unit: str) -> float:
@@ -554,6 +543,29 @@ def receptions_final_third_p90(df: pd.DataFrame, minutes: float) -> float:
     in_final_third = is_in_final_third(receptions["start_x"])
     return per90(in_final_third.sum(), minutes)
 
+def passes_into_final_third_p90(df: pd.DataFrame, minutes: float) -> float:
+    """
+    Open play passes that start outside the final third (start_x <= 66.7)
+    and end inside it (end_x > 66.7), per 90 minutes.
+
+    The primary Wide Playmaker signature — they receive in the middle
+    third and thread balls into dangerous areas. Wide Wingers already
+    operate from the final third so their passes don't generate this.
+    Inside Forwards receive in the final third rather than pass into it.
+    The main weakness: if you're a wide-playmaker of a dominent team and 
+    camp in the opponent's final third, well... it might not work as intended 
+    """
+    passes = open_play(successful(action_filter(df, "pass")))
+    if passes.empty:
+        return 0.0
+
+    has_end = passes["end_x"].notna()
+    enters_final_third = (
+        has_end &
+        (passes["start_x"] <= FINAL_THIRD_X_MIN) &
+        (passes["end_x"] > FINAL_THIRD_X_MIN)
+    )
+    return per90(enters_final_third.sum(), minutes)
 
 def penalty_area_receptions_p90(df: pd.DataFrame, minutes: float) -> float:
     """Open-play receptions received inside the penalty box per 90."""

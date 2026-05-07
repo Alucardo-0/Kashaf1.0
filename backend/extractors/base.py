@@ -25,6 +25,7 @@ class Event:
     outcome:        Optional[bool] = None   # True=success False=fail None=N/A
     body_part:      Optional[str]  = None   # "foot" | "head" | None
     set_piece:      bool = False
+    is_cross:       bool = False             # explicit cross flag (from SB / analyst)
 
 
 VALID_ACTION_TYPES = {
@@ -118,7 +119,7 @@ def events_to_dataframe(events: list[dict]) -> pd.DataFrame:
     schema_cols = [
         "player_name", "match_id", "minutes",
         "action_type", "start_x", "start_y",
-        "end_x", "end_y", "outcome", "body_part", "set_piece",
+        "end_x", "end_y", "outcome", "body_part", "set_piece", "is_cross",
     ]
     for col in schema_cols:
         if col not in df.columns:
@@ -131,5 +132,6 @@ def events_to_dataframe(events: list[dict]) -> pd.DataFrame:
     df["end_y"]     = pd.to_numeric(df["end_y"],     errors="coerce")
     df["minutes"]   = pd.to_numeric(df["minutes"],   errors="coerce")
     df["set_piece"] = df["set_piece"].fillna(False).astype(bool)
+    df["is_cross"]  = df["is_cross"].fillna(False).astype(bool)
 
     return df[schema_cols]

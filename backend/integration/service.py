@@ -56,7 +56,11 @@ def _to_engine_event(
     default_minutes: float,
 ) -> dict[str, Any]:
     """Converts DNS-style event payloads to the engine schema."""
-    action_type = _normalize_action_type(event.get("action_type", event.get("eventType")))
+    raw_action = str(event.get("action_type", event.get("eventType")) or "").strip().lower()
+    action_type = _normalize_action_type(raw_action)
+    # Analyst tags crosses as a distinct action type; preserve that intent
+    is_cross = bool(event.get("is_cross", raw_action == "cross"))
+
     return {
         "player_name": str(event.get("player_name", default_player_name)),
         "match_id": str(event.get("match_id", default_match_id)),
@@ -69,6 +73,7 @@ def _to_engine_event(
         "outcome": _normalize_outcome(event.get("outcome")),
         "body_part": event.get("body_part"),
         "set_piece": bool(event.get("set_piece", event.get("isSetPiece", False))),
+        "is_cross": is_cross,
     }
 
 

@@ -173,6 +173,9 @@ def _parse_event(
             shot_outcome = _safe_get(event, "shot", "outcome", "name", default="")
             outcome = shot_outcome == "Goal"
 
+        # StatsBomb tags crosses as passes with {"pass": {"cross": true}}
+        is_cross = bool(_safe_get(event, "pass", "cross", default=False)) if action_type == "pass" else False
+
         return {
             "player_name": player_name,
             "match_id":    str(match_id),
@@ -185,6 +188,7 @@ def _parse_event(
             "outcome":     outcome,
             "body_part":   _map_body_part(event, action_type),
             "set_piece":   _is_set_piece(event),
+            "is_cross":    is_cross,
         }
 
     # ── Duel events (split into tackle or aerial) ──────────────────────────
